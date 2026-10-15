@@ -1,0 +1,322 @@
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  jsonb,
+  uniqueIndex,
+  pgEnum,
+} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+
+// Enums
+export const providerEnum = pgEnum("ai_provider_enum", [
+  "openai",
+  "anthropic",
+  "google",
+  "custom",
+]);
+
+export const languageEnum = pgEnum("project_language_enum", [
+  "python",
+  "node",
+  "typescript",
+  "go",
+  "rust",
+]);
+
+export const projectStatusEnum = pgEnum("project_status_enum", [
+  "stopped",
+  "starting",
+  "running",
+  "error",
+  "building",
+]);
+
+export const chatRoleEnum = pgEnum("chat_role_enum", [
+  "user",
+  "assistant",
+  "system",
+  "tool",
+]);
+
+// 1. Users Table
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  name: text("name"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 2. AI Providers Table (BYOK)
+export const aiProviders = pgTable(
+  "ai_providers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    provider: providerEnum("provider").notNull(),
+    label: text("label").notNull(),
+    encryptedKey: text("encrypted_key").notNull(),
+    baseUrl: text("base_url"),
+    modelDefault: text("model_default").notNull(),
+    isDefault: boolean("is_default").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    userProviderLabelIdx: uniqueIndex("user_id_label_idx").on(
+      table.userId,
+      table.label
+    ),
+  })
+);
+
+// 3. Projects Table
+export const projects = pgTable("projects", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  language: languageEnum("language").notNull(),
+  framework: text("framework").notNull(),
+  status: projectStatusEnum("status").notNull().default("stopped"),
+  hostPort: integer("host_port").unique(),
+  containerId: text("container_id"),
+  workspacePath: text("workspace_path").notNull(),
+  aiProviderId: uuid("ai_provider_id").references(() => aiProviders.id, {
+    onDelete: "set null",
+  }),
+  lastStartedAt: timestamp("last_started_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 4. Project Files Table
+export const projectFiles = pgTable(
+  "project_files",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    relPath: text("rel_path").notNull(),
+    sizeBytes: integer("size_bytes"),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    projectRelPathIdx: uniqueIndex("project_rel_path_idx").on(
+      table.projectId,
+      table.relPath
+    ),
+  })
+);
+
+// 5. API Specs Table
+export const apiSpecs = pgTable("api_specs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id")
+    .notNull()
+    .unique()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  specJson: jsonb("spec_json").notNull(),
+  fetchedAt: timestamp("fetched_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 6. Collections Table (folders for saved tests)
+export const collections = pgTable("collections", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  parentId: uuid("parent_id"),
+  orderIndex: integer("order_index").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 7. API Requests Table
+export const apiRequests = pgTable("api_requests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  collectionId: uuid("collection_id").references(() => collections.id, {
+    onDelete: "set null",
+  }),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  method: text("method").notNull(),
+  path: text("path").notNull(),
+  headers: jsonb("headers").$type<Record<string, string>>().default({}),
+  body: jsonb("body").$type<unknown>().default({}),
+  authConfig: jsonb("auth_config")
+    .$type<Record<string, unknown>>()
+    .default({}),
+  autoGenerated: boolean("auto_generated").notNull().default(true),
+  lastResponse: jsonb("last_response").$type<unknown>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 8. Test History Table
+export const testHistory = pgTable("test_history", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  requestId: uuid("request_id").references(() => apiRequests.id, {
+    onDelete: "set null",
+  }),
+  method: text("method").notNull(),
+  path: text("path").notNull(),
+  statusCode: integer("status_code").notNull(),
+  durationMs: integer("duration_ms").notNull(),
+  responseSnippet: jsonb("response_snippet").$type<unknown>(),
+  ranAt: timestamp("ran_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// 9. Chat Sessions Table
+export const chatSessions = pgTable("chat_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 10. Chat Messages Table
+export const chatMessages = pgTable("chat_messages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sessionId: uuid("session_id")
+    .notNull()
+    .references(() => chatSessions.id, { onDelete: "cascade" }),
+  role: chatRoleEnum("role").notNull(),
+  content: text("content").notNull(),
+  toolCalls: jsonb("tool_calls").$type<unknown[]>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// 11. Environments Table
+export const environments = pgTable("environments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  variables: jsonb("variables")
+    .$type<Record<string, string>>()
+    .default({}),
+  isActive: boolean("is_active").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  projects: many(projects),
+  aiProviders: many(aiProviders),
+}));
+
+export const aiProvidersRelations = relations(aiProviders, ({ one, many }) => ({
+  user: one(users, {
+    fields: [aiProviders.userId],
+    references: [users.id],
+  }),
+  projects: many(projects),
+}));
+
+export const projectsRelations = relations(projects, ({ one, many }) => ({
+  user: one(users, {
+    fields: [projects.userId],
+    references: [users.id],
+  }),
+  aiProvider: one(aiProviders, {
+    fields: [projects.aiProviderId],
+    references: [aiProviders.id],
+  }),
+  files: many(projectFiles),
+  spec: one(apiSpecs, {
+    fields: [projects.id],
+    references: [apiSpecs.projectId],
+  }),
+  collections: many(collections),
+  requests: many(apiRequests),
+  testHistory: many(testHistory),
+  chatSessions: many(chatSessions),
+  environments: many(environments),
+}));
+
+export const collectionsRelations = relations(collections, ({ one, many }) => ({
+  project: one(projects, {
+    fields: [collections.projectId],
+    references: [projects.id],
+  }),
+  parent: one(collections, {
+    fields: [collections.parentId],
+    references: [collections.id],
+    relationName: "nested_collections",
+  }),
+  subCollections: many(collections, {
+    relationName: "nested_collections",
+  }),
+  requests: many(apiRequests),
+}));
+
+export const apiRequestsRelations = relations(apiRequests, ({ one, many }) => ({
+  project: one(projects, {
+    fields: [apiRequests.projectId],
+    references: [projects.id],
+  }),
+  collection: one(collections, {
+    fields: [apiRequests.collectionId],
+    references: [collections.id],
+  }),
+  history: many(testHistory),
+}));
+
+export const chatSessionsRelations = relations(chatSessions, ({ one, many }) => ({
+  project: one(projects, {
+    fields: [chatSessions.projectId],
+    references: [projects.id],
+  }),
+  messages: many(chatMessages),
+}));
+
+export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
+  session: one(chatSessions, {
+    fields: [chatMessages.sessionId],
+    references: [chatSessions.id],
+  }),
+}));
