@@ -1,0 +1,41 @@
+import { apiClient } from "./client.js";
+import type { Project, TemplateMetadata } from "../../types/api.js";
+
+export const projectsApi = {
+  list: () => apiClient<{ projects: Project[] }>("/api/projects"),
+
+  get: (id: string) => apiClient<{ project: Project }>(`/api/projects/${id}`),
+
+  templates: () =>
+    apiClient<{ templates: TemplateMetadata[] }>("/api/projects/templates"),
+
+  create: (data: {
+    name: string;
+    description?: string;
+    language: string;
+    framework: string;
+    aiProviderId?: string;
+    source?: "scratch" | "import";
+    importSource?:
+      | { type: "git"; url: string }
+      | { type: "template"; templateId: string };
+  }) =>
+    apiClient<{ project: Project }>("/api/projects", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  update: (
+    id: string,
+    data: { name?: string; description?: string | null; aiProviderId?: string | null }
+  ) =>
+    apiClient<{ project: Project }>(`/api/projects/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: string) =>
+    apiClient<{ ok: boolean; id: string }>(`/api/projects/${id}`, {
+      method: "DELETE",
+    }),
+};

@@ -473,5 +473,41 @@ curl -X GET http://localhost:3000/api/projects/$PROJECT_ID/test/history \
 
 ---
 
+## Frontend IDE Web Application
+
+Forge includes a frontend IDE built with **React 19**, **Vite 6**, **TypeScript**, and **Tailwind CSS v4**, strictly implementing the **Ramp** editorial design system.
+
+### Design System Principles
+- **Monochrome & Highlighter**: Bone canvas (`#f4f2f0`), Paper card surfaces (`#ffffff`), Ink text (`#0c0a08`), Obsidian dark sections (`#1a1919`), Hairline borders (`#e5e7eb`), and a single Highlighter Yellow accent (`#e4f222`) reserved exclusively for primary action fills, live counters, and active states.
+- **Elevation**: 1px hairlines replace drop shadows as the elevation primitive.
+- **Typography**: Single weight (400) neo-grotesque type scale with uppercase tracking (`0.018em`) and font feature settings `ss01: on`.
+
+### Frontend Architecture
+- **State Management**:
+  - `auth.store.ts`: JWT session storage, token refresh loop.
+  - `editor.store.ts`: Open file tabs, active file, dirty states, Monaco models.
+  - `chat.store.ts`: AI chat sessions, message streaming buffers.
+  - `tester.store.ts`: Active HTTP request builder, headers, auth, body, test history.
+  - `ui.store.ts`: Theme switcher, panel sizes, container telemetry, 5000-line ring buffer logs.
+- **Realtime Integration**:
+  - `socket.ts` / `useProjectSocket`: Native WebSocket client with exponential backoff auto-reconnect, syncing container status, logs, spec changes, and AI tokens.
+- **Integrated Panels**:
+  - **Monaco Code Editor**: Auto-saves, syntax highlighting for Python/TypeScript/Go/Rust/JSON, keyboard shortcuts (`Cmd+S`).
+  - **AI Assistant**: SSE streaming message bubbles, tool call execution cards (`writeFile`, `runCommand`), model selector.
+  - **API Tester**: Full HTTP request builder, environment substitution (`{{VAR}}`), status codes, latency badges, headers, JSON tree viewer.
+  - **Console**: Live stdout/stderr log streaming with search filter and log export.
+  - **BYOK Manager**: Manage OpenAI, Anthropic, Google Gemini, and custom OpenAI-compatible keys with in-browser connection latency ping tests.
+
+### Running Frontend
+```bash
+# Development (Vite dev server with /api and /ws proxy to port 3000)
+bun run frontend:dev
+
+# Production build
+bun run frontend:build
+```
+
+---
+
 ## License
 MIT
