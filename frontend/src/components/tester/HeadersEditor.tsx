@@ -55,7 +55,7 @@ export function HeadersEditor({ headers, onChange }: HeadersEditorProps) {
 
   return (
     <div className="space-y-2 p-3 font-sans text-xs">
-      <div className="grid grid-cols-12 gap-2 text-[10px] uppercase tracking-[0.018em] text-ash font-medium pb-1 border-b border-hairline">
+      <div className="grid grid-cols-12 gap-2 text-[10px] uppercase tracking-[0.018em] text-ash font-normal pb-1 border-b border-hairline">
         <span className="col-span-5">Key</span>
         <span className="col-span-6">Value</span>
         <span className="col-span-1" />
@@ -68,13 +68,13 @@ export function HeadersEditor({ headers, onChange }: HeadersEditorProps) {
               placeholder="Content-Type"
               value={row.key}
               onChange={(e) => updateHeaderRow(idx, e.target.value, row.value)}
-              className="col-span-5 h-7 text-xs font-mono rounded-md border-hairline"
+              className="col-span-5 h-7 text-xs font-mono rounded-[10px] border-hairline font-normal"
             />
             <Input
               placeholder="application/json"
               value={row.value}
               onChange={(e) => updateHeaderRow(idx, row.key, e.target.value)}
-              className="col-span-6 h-7 text-xs font-mono rounded-md border-hairline"
+              className="col-span-6 h-7 text-xs font-mono rounded-[10px] border-hairline font-normal"
             />
             <button
               onClick={() => removeRow(idx)}
@@ -90,7 +90,7 @@ export function HeadersEditor({ headers, onChange }: HeadersEditorProps) {
         size="xs"
         variant="outline"
         onClick={addRow}
-        className="mt-2 text-xs rounded-md border-hairline text-ash hover:text-ink dark:hover:text-paper"
+        className="mt-2 text-xs rounded-[6px] border-hairline text-ash hover:text-ink font-normal"
       >
         <Plus className="w-3 h-3 mr-1" />
         Add Header

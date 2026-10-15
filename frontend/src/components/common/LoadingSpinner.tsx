@@ -14,8 +14,8 @@ export function LoadingSpinner({
 }: LoadingSpinnerProps) {
   return (
     <div className={cn("flex items-center gap-2 text-ash", className)}>
-      <Loader2 className="animate-spin text-ink dark:text-paper" size={size} />
-      {label && <span className="text-sm font-sans">{label}</span>}
+      <Loader2 className="animate-spin text-ink" size={size} />
+      {label && <span className="text-sm font-sans font-normal">{label}</span>}
     </div>
   );
 }

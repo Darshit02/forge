@@ -11,10 +11,10 @@ export function LogLine({ line }: LogLineProps) {
       return "text-destructive";
     }
     if (lower.includes("warn")) {
-      return "text-amber-500";
+      return "text-ash";
     }
     if (lower.includes("info")) {
-      return "text-ink dark:text-paper";
+      return "text-ink";
     }
     return "text-ash";
   };
@@ -22,7 +22,7 @@ export function LogLine({ line }: LogLineProps) {
   return (
     <div
       className={cn(
-        "font-mono text-xs leading-5 hover:bg-wash dark:hover:bg-muted/40 px-2 py-0.5 whitespace-pre-wrap break-all select-text",
+        "font-mono text-xs leading-5 hover:bg-bone px-2 py-0.5 whitespace-pre-wrap break-all select-text font-normal",
         getLineStyle()
       )}
     >

@@ -14,16 +14,16 @@ export function Sidebar({ projectId }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<SidebarTab>("files");
 
   return (
-    <div className="h-full flex flex-col bg-paper dark:bg-card border-r border-hairline overflow-hidden">
+    <div className="h-full flex flex-col bg-paper border-r border-hairline overflow-hidden">
       {/* Sidebar Header Tabs */}
-      <div className="flex items-center justify-between px-3 h-10 border-b border-hairline bg-bone/40 dark:bg-muted/20 shrink-0">
+      <div className="flex items-center justify-between px-3 h-10 border-b border-hairline bg-bone shrink-0">
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => setActiveTab("files")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
               activeTab === "files"
-                ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
             }`}
           >
@@ -34,9 +34,9 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("collections")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
               activeTab === "collections"
-                ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
             }`}
           >
@@ -47,9 +47,9 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("environments")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
               activeTab === "environments"
-                ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
             }`}
           >

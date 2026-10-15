@@ -10,7 +10,7 @@ export function FileTabs() {
   }
 
   return (
-    <div className="flex items-center h-9 border-b border-hairline bg-paper dark:bg-card overflow-x-auto select-none no-scrollbar">
+    <div className="flex items-center h-9 border-b border-hairline bg-paper overflow-x-auto select-none no-scrollbar">
       {openFiles.map((file) => {
         const isActive = file.path === activeFile;
         const fileName = file.path.split("/").pop() || file.path;
@@ -20,10 +20,10 @@ export function FileTabs() {
             key={file.path}
             onClick={() => setActiveFile(file.path)}
             className={cn(
-              "group flex items-center h-full px-3 gap-2 border-r border-hairline text-xs cursor-pointer transition-colors shrink-0",
+              "group flex items-center h-full px-3 gap-2 border-r border-hairline text-xs cursor-pointer transition-colors shrink-0 font-normal",
               isActive
-                ? "bg-bone dark:bg-muted text-ink dark:text-paper border-b-2 border-b-primary font-medium"
-                : "text-ash hover:bg-wash dark:hover:bg-muted/50 hover:text-ink dark:hover:text-paper"
+                ? "bg-bone text-ink border-b-2 border-b-primary"
+                : "text-ash hover:bg-bone hover:text-ink"
             )}
           >
             {file.language === "python" || file.language === "typescript" || file.language === "javascript" ? (
@@ -32,7 +32,7 @@ export function FileTabs() {
               <FileText className="w-3.5 h-3.5 text-ash" />
             )}
 
-            <span className="truncate max-w-[120px]">{fileName}</span>
+            <span className="truncate max-w-[120px] font-normal">{fileName}</span>
 
             {/* Dirty indicator */}
             {file.dirty && (
@@ -45,7 +45,7 @@ export function FileTabs() {
                 e.stopPropagation();
                 closeFile(file.path);
               }}
-              className="p-0.5 rounded hover:bg-hairline text-ash hover:text-ink dark:hover:text-paper opacity-0 group-hover:opacity-100 transition-opacity"
+              className="p-0.5 rounded-[4px] hover:bg-hairline text-ash hover:text-ink opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <X className="w-3 h-3" />
             </button>

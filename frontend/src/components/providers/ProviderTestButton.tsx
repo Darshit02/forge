@@ -48,7 +48,7 @@ export function ProviderTestButton({ providerId }: ProviderTestButtonProps) {
         size="sm"
         onClick={handleTest}
         disabled={testing}
-        className="rounded-md border-hairline text-xs font-mono h-8 px-2.5 text-ash hover:text-ink hover:bg-bone dark:hover:bg-muted"
+        className="rounded-[6px] border-hairline text-xs font-mono h-8 px-2.5 text-ash hover:text-ink hover:bg-bone font-normal"
       >
         {testing ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
@@ -60,20 +60,20 @@ export function ProviderTestButton({ providerId }: ProviderTestButtonProps) {
 
       {result && (
         <div
-          className={`flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded ${
+          className={`flex items-center gap-1 text-[10px] uppercase font-mono tracking-[0.018em] px-2 py-0.5 rounded-[6px] border font-normal ${
             result.ok
-              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
-              : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+              ? "bg-primary text-ink border-primary"
+              : "bg-bone text-destructive border-hairline"
           }`}
         >
           {result.ok ? (
             <>
-              <CheckCircle2 className="w-3 h-3" />
+              <CheckCircle2 className="w-3 h-3 text-ink" />
               <span>{result.latencyMs}ms</span>
             </>
           ) : (
             <>
-              <AlertCircle className="w-3 h-3" />
+              <AlertCircle className="w-3 h-3 text-destructive" />
               <span className="truncate max-w-[120px]">Failed</span>
             </>
           )}

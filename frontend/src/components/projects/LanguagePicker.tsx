@@ -56,21 +56,21 @@ export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
             key={lang.id}
             onClick={() => onChange(lang.id)}
             className={cn(
-              "flex flex-col p-3 rounded-xl border cursor-pointer transition-all text-left select-none font-sans",
+              "flex flex-col p-3 rounded-xl border cursor-pointer transition-colors text-left select-none",
               isSelected
-                ? "border-primary bg-bone dark:bg-muted ring-1 ring-primary"
-                : "border-hairline bg-paper dark:bg-card hover:bg-wash dark:hover:bg-muted/30"
+                ? "border-ink bg-bone text-ink"
+                : "border-hairline bg-paper hover:border-smoke text-ink"
             )}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-ink dark:text-paper">
+              <span className="text-xs font-normal text-ink">
                 {lang.name}
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded border border-hairline bg-wash dark:bg-muted text-ash font-mono">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-[4px] border border-hairline bg-bone text-ash font-mono font-normal">
                 {lang.tag}
               </span>
             </div>
-            <span className="text-[11px] text-ash line-clamp-1">
+            <span className="text-[11px] text-ash line-clamp-1 font-normal">
               {lang.description}
             </span>
           </div>

@@ -25,7 +25,7 @@ export function TesterPanel({ projectId }: TesterPanelProps) {
   }, [runTest]);
 
   return (
-    <div className="flex h-full bg-paper dark:bg-card overflow-hidden">
+    <div className="flex h-full bg-paper overflow-hidden">
       {/* Collections & Saved Endpoints */}
       <CollectionSidebar projectId={projectId} />
 

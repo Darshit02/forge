@@ -23,9 +23,9 @@ export function DiffViewer({
   const theme = useUIStore((s) => s.theme);
 
   return (
-    <div className="flex flex-col h-full bg-paper dark:bg-card border border-hairline rounded-xl overflow-hidden">
-      <div className="h-9 px-3 border-b border-hairline bg-wash dark:bg-muted/40 flex items-center justify-between text-xs select-none">
-        <span className="font-mono text-ink dark:text-paper font-medium">
+    <div className="flex flex-col h-full bg-paper border border-hairline rounded-xl overflow-hidden">
+      <div className="h-9 px-3 border-b border-hairline bg-bone flex items-center justify-between text-xs select-none">
+        <span className="font-mono text-ink font-normal">
           Diff: {filePath}
         </span>
         <div className="flex items-center gap-2">
@@ -34,7 +34,7 @@ export function DiffViewer({
               size="xs"
               variant="outline"
               onClick={onDiscard}
-              className="rounded-md border-hairline"
+              className="rounded-[6px] border-hairline font-normal"
             >
               <X className="w-3 h-3 mr-1" />
               Discard
@@ -44,7 +44,7 @@ export function DiffViewer({
             <Button
               size="xs"
               onClick={onApply}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
             >
               <Check className="w-3 h-3 mr-1" />
               Apply Changes
@@ -59,7 +59,7 @@ export function DiffViewer({
           original={original}
           modified={modified}
           language={language}
-          theme={theme === "dark" ? "vs-dark" : "light"}
+          theme="light"
           options={{
             readOnly: true,
             renderSideBySide: true,

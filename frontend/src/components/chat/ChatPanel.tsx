@@ -13,7 +13,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
   const { sendMessage, cancel, isStreaming } = useChatStream(projectId);
 
   return (
-    <div className="flex flex-col h-full bg-paper dark:bg-card">
+    <div className="flex flex-col h-full bg-paper">
       <SessionList projectId={projectId} />
       <MessageList messages={messages} projectId={projectId} />
       <ChatInput

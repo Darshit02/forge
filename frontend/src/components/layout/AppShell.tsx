@@ -54,7 +54,7 @@ export function AppShell({ project }: AppShellProps) {
   }, [toggleSidebar, setRightPanelTab]);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-bone dark:bg-background overflow-hidden text-ink dark:text-paper">
+    <div className="h-screen w-screen flex flex-col bg-bone overflow-hidden text-ink">
       {/* Top Navigation Bar */}
       <TopBar currentProject={project} />
 
@@ -67,20 +67,20 @@ export function AppShell({ project }: AppShellProps) {
               <Panel defaultSize={18} minSize={14} maxSize={35}>
                 <Sidebar projectId={project.id} />
               </Panel>
-              <PanelResizeHandle className="w-[1px] bg-hairline hover:bg-ink/30 transition-colors cursor-col-resize active:bg-primary active:w-[2px]" />
+              <PanelResizeHandle className="w-[1px] bg-hairline hover:bg-smoke transition-colors cursor-col-resize active:bg-primary active:w-[2px]" />
             </>
           )}
 
           {/* Center Panel: Code Editor */}
           <Panel defaultSize={48} minSize={25}>
-            <div className="h-full flex flex-col bg-paper dark:bg-card overflow-hidden">
-              <div className="flex items-center justify-between border-b border-hairline bg-bone/30 dark:bg-muted/10 h-9">
+            <div className="h-full flex flex-col bg-paper overflow-hidden">
+              <div className="flex items-center justify-between border-b border-hairline bg-bone h-9">
                 <div className="flex items-center flex-1 overflow-x-auto">
                   <button
                     type="button"
                     onClick={toggleSidebar}
                     title={sidebarOpen ? "Collapse Sidebar (⌘B)" : "Open Sidebar (⌘B)"}
-                    className="h-9 px-2.5 text-ash hover:text-ink border-r border-hairline flex items-center justify-center"
+                    className="h-9 px-2.5 text-ash hover:text-ink border-r border-hairline flex items-center justify-center transition-colors"
                   >
                     {sidebarOpen ? (
                       <PanelLeftClose className="w-3.5 h-3.5" />
@@ -98,20 +98,20 @@ export function AppShell({ project }: AppShellProps) {
             </div>
           </Panel>
 
-          <PanelResizeHandle className="w-[1px] bg-hairline hover:bg-ink/30 transition-colors cursor-col-resize active:bg-primary active:w-[2px]" />
+          <PanelResizeHandle className="w-[1px] bg-hairline hover:bg-smoke transition-colors cursor-col-resize active:bg-primary active:w-[2px]" />
 
           {/* Right Panel: AI Chat / API Tester / Console */}
           <Panel defaultSize={34} minSize={22}>
-            <div className="h-full flex flex-col bg-paper dark:bg-card border-l border-hairline overflow-hidden">
+            <div className="h-full flex flex-col bg-paper border-l border-hairline overflow-hidden">
               {/* Tab Selector Header */}
-              <div className="flex items-center justify-between px-3 h-9 border-b border-hairline bg-bone/40 dark:bg-muted/20 shrink-0">
+              <div className="flex items-center justify-between px-3 h-9 border-b border-hairline bg-bone shrink-0">
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("chat")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
                       rightPanelTab === "chat"
-                        ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                        ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
                     }`}
                   >
@@ -122,9 +122,9 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("tester")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
                       rightPanelTab === "tester"
-                        ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                        ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
                     }`}
                   >
@@ -135,9 +135,9 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("console")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
                       rightPanelTab === "console"
-                        ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
+                        ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
                     }`}
                   >

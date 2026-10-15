@@ -23,9 +23,6 @@ import {
   FileCode,
   LayoutDashboard,
   Settings,
-  Sun,
-  Moon,
-  Laptop,
   FolderTree,
 } from "lucide-react";
 
@@ -39,7 +36,6 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
     commandPaletteOpen,
     setCommandPaletteOpen,
     setRightPanelTab,
-    setTheme,
     toggleSidebar,
   } = useUIStore();
 
@@ -67,7 +63,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
     <CommandDialog
       open={commandPaletteOpen}
       onOpenChange={setCommandPaletteOpen}
-      className="rounded-2xl border border-hairline bg-paper dark:bg-card shadow-2xl max-w-xl"
+      className="rounded-2xl border border-hairline bg-paper shadow-none max-w-xl"
     >
       <CommandInput
         placeholder="Type a command or search open files..."
@@ -85,7 +81,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
               <CommandItem
                 key={file.path}
                 onSelect={() => runCommand(() => setActiveFile(file.path))}
-                className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+                className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
               >
                 <FileCode className="w-3.5 h-3.5 text-ash" />
                 <span className="truncate">{file.path}</span>
@@ -100,24 +96,24 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
             <CommandItem
               onSelect={() => runCommand(() => { start(); })}
               disabled={isStarting}
-              className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+              className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
             >
-              <Play className="w-3.5 h-3.5 text-emerald-500" />
+              <Play className="w-3.5 h-3.5 text-ink" />
               <span>Start Backend Container</span>
             </CommandItem>
             <CommandItem
               onSelect={() => runCommand(() => { restart(); })}
-              className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+              className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
             >
-              <RotateCw className="w-3.5 h-3.5 text-amber-500" />
+              <RotateCw className="w-3.5 h-3.5 text-ink" />
               <span>Restart Container</span>
             </CommandItem>
             <CommandItem
               onSelect={() => runCommand(() => { stop(); })}
               disabled={isStopping}
-              className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+              className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
             >
-              <Square className="w-3.5 h-3.5 text-red-500" />
+              <Square className="w-3.5 h-3.5 text-ink" />
               <span>Stop Container</span>
             </CommandItem>
           </CommandGroup>
@@ -127,7 +123,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
         <CommandGroup heading="Panels & Views">
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("chat"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5 text-ash" />
             <span>Open AI Chat Assistant</span>
@@ -135,7 +131,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("tester"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <Send className="w-3.5 h-3.5 text-ash" />
             <span>Open API Tester</span>
@@ -143,7 +139,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("console"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <Terminal className="w-3.5 h-3.5 text-ash" />
             <span>Open Container Logs Console</span>
@@ -151,7 +147,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => toggleSidebar())}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <FolderTree className="w-3.5 h-3.5 text-ash" />
             <span>Toggle Left Sidebar</span>
@@ -165,42 +161,17 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
         <CommandGroup heading="Navigation">
           <CommandItem
             onSelect={() => runCommand(() => navigate("/dashboard"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <LayoutDashboard className="w-3.5 h-3.5 text-ash" />
             <span>Dashboard</span>
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => navigate("/settings"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
+            className="gap-2 text-xs font-mono rounded-[6px] cursor-pointer"
           >
             <Settings className="w-3.5 h-3.5 text-ash" />
             <span>Settings & BYOK Keys</span>
-          </CommandItem>
-        </CommandGroup>
-
-        {/* Theme */}
-        <CommandGroup heading="Appearance">
-          <CommandItem
-            onSelect={() => runCommand(() => setTheme("light"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
-          >
-            <Sun className="w-3.5 h-3.5 text-ash" />
-            <span>Theme: Light</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => runCommand(() => setTheme("dark"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
-          >
-            <Moon className="w-3.5 h-3.5 text-ash" />
-            <span>Theme: Dark</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => runCommand(() => setTheme("system"))}
-            className="gap-2 text-xs font-mono rounded-lg cursor-pointer"
-          >
-            <Laptop className="w-3.5 h-3.5 text-ash" />
-            <span>Theme: Match System</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>

@@ -46,18 +46,18 @@ export function TopBar({ currentProject }: TopBarProps) {
     : user?.email?.[0]?.toUpperCase() || "U";
 
   return (
-    <header className="h-12 border-b border-hairline bg-paper dark:bg-card px-3 flex items-center justify-between shrink-0 select-none">
+    <header className="h-12 border-b border-hairline bg-paper px-3 flex items-center justify-between shrink-0 select-none [box-shadow:rgba(255,255,255,0.6)_0_0_2px_0_inset] sticky top-0 z-40">
       {/* Left side: Logo & Project Switcher */}
       <div className="flex items-center gap-3">
         <Link
           to="/dashboard"
-          className="flex items-center gap-2 text-ink dark:text-paper hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 text-ink hover:opacity-85 transition-opacity"
         >
           {/* Highlighter accent mark representing Forge */}
-          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center font-bold text-ink text-xs leading-none">
+          <div className="w-5 h-5 rounded-[6px] bg-primary flex items-center justify-center font-normal text-ink text-xs leading-none">
             F
           </div>
-          <span className="font-normal tracking-tight text-sm text-ink dark:text-paper">
+          <span className="font-normal tracking-tight text-sm text-ink">
             Forge
           </span>
         </Link>
@@ -68,8 +68,8 @@ export function TopBar({ currentProject }: TopBarProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 text-xs text-ink dark:text-paper px-2 py-1 rounded-md hover:bg-wash dark:hover:bg-muted transition-colors font-sans">
-                  <span className="truncate max-w-[140px] font-medium">
+                <button className="flex items-center gap-1.5 text-xs text-ink px-2 py-1 rounded-[6px] hover:bg-bone transition-colors font-sans">
+                  <span className="truncate max-w-[140px] font-normal">
                     {currentProject.name}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 text-ash" />
@@ -77,27 +77,27 @@ export function TopBar({ currentProject }: TopBarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="w-56 rounded-xl border border-hairline bg-paper dark:bg-card"
+                className="w-56 rounded-xl border border-hairline bg-paper"
               >
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-[0.018em] text-ash">
+                <DropdownMenuLabel className="text-[10px] uppercase tracking-[0.018em] text-ash font-normal">
                   Switch Project
                 </DropdownMenuLabel>
                 {projects.map((p) => (
                   <DropdownMenuItem
                     key={p.id}
-                    className="text-xs cursor-pointer text-ink dark:text-paper"
+                    className="text-xs cursor-pointer text-ink font-normal"
                     onClick={() => navigate(`/projects/${p.id}`)}
                   >
                     <FolderOpen className="w-3.5 h-3.5 mr-2 text-ash" />
                     <span className="truncate">{p.name}</span>
-                    <span className="ml-auto text-[10px] text-ash uppercase">
+                    <span className="ml-auto text-[10px] text-ash uppercase font-mono">
                       {p.framework}
                     </span>
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator className="bg-hairline" />
                 <DropdownMenuItem
-                  className="text-xs cursor-pointer text-ink dark:text-paper"
+                  className="text-xs cursor-pointer text-ink font-normal"
                   onClick={() => navigate("/dashboard")}
                 >
                   <LayoutDashboard className="w-3.5 h-3.5 mr-2 text-ash" />
@@ -121,9 +121,9 @@ export function TopBar({ currentProject }: TopBarProps) {
       {/* Right side: Reconnecting pill, Cmd+K, Theme, User Profile */}
       <div className="flex items-center gap-2">
         {reconnecting && (
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 text-[11px]">
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] border border-hairline bg-bone text-ash text-[10px] uppercase font-mono tracking-[0.018em]">
             <WifiOff className="w-3 h-3 animate-pulse" />
-            <span>Reconnecting...</span>
+            <span>Reconnecting</span>
           </div>
         )}
 
@@ -131,11 +131,11 @@ export function TopBar({ currentProject }: TopBarProps) {
           variant="outline"
           size="sm"
           onClick={toggleCommandPalette}
-          className="h-7 text-xs border-hairline rounded-md px-2 gap-1.5 text-ash hover:text-ink dark:hover:text-paper font-sans"
+          className="h-7 text-xs border-hairline rounded-[6px] px-2 gap-1.5 text-ash hover:text-ink font-sans font-normal"
         >
           <Command className="w-3 h-3" />
           <span className="hidden sm:inline">Search</span>
-          <kbd className="hidden sm:inline-block ml-1 px-1 py-0.2 rounded border border-hairline bg-wash dark:bg-muted text-[10px]">
+          <kbd className="hidden sm:inline-block ml-1 px-1 py-0.2 rounded-[4px] border border-hairline bg-bone text-[10px] font-mono">
             ⌘K
           </kbd>
         </Button>
@@ -144,9 +144,9 @@ export function TopBar({ currentProject }: TopBarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              <Avatar className="w-7 h-7 border border-hairline">
-                <AvatarFallback className="bg-wash text-ink dark:text-paper text-[11px] font-sans">
+            <button className="flex items-center rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+              <Avatar className="w-7 h-7 border border-hairline rounded-[6px]">
+                <AvatarFallback className="bg-bone text-ink text-[11px] font-mono font-normal">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -154,24 +154,24 @@ export function TopBar({ currentProject }: TopBarProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-48 rounded-xl border border-hairline bg-paper dark:bg-card"
+            className="w-48 rounded-xl border border-hairline bg-paper"
           >
             <div className="px-2 py-1.5">
-              <p className="text-xs font-medium text-ink dark:text-paper truncate">
+              <p className="text-xs font-normal text-ink truncate">
                 {user?.name || "Developer"}
               </p>
-              <p className="text-[11px] text-ash truncate">{user?.email}</p>
+              <p className="text-[11px] text-ash truncate font-normal">{user?.email}</p>
             </div>
             <DropdownMenuSeparator className="bg-hairline" />
             <DropdownMenuItem
-              className="text-xs cursor-pointer text-ink dark:text-paper"
+              className="text-xs cursor-pointer text-ink font-normal"
               onClick={() => navigate("/dashboard")}
             >
               <LayoutDashboard className="w-3.5 h-3.5 mr-2 text-ash" />
               Dashboard
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="text-xs cursor-pointer text-ink dark:text-paper"
+              className="text-xs cursor-pointer text-ink font-normal"
               onClick={() => navigate("/settings")}
             >
               <Settings className="w-3.5 h-3.5 mr-2 text-ash" />
@@ -179,10 +179,10 @@ export function TopBar({ currentProject }: TopBarProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-hairline" />
             <DropdownMenuItem
-              className="text-xs cursor-pointer text-destructive focus:text-destructive"
+              className="text-xs cursor-pointer text-ink hover:text-ink focus:bg-bone font-normal"
               onClick={() => logout()}
             >
-              <LogOut className="w-3.5 h-3.5 mr-2" />
+              <LogOut className="w-3.5 h-3.5 mr-2 text-ash" />
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>

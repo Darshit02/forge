@@ -32,19 +32,19 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper dark:bg-card p-6 shadow-none">
+    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper p-6 shadow-none">
       <div className="mb-6">
-        <h1 className="text-2xl font-normal tracking-tight text-ink dark:text-paper">
+        <h1 className="text-2xl font-normal tracking-tight text-ink">
           Create your Forge account
         </h1>
-        <p className="mt-1 text-sm text-ash font-sans">
+        <p className="mt-1 text-xs text-ash font-normal">
           Deploy backends with AI. Test endpoints instantly.
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-xs uppercase tracking-[0.018em] text-ash">
+          <Label htmlFor="name" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
             Full Name
           </Label>
           <Input
@@ -54,12 +54,12 @@ export function RegisterForm() {
             {...register("name")}
           />
           {errors.name && (
-            <p className="text-xs text-destructive">{errors.name.message}</p>
+            <p className="text-xs text-ash font-normal">{errors.name.message}</p>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash">
+          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
             Email
           </Label>
           <Input
@@ -70,14 +70,14 @@ export function RegisterForm() {
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-xs text-destructive">{errors.email.message}</p>
+            <p className="text-xs text-ash font-normal">{errors.email.message}</p>
           )}
         </div>
 
         <div className="space-y-1.5">
           <Label
             htmlFor="password"
-            className="text-xs uppercase tracking-[0.018em] text-ash"
+            className="text-xs uppercase tracking-[0.018em] text-ash font-normal"
           >
             Password
           </Label>
@@ -89,14 +89,14 @@ export function RegisterForm() {
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-xs text-destructive">{errors.password.message}</p>
+            <p className="text-xs text-ash font-normal">{errors.password.message}</p>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isRegistering}
-          className="w-full h-11 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+          className="w-full h-10 rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
         >
           {isRegistering ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -105,11 +105,11 @@ export function RegisterForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-ash">
+      <p className="mt-6 text-center text-xs text-ash font-normal">
         Already have an account?{" "}
         <Link
           to="/login"
-          className="text-ink dark:text-paper underline underline-offset-4 hover:opacity-80"
+          className="text-ink underline underline-offset-4 hover:opacity-80"
         >
           Sign in
         </Link>

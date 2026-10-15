@@ -156,12 +156,12 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
       {/* Header and Env Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h3 className="text-base font-normal text-ink dark:text-paper">
+          <h3 className="text-base font-normal text-ink">
             Environment Variables
           </h3>
-          <p className="text-xs text-ash mt-0.5">
+          <p className="text-xs text-ash mt-0.5 font-normal">
             Variables are substituted into your HTTP request builder and runner as{" "}
-            <code className="text-ink dark:text-paper bg-bone dark:bg-muted px-1 py-0.5 rounded font-mono">
+            <code className="text-ink bg-bone px-1 py-0.5 rounded-[4px] font-mono">
               {"{{VAR_NAME}}"}
             </code>
           </p>
@@ -172,27 +172,27 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-md border-hairline text-xs font-mono gap-1.5 h-8"
+              className="rounded-[6px] border-hairline text-xs font-mono gap-1.5 h-8 font-normal"
             >
               <Plus className="w-3.5 h-3.5" />
               New Environment
             </Button>
           </DialogTrigger>
-          <DialogContent className="rounded-2xl border border-hairline bg-paper dark:bg-card max-w-sm p-5 shadow-none">
+          <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-sm p-5 shadow-none">
             <DialogHeader>
-              <DialogTitle className="text-base font-normal text-ink dark:text-paper">
+              <DialogTitle className="text-base font-normal text-ink">
                 Create Environment
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-2 pt-2">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 Environment Name
               </Label>
               <Input
                 placeholder="e.g. Staging, Production, Local"
                 value={newEnvName}
                 onChange={(e) => setNewEnvName(e.target.value)}
-                className="rounded-lg border-hairline text-xs"
+                className="rounded-[10px] border-hairline text-xs font-normal"
               />
             </div>
             <DialogFooter className="mt-4 pt-3 border-t border-hairline">
@@ -200,7 +200,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setNewEnvDialogOpen(false)}
-                className="text-xs"
+                className="text-xs rounded-[6px] font-normal"
               >
                 Cancel
               </Button>
@@ -208,7 +208,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                 size="sm"
                 onClick={handleCreateNew}
                 disabled={!newEnvName.trim() || isCreating}
-                className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+                className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
               >
                 Create
               </Button>
@@ -219,14 +219,14 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
 
       {/* Environment Selector Tabs */}
       {environments.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-hairline p-8 text-center bg-paper dark:bg-card">
-          <p className="text-xs text-ash">
+        <div className="rounded-2xl border border-dashed border-hairline p-8 text-center bg-paper">
+          <p className="text-xs text-ash font-normal">
             No environments created yet for this project.
           </p>
           <Button
             size="sm"
             onClick={() => setNewEnvDialogOpen(true)}
-            className="mt-3 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-medium"
+            className="mt-3 rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
           >
             Create Default Environment
           </Button>
@@ -239,10 +239,10 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
               return (
                 <div
                   key={env.id}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] border text-xs font-mono transition-colors font-normal ${
                     isSelected
-                      ? "border-ink bg-bone dark:border-paper dark:bg-muted text-ink dark:text-paper"
-                      : "border-hairline bg-paper dark:bg-card text-ash hover:border-smoke"
+                      ? "border-ink bg-bone text-ink"
+                      : "border-hairline bg-paper text-ash hover:border-smoke"
                   }`}
                 >
                   <button
@@ -252,7 +252,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                   >
                     <span>{env.name}</span>
                     {env.isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                     )}
                   </button>
 
@@ -261,7 +261,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                       type="button"
                       onClick={() => handleSetActive(env)}
                       title="Set as Active"
-                      className="text-[10px] uppercase font-mono px-1 py-0.2 rounded bg-paper dark:bg-card hover:bg-ink hover:text-paper border border-hairline ml-1"
+                      className="text-[10px] uppercase font-mono px-1 py-0.2 rounded-[4px] bg-paper hover:bg-ink hover:text-paper border border-hairline ml-1 font-normal"
                     >
                       Activate
                     </button>
@@ -283,14 +283,14 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
 
           {/* Active Env Editor Card */}
           {activeEnv && (
-            <div className="rounded-2xl border border-hairline bg-paper dark:bg-card p-5 space-y-4">
+            <div className="rounded-2xl border border-hairline bg-paper p-5 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-ink dark:text-paper font-mono">
+                  <span className="text-xs font-normal text-ink font-mono">
                     {activeEnv.name}
                   </span>
                   {activeEnv.isActive ? (
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[6px] bg-primary text-ink font-normal">
                       Active Environment
                     </span>
                   ) : (
@@ -298,7 +298,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleSetActive(activeEnv)}
-                      className="text-[11px] h-6 px-2 text-ash hover:text-ink"
+                      className="text-[11px] h-6 px-2 text-ash hover:text-ink rounded-[6px] font-normal"
                     >
                       Set as active
                     </Button>
@@ -311,7 +311,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setRawTextMode(!rawTextMode)}
-                    className="text-xs text-ash hover:text-ink h-7 gap-1"
+                    className="text-xs text-ash hover:text-ink h-7 gap-1 rounded-[6px] font-normal"
                   >
                     {rawTextMode ? (
                       <>
@@ -329,7 +329,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     size="sm"
                     onClick={handleSave}
                     disabled={isUpdating}
-                    className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-xs h-7 px-3 gap-1.5"
+                    className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs h-7 px-3 gap-1.5 font-normal"
                   >
                     {isUpdating ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -343,7 +343,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
 
               {rawTextMode ? (
                 <div className="space-y-1">
-                  <Label className="text-xs text-ash">
+                  <Label className="text-xs text-ash font-normal">
                     Paste raw .env key=value pairs (one per line):
                   </Label>
                   <textarea
@@ -351,12 +351,12 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     onChange={(e) => handleRawTextChange(e.target.value)}
                     rows={8}
                     placeholder="API_URL=http://localhost:3000&#10;TOKEN=ey..."
-                    className="w-full rounded-xl border border-hairline bg-bone/30 dark:bg-muted/20 p-3 font-mono text-xs text-ink dark:text-paper focus:outline-none focus:ring-1 focus:ring-ink"
+                    className="w-full rounded-[10px] border border-hairline bg-bone/30 p-3 font-mono text-xs text-ink focus:outline-none focus:ring-1 focus:ring-primary font-normal"
                   />
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <div className="grid grid-cols-12 gap-2 text-[11px] uppercase tracking-[0.018em] text-ash font-mono px-1">
+                  <div className="grid grid-cols-12 gap-2 text-[10px] uppercase tracking-[0.018em] text-ash font-mono px-1 font-normal">
                     <div className="col-span-5">Variable Key</div>
                     <div className="col-span-6">Value</div>
                     <div className="col-span-1 text-center"></div>
@@ -371,7 +371,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           onChange={(e) =>
                             handleUpdateRow(idx, "key", e.target.value)
                           }
-                          className="h-8 text-xs font-mono rounded-lg border-hairline"
+                          className="h-8 text-xs font-mono rounded-[10px] border-hairline font-normal"
                         />
                       </div>
                       <div className="col-span-6">
@@ -381,7 +381,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           onChange={(e) =>
                             handleUpdateRow(idx, "value", e.target.value)
                           }
-                          className="h-8 text-xs font-mono rounded-lg border-hairline"
+                          className="h-8 text-xs font-mono rounded-[10px] border-hairline font-normal"
                         />
                       </div>
                       <div className="col-span-1 flex justify-center">
@@ -390,7 +390,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleRemoveRow(idx)}
-                          className="h-7 w-7 text-ash hover:text-red-600 rounded-md"
+                          className="h-7 w-7 text-ash hover:text-red-600 rounded-[6px]"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -403,7 +403,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={handleAddRow}
-                    className="text-xs text-ash hover:text-ink gap-1.5 h-8 mt-2"
+                    className="text-xs text-ash hover:text-ink gap-1.5 h-8 mt-2 rounded-[6px] font-normal"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Variable

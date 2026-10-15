@@ -115,19 +115,19 @@ export function FrameworkPicker({
             className={cn(
               "flex flex-col p-3 rounded-xl border cursor-pointer transition-all text-left select-none font-sans",
               isSelected
-                ? "border-primary bg-bone dark:bg-muted ring-1 ring-primary"
-                : "border-hairline bg-paper dark:bg-card hover:bg-wash dark:hover:bg-muted/30"
+                ? "border-primary bg-bone ring-1 ring-primary"
+                : "border-hairline bg-paper hover:bg-bone"
             )}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-ink dark:text-paper">
+              <span className="text-xs font-normal text-ink">
                 {fw.name}
               </span>
-              <span className="text-[10px] text-ash font-mono">
+              <span className="text-[10px] text-ash font-mono uppercase tracking-[0.018em]">
                 {fw.openapiSupport}
               </span>
             </div>
-            <span className="text-[11px] text-ash line-clamp-2">
+            <span className="text-[11px] text-ash line-clamp-2 font-normal">
               {fw.description}
             </span>
           </div>

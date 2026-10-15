@@ -32,10 +32,10 @@ export function MessageBubble({
     return (
       <div className="flex justify-end my-3">
         <div className="flex gap-2 max-w-[85%]">
-          <div className="rounded-2xl rounded-tr-xs bg-wash dark:bg-muted/60 border border-hairline px-3.5 py-2.5 text-xs text-ink dark:text-paper font-sans">
+          <div className="rounded-2xl rounded-tr-xs bg-bone border border-hairline px-3.5 py-2.5 text-xs text-ink font-sans font-normal">
             <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
           </div>
-          <div className="w-6 h-6 rounded-full bg-paper dark:bg-card border border-hairline flex items-center justify-center shrink-0 text-ash mt-1">
+          <div className="w-6 h-6 rounded-[6px] bg-paper border border-hairline flex items-center justify-center shrink-0 text-ash mt-1">
             <User className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -46,7 +46,7 @@ export function MessageBubble({
   return (
     <div className="flex justify-start my-3">
       <div className="flex gap-2.5 max-w-[95%]">
-        <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center shrink-0 text-primary-foreground font-bold text-xs mt-0.5">
+        <div className="w-6 h-6 rounded-[6px] bg-primary flex items-center justify-center shrink-0 text-ink font-normal text-xs mt-0.5">
           <Bot className="w-3.5 h-3.5 text-ink" />
         </div>
 
@@ -65,7 +65,7 @@ export function MessageBubble({
           )}
 
           {/* Markdown Content */}
-          <div className="prose prose-sm dark:prose-invert max-w-none text-xs font-sans text-ink dark:text-paper leading-relaxed">
+          <div className="prose prose-sm max-w-none text-xs font-sans text-ink leading-relaxed font-normal">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -76,7 +76,7 @@ export function MessageBubble({
                   if (isInline) {
                     return (
                       <code
-                        className="px-1.5 py-0.5 rounded bg-wash dark:bg-muted font-mono text-[11px] text-ink dark:text-paper"
+                        className="px-1.5 py-0.5 rounded-[4px] bg-bone font-mono text-[11px] text-ink font-normal"
                         {...props}
                       >
                         {children}
@@ -88,16 +88,16 @@ export function MessageBubble({
                   const blockId = Math.random().toString(36).slice(2, 7);
 
                   return (
-                    <div className="relative my-2 rounded-xl border border-hairline bg-paper dark:bg-card overflow-hidden">
-                      <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-wash dark:bg-muted/40 text-[10px] uppercase font-mono text-ash">
+                    <div className="relative my-2 rounded-xl border border-hairline bg-paper overflow-hidden">
+                      <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-bone text-[10px] uppercase font-mono tracking-[0.018em] text-ash">
                         <span>{match ? match[1] : "code"}</span>
                         <button
                           onClick={() => copyToClipboard(codeText, blockId)}
-                          className="flex items-center gap-1 hover:text-ink dark:hover:text-paper transition-colors"
+                          className="flex items-center gap-1 hover:text-ink transition-colors font-mono text-[10px]"
                         >
                           {copiedCodeId === blockId ? (
                             <>
-                              <Check className="w-3 h-3 text-emerald-500" />
+                              <Check className="w-3 h-3 text-ink" />
                               <span>Copied</span>
                             </>
                           ) : (
@@ -108,7 +108,7 @@ export function MessageBubble({
                           )}
                         </button>
                       </div>
-                      <pre className="p-3 font-mono text-[11px] overflow-x-auto text-ink dark:text-paper m-0">
+                      <pre className="p-3 font-mono text-[11px] overflow-x-auto text-ink m-0 bg-paper">
                         <code>{children}</code>
                       </pre>
                     </div>

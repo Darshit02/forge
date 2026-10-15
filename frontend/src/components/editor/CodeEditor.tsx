@@ -89,14 +89,14 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
 
   if (!currentFile) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-paper dark:bg-card select-none">
-        <div className="w-12 h-12 rounded-2xl border border-hairline bg-bone dark:bg-muted/40 flex items-center justify-center mb-4 text-ash">
+      <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-paper select-none">
+        <div className="w-12 h-12 rounded-2xl border border-hairline bg-bone flex items-center justify-center mb-4 text-ash">
           <Code2 className="w-6 h-6" />
         </div>
-        <h3 className="text-base font-normal text-ink dark:text-paper">
+        <h3 className="text-base font-normal text-ink">
           No file is currently open
         </h3>
-        <p className="mt-1 text-sm text-ash max-w-sm">
+        <p className="mt-1 text-sm text-ash max-w-sm font-normal">
           Select a file from the explorer on the left or prompt the AI pair
           programmer to generate endpoints.
         </p>
@@ -105,10 +105,10 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-paper dark:bg-card">
+    <div className="flex flex-col h-full bg-paper">
       {/* Editor Sub-Header / Breadcrumb */}
-      <div className="h-7 px-3 border-b border-hairline bg-paper dark:bg-card flex items-center justify-between text-[11px] text-ash select-none shrink-0 font-mono">
-        <div className="flex items-center gap-1.5 truncate">
+      <div className="h-7 px-3 border-b border-hairline bg-paper flex items-center justify-between text-[11px] text-ash select-none shrink-0 font-mono">
+        <div className="flex items-center gap-1.5 truncate font-normal">
           <FileCode className="w-3.5 h-3.5 text-ash" />
           <span className="truncate">{currentFile.path}</span>
         </div>
@@ -116,15 +116,15 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
           {currentFile.dirty ? (
             <button
               onClick={() => handleSave(currentFile.path, currentFile.content)}
-              className="flex items-center gap-1 text-[11px] text-primary-foreground bg-primary px-1.5 py-0.2 rounded hover:opacity-90 font-sans"
+              className="flex items-center gap-1 text-[11px] text-ink bg-primary px-2 py-0.5 rounded-[6px] hover:opacity-90 font-sans font-normal"
             >
               <Save className="w-3 h-3" />
               Save
             </button>
           ) : (
-            <span className="text-[10px] text-ash">Saved</span>
+            <span className="text-[10px] text-ash font-normal">Saved</span>
           )}
-          <span className="uppercase text-[10px]">{currentFile.language}</span>
+          <span className="uppercase text-[10px] tracking-[0.018em] font-normal">{currentFile.language}</span>
         </div>
       </div>
 
@@ -135,7 +135,7 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
           path={currentFile.path}
           language={currentFile.language}
           value={currentFile.content}
-          theme={theme === "dark" ? "vs-dark" : "light"}
+          theme="light"
           onChange={(value) => {
             if (value !== undefined) {
               updateContent(currentFile.path, value);

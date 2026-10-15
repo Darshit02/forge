@@ -39,12 +39,12 @@ export function SessionList({ projectId }: SessionListProps) {
   const sessions = sessionsQuery.data || [];
 
   return (
-    <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-hairline bg-wash dark:bg-muted/30 overflow-x-auto no-scrollbar shrink-0 select-none">
+    <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-hairline bg-bone overflow-x-auto no-scrollbar shrink-0 select-none">
       <Button
         size="xs"
         variant="ghost"
         onClick={handleNewSession}
-        className="rounded-md border border-hairline bg-paper dark:bg-card text-ink dark:text-paper shrink-0 gap-1"
+        className="rounded-[6px] border border-hairline bg-paper text-ink shrink-0 gap-1 font-normal"
       >
         <Plus className="w-3 h-3 text-ash" />
         <span>New</span>
@@ -57,10 +57,10 @@ export function SessionList({ projectId }: SessionListProps) {
             key={session.id}
             onClick={() => handleSelectSession(session.id)}
             className={cn(
-              "flex items-center gap-1.5 h-6 px-2.5 rounded-md text-[11px] truncate max-w-[130px] transition-colors shrink-0 font-sans",
+              "flex items-center gap-1.5 h-6 px-2.5 rounded-[6px] text-[11px] truncate max-w-[130px] transition-colors shrink-0 font-sans font-normal",
               isActive
-                ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
-                : "text-ash hover:text-ink dark:hover:text-paper hover:bg-paper/50"
+                ? "bg-paper text-ink border border-hairline"
+                : "text-ash hover:text-ink hover:bg-paper/50"
             )}
           >
             <MessageSquare className="w-3 h-3 text-ash shrink-0" />

@@ -36,9 +36,8 @@ export function HistoryList({ history }: HistoryListProps) {
   }
 
   const getStatusColor = (status: number) => {
-    if (status >= 200 && status < 300) return "text-emerald-600 dark:text-emerald-400";
-    if (status >= 400 && status < 500) return "text-amber-600 dark:text-amber-400";
-    return "text-destructive";
+    if (status >= 200 && status < 300) return "text-ink font-mono font-normal";
+    return "text-destructive font-mono font-normal";
   };
 
   return (
@@ -47,21 +46,21 @@ export function HistoryList({ history }: HistoryListProps) {
         <div
           key={item.id}
           onClick={() => handleSelect(item)}
-          className="flex items-center justify-between p-2 rounded-md hover:bg-wash dark:hover:bg-muted/40 cursor-pointer text-xs font-sans border border-hairline/60"
+          className="flex items-center justify-between p-2 rounded-[6px] hover:bg-bone cursor-pointer text-xs font-sans border border-hairline font-normal"
         >
           <div className="flex items-center gap-2 truncate">
-            <span className="font-mono font-bold text-[10px] w-8">
+            <span className="font-mono font-normal text-[10px] w-8 text-ink uppercase">
               {item.method}
             </span>
-            <span className="font-mono truncate">{item.path}</span>
+            <span className="font-mono truncate font-normal">{item.path}</span>
           </div>
 
           <div className="flex items-center gap-3 shrink-0 font-mono text-[10px]">
             <span className={getStatusColor(item.statusCode)}>
               {item.statusCode}
             </span>
-            <span className="text-ash">{formatDuration(item.durationMs)}</span>
-            <span className="text-ash font-sans">
+            <span className="text-ash font-normal">{formatDuration(item.durationMs)}</span>
+            <span className="text-ash font-sans font-normal">
               {formatDistanceToNow(new Date(item.ranAt), { addSuffix: true })}
             </span>
           </div>

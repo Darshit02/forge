@@ -12,7 +12,7 @@ export function ProjectPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen w-screen bg-bone dark:bg-background flex items-center justify-center">
+      <div className="h-screen w-screen bg-bone flex items-center justify-center">
         <LoadingSpinner label="Loading workspace..." />
       </div>
     );
@@ -20,22 +20,22 @@ export function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="h-screen w-screen bg-bone dark:bg-background flex items-center justify-center p-6">
-        <div className="max-w-md w-full rounded-2xl border border-hairline bg-paper dark:bg-card p-8 text-center space-y-4">
-          <div className="w-10 h-10 rounded-full bg-red-50 dark:bg-red-950/30 text-red-600 mx-auto flex items-center justify-center">
+      <div className="h-screen w-screen bg-bone flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-hairline bg-paper p-8 text-center space-y-4">
+          <div className="w-10 h-10 rounded-[6px] bg-bone text-destructive mx-auto flex items-center justify-center border border-hairline">
             <AlertCircle className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-normal text-ink dark:text-paper">
+            <h2 className="text-lg font-normal text-ink">
               Workspace Not Found
             </h2>
-            <p className="text-xs text-ash mt-1">
+            <p className="text-xs text-ash mt-1 font-normal">
               The project you requested does not exist or you do not have permission to access it.
             </p>
           </div>
           <Button
             asChild
-            className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+            className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
           >
             <Link to="/dashboard" className="gap-2">
               <ArrowLeft className="w-3.5 h-3.5" />

@@ -175,10 +175,10 @@ export function FileTree({ projectId }: FileTreeProps) {
             onClick={() => handleOpenFile(node)}
             style={{ paddingLeft: `${depth * 12 + 8}px` }}
             className={cn(
-              "group flex items-center justify-between h-7 pr-2 cursor-pointer rounded-md transition-colors select-none",
+              "group flex items-center justify-between h-7 pr-2 cursor-pointer rounded-[6px] transition-colors select-none font-normal",
               isActive
-                ? "bg-bone dark:bg-muted text-ink dark:text-paper font-medium"
-                : "text-ash hover:bg-wash dark:hover:bg-muted/40 hover:text-ink dark:hover:text-paper"
+                ? "bg-bone text-ink"
+                : "text-ash hover:bg-bone hover:text-ink"
             )}
           >
             <div className="flex items-center gap-1.5 truncate">
@@ -207,13 +207,13 @@ export function FileTree({ projectId }: FileTreeProps) {
             {/* Quick Actions Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                <button className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-hairline text-ash">
+                <button className="opacity-0 group-hover:opacity-100 p-0.5 rounded-[4px] hover:bg-hairline text-ash">
                   <MoreVertical className="w-3 h-3" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-32 rounded-xl border border-hairline bg-paper dark:bg-card text-xs font-sans"
+                className="w-32 rounded-xl border border-hairline bg-paper text-xs font-sans"
               >
                 {isDir && (
                   <>
@@ -263,10 +263,10 @@ export function FileTree({ projectId }: FileTreeProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-paper dark:bg-card border-r border-hairline select-none">
+    <div className="flex flex-col h-full bg-paper border-r border-hairline select-none">
       {/* File Tree Header */}
       <div className="flex items-center justify-between px-3 h-9 border-b border-hairline shrink-0">
-        <span className="text-[10px] uppercase tracking-[0.018em] font-medium text-ash">
+        <span className="text-[10px] uppercase tracking-[0.018em] font-normal text-ash">
           Explorer
         </span>
         <div className="flex items-center gap-1">
@@ -277,7 +277,7 @@ export function FileTree({ projectId }: FileTreeProps) {
             onClick={() =>
               setCreateModal({ open: true, type: "file", parentPath: "" })
             }
-            className="text-ash hover:text-ink dark:hover:text-paper rounded-[4px]"
+            className="text-ash hover:text-ink rounded-[4px]"
           >
             <FilePlus className="w-3.5 h-3.5" />
           </Button>
@@ -289,7 +289,7 @@ export function FileTree({ projectId }: FileTreeProps) {
             onClick={() =>
               setCreateModal({ open: true, type: "folder", parentPath: "" })
             }
-            className="text-ash hover:text-ink dark:hover:text-paper rounded-[4px]"
+            className="text-ash hover:text-ink rounded-[4px]"
           >
             <FolderPlus className="w-3.5 h-3.5" />
           </Button>
@@ -299,7 +299,7 @@ export function FileTree({ projectId }: FileTreeProps) {
             variant="ghost"
             title="Upload Zip or File"
             onClick={() => fileInputRef.current?.click()}
-            className="text-ash hover:text-ink dark:hover:text-paper rounded-[4px]"
+            className="text-ash hover:text-ink rounded-[4px]"
           >
             <Upload className="w-3.5 h-3.5" />
           </Button>
@@ -315,11 +315,11 @@ export function FileTree({ projectId }: FileTreeProps) {
       {/* File Tree List */}
       <div className="flex-1 overflow-y-auto p-1.5 no-scrollbar">
         {filesQuery.isLoading ? (
-          <div className="p-3 text-xs text-ash">Loading files...</div>
+          <div className="p-3 text-xs text-ash font-normal">Loading files...</div>
         ) : filesQuery.data && filesQuery.data.length > 0 ? (
           renderTree(filesQuery.data)
         ) : (
-          <div className="p-4 text-center text-xs text-ash">
+          <div className="p-4 text-left text-xs text-ash font-normal">
             No files in workspace yet. Ask AI to create some!
           </div>
         )}
@@ -332,15 +332,15 @@ export function FileTree({ projectId }: FileTreeProps) {
           setCreateModal((prev) => ({ ...prev, open }))
         }
       >
-        <DialogContent className="rounded-2xl border border-hairline bg-paper dark:bg-card max-w-sm">
+        <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-base font-normal text-ink dark:text-paper">
+            <DialogTitle className="text-base font-normal text-ink">
               Create New {createModal.type === "file" ? "File" : "Folder"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-2 py-2">
-            <Label className="text-xs text-ash">
+            <Label className="text-xs text-ash font-normal">
               {createModal.parentPath
                 ? `Inside: ${createModal.parentPath}/`
                 : "Inside workspace root"}
@@ -374,7 +374,7 @@ export function FileTree({ projectId }: FileTreeProps) {
               onClick={() =>
                 setCreateModal({ open: false, type: "file", parentPath: "" })
               }
-              className="rounded-md border-hairline"
+              className="rounded-[6px] border-hairline font-normal"
             >
               Cancel
             </Button>
@@ -390,7 +390,7 @@ export function FileTree({ projectId }: FileTreeProps) {
                   type: createModal.type,
                 });
               }}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
             >
               Create
             </Button>

@@ -119,22 +119,22 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
         {trigger || (
           <Button
             variant="outline"
-            className="rounded-md border-hairline hover:bg-bone dark:hover:bg-muted font-medium gap-1.5"
+            className="rounded-[6px] border-hairline hover:bg-bone font-normal gap-1.5 text-xs"
           >
-            <DownloadCloud className="w-4 h-4" />
+            <DownloadCloud className="w-4 h-4 text-ash" />
             Import Project
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper dark:bg-card max-w-lg p-6 shadow-none">
+      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-lg p-6 shadow-none">
         <DialogHeader>
           <div className="flex items-center justify-between text-xs text-ash mb-1">
-            <span className="uppercase tracking-[0.018em]">Import Workspace</span>
+            <span className="uppercase tracking-[0.018em] font-mono">Import Workspace</span>
           </div>
-          <DialogTitle className="text-xl font-normal text-ink dark:text-paper">
+          <DialogTitle className="text-xl font-normal text-ink">
             Import Backend Project
           </DialogTitle>
-          <DialogDescription className="text-sm text-ash font-normal">
+          <DialogDescription className="text-xs text-ash font-normal">
             Clone an existing git repository or jumpstart from a pre-configured architecture.
           </DialogDescription>
         </DialogHeader>
@@ -144,45 +144,45 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
           onValueChange={(val) => setImportMode(val as "git" | "template")}
           className="mt-2"
         >
-          <TabsList className="grid grid-cols-2 bg-bone dark:bg-muted rounded-lg p-1 border border-hairline">
+          <TabsList className="grid grid-cols-2 bg-bone rounded-[6px] p-1 border border-hairline">
             <TabsTrigger
               value="git"
-              className="gap-2 rounded-md data-[state=active]:bg-paper dark:data-[state=active]:bg-card data-[state=active]:shadow-none text-xs"
+              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
             >
-              <GitBranch className="w-3.5 h-3.5" />
+              <GitBranch className="w-3.5 h-3.5 text-ash" />
               Git Repository
             </TabsTrigger>
             <TabsTrigger
               value="template"
-              className="gap-2 rounded-md data-[state=active]:bg-paper dark:data-[state=active]:bg-card data-[state=active]:shadow-none text-xs"
+              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
             >
-              <Box className="w-3.5 h-3.5" />
+              <Box className="w-3.5 h-3.5 text-ash" />
               Starter Template
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="git" className="space-y-4 pt-3">
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 Git Repository URL
               </Label>
               <Input
                 placeholder="https://github.com/owner/repository.git"
                 value={gitUrl}
                 onChange={(e) => handleGitUrlChange(e.target.value)}
-                className="rounded-lg border-hairline focus-visible:ring-1 focus-visible:ring-ink"
+                className="rounded-[10px] border-hairline"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+                <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                   Language
                 </Label>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as ProjectLanguage)}
-                  className="w-full h-10 px-3 rounded-lg border border-hairline bg-paper dark:bg-card text-xs text-ink dark:text-paper focus:outline-none focus:ring-1 focus:ring-ink"
+                  className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="python">Python</option>
                   <option value="node">Node.js (JS)</option>
@@ -193,13 +193,13 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+                <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                   Framework
                 </Label>
                 <select
                   value={framework}
                   onChange={(e) => setFramework(e.target.value as ProjectFramework)}
-                  className="w-full h-10 px-3 rounded-lg border border-hairline bg-paper dark:bg-card text-xs text-ink dark:text-paper focus:outline-none focus:ring-1 focus:ring-ink"
+                  className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="fastapi">FastAPI</option>
                   <option value="flask">Flask</option>
@@ -218,7 +218,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
 
           <TabsContent value="template" className="space-y-4 pt-3">
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 Choose Starter Architecture
               </Label>
               <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
@@ -229,21 +229,21 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                       key={tmpl.id}
                       type="button"
                       onClick={() => handleTemplateSelect(tmpl)}
-                      className={`text-left p-2.5 rounded-lg border transition-all ${
+                      className={`text-left p-3 rounded-xl border transition-colors ${
                         isSelected
-                          ? "border-ink bg-bone dark:border-paper dark:bg-muted"
-                          : "border-hairline bg-paper dark:bg-card hover:border-smoke"
+                          ? "border-ink bg-bone text-ink"
+                          : "border-hairline bg-paper hover:border-smoke text-ink"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-ink dark:text-paper capitalize">
+                        <span className="text-xs font-normal text-ink capitalize">
                           {tmpl.name}
                         </span>
-                        <span className="text-[10px] uppercase font-mono px-1 py-0.5 rounded bg-bone dark:bg-muted text-ash">
+                        <span className="text-[10px] uppercase font-mono px-1 py-0.5 rounded-[4px] bg-bone text-ash border border-hairline">
                           {tmpl.language}
                         </span>
                       </div>
-                      <p className="text-[11px] text-ash mt-1 line-clamp-2">
+                      <p className="text-[11px] text-ash mt-1 line-clamp-2 font-normal leading-relaxed">
                         {tmpl.description}
                       </p>
                     </button>
@@ -257,25 +257,25 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
         {/* Common Project Metadata */}
         <div className="space-y-3 pt-2 border-t border-hairline">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+            <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
               Project Name
             </Label>
             <Input
               placeholder="e.g. billing-service"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="rounded-lg border-hairline focus-visible:ring-1 focus-visible:ring-ink"
+              className="rounded-[10px] border-hairline"
             />
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+            <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
               AI Provider (Optional)
             </Label>
             <select
               value={aiProviderId}
               onChange={(e) => setAiProviderId(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-hairline bg-paper dark:bg-card text-xs text-ink dark:text-paper focus:outline-none focus:ring-1 focus:ring-ink"
+              className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               <option value="">Default AI Provider</option>
               {providers.map((p) => (
@@ -292,7 +292,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
             type="button"
             variant="ghost"
             onClick={() => setOpen(false)}
-            className="rounded-md text-xs text-ash hover:text-ink"
+            className="rounded-[6px] text-xs text-ash hover:text-ink font-normal"
           >
             Cancel
           </Button>
@@ -300,7 +300,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
             type="button"
             onClick={handleSubmit}
             disabled={!name.trim() || (importMode === "git" && !gitUrl.trim()) || isCreating}
-            className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-xs px-4"
+            className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
           >
             {isCreating ? (
               <Loader2 className="w-4 h-4 animate-spin mr-1.5" />

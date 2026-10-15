@@ -13,7 +13,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-bone dark:bg-background">
+      <div className="flex h-screen w-screen items-center justify-center bg-bone">
         <LoadingSpinner size={24} label="Authenticating Forge session..." />
       </div>
     );

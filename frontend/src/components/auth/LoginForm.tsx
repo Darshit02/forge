@@ -32,19 +32,19 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper dark:bg-card p-6 shadow-none">
+    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper p-6 shadow-none">
       <div className="mb-6">
-        <h1 className="text-2xl font-normal tracking-tight text-ink dark:text-paper">
+        <h1 className="text-2xl font-normal tracking-tight text-ink">
           Sign in to Forge
         </h1>
-        <p className="mt-1 text-sm text-ash font-sans">
+        <p className="mt-1 text-xs text-ash font-normal">
           Access your AI pair programming workspace
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash">
+          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
             Email
           </Label>
           <Input
@@ -55,14 +55,14 @@ export function LoginForm() {
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-xs text-destructive">{errors.email.message}</p>
+            <p className="text-xs text-ash font-normal">{errors.email.message}</p>
           )}
         </div>
 
         <div className="space-y-1.5">
           <Label
             htmlFor="password"
-            className="text-xs uppercase tracking-[0.018em] text-ash"
+            className="text-xs uppercase tracking-[0.018em] text-ash font-normal"
           >
             Password
           </Label>
@@ -74,14 +74,14 @@ export function LoginForm() {
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-xs text-destructive">{errors.password.message}</p>
+            <p className="text-xs text-ash font-normal">{errors.password.message}</p>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isLoggingIn}
-          className="w-full h-11 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+          className="w-full h-10 rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
         >
           {isLoggingIn ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -95,7 +95,7 @@ export function LoginForm() {
           <span className="w-full border-t border-hairline" />
         </div>
         <div className="relative flex justify-center text-[10px] uppercase tracking-[0.018em]">
-          <span className="bg-paper dark:bg-card px-2 text-ash">or</span>
+          <span className="bg-paper px-2 text-ash font-mono">or</span>
         </div>
       </div>
 
@@ -106,23 +106,23 @@ export function LoginForm() {
               type="button"
               variant="outline"
               disabled
-              className="w-full h-11 rounded-md border-hairline opacity-60 cursor-not-allowed text-ink dark:text-paper"
+              className="w-full h-10 rounded-[6px] border-hairline opacity-60 cursor-not-allowed text-ink text-xs font-normal"
             >
-              <Github className="w-4 h-4 mr-2" />
+              <Github className="w-4 h-4 mr-2 text-ash" />
               Continue with GitHub (v2)
             </Button>
           </TooltipTrigger>
-          <TooltipContent className="rounded-md border-hairline bg-obsidian text-paper text-xs">
+          <TooltipContent className="rounded-xl border border-hairline bg-ink text-paper text-xs">
             GitHub OAuth coming in v2
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
 
-      <p className="mt-6 text-center text-xs text-ash">
+      <p className="mt-6 text-center text-xs text-ash font-normal">
         Don&apos;t have an account?{" "}
         <Link
           to="/register"
-          className="text-ink dark:text-paper underline underline-offset-4 hover:opacity-80"
+          className="text-ink underline underline-offset-4 hover:opacity-80"
         >
           Sign up
         </Link>

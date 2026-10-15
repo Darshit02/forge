@@ -28,7 +28,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
       <StatusBadge status={status} port={hostPort} />
 
       <TooltipProvider delayDuration={300}>
-        <div className="flex items-center gap-1 border border-hairline rounded-md p-0.5 bg-paper dark:bg-card">
+        <div className="flex items-center gap-1 border border-hairline rounded-[6px] p-0.5 bg-paper">
           {!isRunning ? (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -36,7 +36,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                   size="icon-xs"
                   disabled={isBusy}
                   onClick={() => start()}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-[4px]"
+                  className="bg-primary text-ink hover:bg-primary/90 rounded-[4px]"
                 >
                   {isStarting ? (
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -45,7 +45,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="text-xs bg-obsidian text-paper">
+              <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
                 Start Container
               </TooltipContent>
             </Tooltip>
@@ -57,7 +57,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                   variant="ghost"
                   disabled={isBusy}
                   onClick={() => stop()}
-                  className="hover:bg-destructive/10 hover:text-destructive rounded-[4px]"
+                  className="hover:bg-bone hover:text-destructive rounded-[4px]"
                 >
                   {isStopping ? (
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -66,7 +66,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="text-xs bg-obsidian text-paper">
+              <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
                 Stop Container
               </TooltipContent>
             </Tooltip>
@@ -79,7 +79,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                 variant="ghost"
                 disabled={isBusy || !isRunning}
                 onClick={() => restart()}
-                className="hover:bg-wash dark:hover:bg-muted text-ash hover:text-ink dark:hover:text-paper rounded-[4px]"
+                className="hover:bg-bone text-ash hover:text-ink rounded-[4px]"
               >
                 {isRestarting ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -88,7 +88,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                 )}
               </Button>
             </TooltipTrigger>
-            <TooltipContent className="text-xs bg-obsidian text-paper">
+            <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
               Restart Container
             </TooltipContent>
           </Tooltip>

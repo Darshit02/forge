@@ -105,21 +105,21 @@ export function ChatInput({
   const providers = providersQuery.data || [];
 
   return (
-    <div className="p-3 border-t border-hairline bg-paper dark:bg-card">
+    <div className="p-3 border-t border-hairline bg-paper">
       {/* Controls Strip: Mode Toggle + Model Picker + File Context */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           {/* Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-md border border-hairline bg-wash dark:bg-muted/50 text-[11px] font-sans">
+          <div className="flex items-center p-0.5 rounded-[6px] border border-hairline bg-bone text-[11px] font-sans">
             {(["edit", "chat", "agent"] as ChatMode[]).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setChatMode(mode)}
                 className={cn(
-                  "px-2 py-0.5 rounded capitalize transition-colors",
+                  "px-2 py-0.5 rounded-[4px] capitalize transition-colors font-normal",
                   chatMode === mode
-                    ? "bg-paper dark:bg-card text-ink dark:text-paper font-medium border border-hairline"
-                    : "text-ash hover:text-ink dark:hover:text-paper"
+                    ? "bg-paper text-ink font-normal border border-hairline"
+                    : "text-ash hover:text-ink"
                 )}
               >
                 {mode}
@@ -130,7 +130,7 @@ export function ChatInput({
           {/* Model Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 px-2 py-1 rounded-md border border-hairline text-[11px] text-ink dark:text-paper hover:bg-wash dark:hover:bg-muted font-sans">
+              <button className="flex items-center gap-1 px-2 py-1 rounded-[6px] border border-hairline text-[11px] text-ink hover:bg-bone font-sans font-normal">
                 <Sparkles className="w-3 h-3 text-primary" />
                 <span className="truncate max-w-[100px]">{selectedModel}</span>
                 <ChevronDown className="w-3 h-3 text-ash" />
@@ -138,24 +138,24 @@ export function ChatInput({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="rounded-xl border border-hairline bg-paper dark:bg-card text-xs font-sans w-48"
+              className="rounded-xl border border-hairline bg-paper text-xs font-sans w-48"
             >
               {providers.length > 0 ? (
                 providers.map((p) => (
                   <DropdownMenuItem
                     key={p.id}
-                    className="cursor-pointer text-xs"
+                    className="cursor-pointer text-xs font-normal"
                     onClick={() => {
                       setSelectedProviderId(p.id);
                       setSelectedModel(p.modelDefault);
                     }}
                   >
-                    <span className="font-medium mr-1.5">{p.label}:</span>
+                    <span className="font-normal mr-1.5">{p.label}:</span>
                     <span className="text-ash truncate">{p.modelDefault}</span>
                   </DropdownMenuItem>
                 ))
               ) : (
-                <div className="p-2 text-xs text-ash">
+                <div className="p-2 text-xs text-ash font-normal">
                   No BYOK providers added. (Go to Settings)
                 </div>
               )}
@@ -170,16 +170,16 @@ export function ChatInput({
               size="icon-xs"
               variant="ghost"
               title="Attach File Context"
-              className="rounded-md border border-hairline text-ash hover:text-ink dark:hover:text-paper"
+              className="rounded-[6px] border border-hairline text-ash hover:text-ink"
             >
               <Paperclip className="w-3 h-3" />
             </Button>
           </PopoverTrigger>
           <PopoverContent
             align="end"
-            className="w-56 p-1.5 rounded-xl border border-hairline bg-paper dark:bg-card text-xs font-sans"
+            className="w-56 p-1.5 rounded-xl border border-hairline bg-paper text-xs font-sans"
           >
-            <div className="px-2 py-1 text-[10px] uppercase tracking-[0.018em] text-ash">
+            <div className="px-2 py-1 text-[10px] uppercase tracking-[0.018em] text-ash font-mono font-normal">
               Attach File to Prompt
             </div>
             <div className="max-h-48 overflow-y-auto no-scrollbar space-y-0.5">
@@ -188,14 +188,14 @@ export function ChatInput({
                   <button
                     key={node.path}
                     onClick={() => handleAttachFile(node.path)}
-                    className="w-full text-left px-2 py-1 rounded hover:bg-wash dark:hover:bg-muted text-xs truncate flex items-center gap-1.5 text-ink dark:text-paper"
+                    className="w-full text-left px-2 py-1 rounded-[4px] hover:bg-bone text-xs truncate flex items-center gap-1.5 text-ink font-normal"
                   >
                     <FileCode className="w-3 h-3 text-ash shrink-0" />
                     <span className="truncate">{node.path}</span>
                   </button>
                 ))
               ) : (
-                <div className="p-2 text-xs text-ash">No files found</div>
+                <div className="p-2 text-xs text-ash font-normal">No files found</div>
               )}
             </div>
           </PopoverContent>
@@ -203,7 +203,7 @@ export function ChatInput({
       </div>
 
       {/* Input Textarea & Send / Cancel Button */}
-      <div className="relative rounded-[10px] border border-hairline bg-paper dark:bg-card focus-within:border-primary transition-colors p-2">
+      <div className="relative rounded-[10px] border border-hairline bg-paper focus-within:border-primary transition-colors p-2">
         <textarea
           ref={textareaRef}
           rows={2}
@@ -211,11 +211,11 @@ export function ChatInput({
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Describe backend features, endpoints, or ask for refactors (⌘+Enter)..."
-          className="w-full resize-none border-0 bg-transparent text-xs text-ink dark:text-paper placeholder:text-ash outline-none font-sans"
+          className="w-full resize-none border-0 bg-transparent text-xs text-ink placeholder:text-ash outline-none font-sans font-normal"
         />
 
         <div className="flex items-center justify-between pt-1">
-          <span className="text-[10px] text-ash font-sans">
+          <span className="text-[10px] text-ash font-sans font-normal">
             ⌘+Enter to send
           </span>
 
@@ -224,7 +224,7 @@ export function ChatInput({
               size="xs"
               variant="outline"
               onClick={onCancel}
-              className="rounded-md border-hairline text-destructive hover:bg-destructive/10"
+              className="rounded-[6px] border-hairline text-destructive hover:bg-bone font-normal"
             >
               <StopCircle className="w-3.5 h-3.5 mr-1" />
               Stop
@@ -234,7 +234,7 @@ export function ChatInput({
               size="xs"
               disabled={!text.trim()}
               onClick={handleSend}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-2.5"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal px-2.5"
             >
               <Send className="w-3 h-3 mr-1" />
               Send

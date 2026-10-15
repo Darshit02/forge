@@ -157,19 +157,19 @@ export function ProviderForm({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-xs gap-1.5">
+          <Button className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs gap-1.5">
             <Plus className="w-3.5 h-3.5" />
             Add AI Provider (BYOK)
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper dark:bg-card max-w-md p-6 shadow-none">
+      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-md p-6 shadow-none">
         <DialogHeader>
-          <div className="flex items-center gap-1.5 text-xs text-ash uppercase tracking-[0.018em] mb-1">
-            <KeyRound className="w-3.5 h-3.5 text-ink dark:text-paper" />
+          <div className="flex items-center gap-1.5 text-xs text-ash uppercase tracking-[0.018em] mb-1 font-mono font-normal">
+            <KeyRound className="w-3.5 h-3.5 text-ink" />
             <span>Bring Your Own Key</span>
           </div>
-          <DialogTitle className="text-xl font-normal text-ink dark:text-paper">
+          <DialogTitle className="text-xl font-normal text-ink">
             {isEditing ? "Edit AI Provider" : "Register AI Provider"}
           </DialogTitle>
           <DialogDescription className="text-xs text-ash font-normal">
@@ -180,7 +180,7 @@ export function ProviderForm({
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           {!isEditing && (
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 Provider Type
               </Label>
               <select
@@ -188,7 +188,7 @@ export function ProviderForm({
                 onChange={(e) =>
                   handleProviderChange(e.target.value as AIProviderType)
                 }
-                className="w-full h-10 px-3 rounded-lg border border-hairline bg-paper dark:bg-card text-xs text-ink dark:text-paper focus:outline-none focus:ring-1 focus:ring-ink"
+                className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-paper text-xs text-ink focus:outline-none focus:ring-1 focus:ring-primary font-normal"
               >
                 <option value="openai">OpenAI (GPT-4o, o1, etc.)</option>
                 <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
@@ -201,7 +201,7 @@ export function ProviderForm({
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+            <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
               Friendly Label
             </Label>
             <Input
@@ -209,17 +209,17 @@ export function ProviderForm({
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. My Anthropic Key"
               required
-              className="rounded-lg border-hairline text-xs"
+              className="rounded-[10px] border-hairline text-xs font-normal"
             />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 API Key
               </Label>
               {isEditing && (
-                <span className="text-[11px] text-ash">
+                <span className="text-[11px] text-ash font-normal">
                   Leave blank to keep existing key
                 </span>
               )}
@@ -231,7 +231,7 @@ export function ProviderForm({
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={isEditing ? initialProvider?.maskedKey || "••••••••" : "sk-..."}
                 required={!isEditing}
-                className="rounded-lg border-hairline text-xs pr-9 font-mono"
+                className="rounded-[10px] border-hairline text-xs pr-9 font-mono font-normal"
               />
               <button
                 type="button"
@@ -249,7 +249,7 @@ export function ProviderForm({
 
           {(provider === "custom" || baseUrl) && (
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                 Custom Base URL {provider === "custom" ? "*" : "(Optional)"}
               </Label>
               <Input
@@ -259,13 +259,13 @@ export function ProviderForm({
                   PROVIDER_PRESETS[provider].placeholderUrl || "https://..."
                 }
                 required={provider === "custom"}
-                className="rounded-lg border-hairline text-xs font-mono"
+                className="rounded-[10px] border-hairline text-xs font-mono font-normal"
               />
             </div>
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+            <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
               Default Model
             </Label>
             <Input
@@ -273,7 +273,7 @@ export function ProviderForm({
               onChange={(e) => setModelDefault(e.target.value)}
               placeholder="e.g. gpt-4o, claude-3-5-sonnet-20241022"
               required
-              className="rounded-lg border-hairline text-xs font-mono"
+              className="rounded-[10px] border-hairline text-xs font-mono font-normal"
             />
           </div>
 
@@ -282,14 +282,14 @@ export function ProviderForm({
               type="button"
               variant="ghost"
               onClick={() => setOpen(false)}
-              className="text-xs text-ash hover:text-ink"
+              className="text-xs text-ash hover:text-ink rounded-[6px] font-normal"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isPending || (!isEditing && !apiKey.trim())}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-xs px-4"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
             >
               {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />}
               {isEditing ? "Update Provider" : "Save Key"}

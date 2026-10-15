@@ -76,30 +76,30 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium gap-1.5">
+          <Button className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal gap-1.5 text-xs">
             <Plus className="w-4 h-4" />
             New Project
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper dark:bg-card max-w-lg p-6 shadow-none">
+      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-lg p-6 shadow-none">
         <DialogHeader>
           <div className="flex items-center justify-between text-xs text-ash mb-1">
             <span>Step {step} of 4</span>
-            <span className="uppercase tracking-[0.018em]">
+            <span className="uppercase tracking-[0.018em] font-mono">
               {step === 1 && "Project Details"}
               {step === 2 && "Language"}
               {step === 3 && "Framework"}
               {step === 4 && "AI Provider"}
             </span>
           </div>
-          <DialogTitle className="text-xl font-normal text-ink dark:text-paper">
+          <DialogTitle className="text-xl font-normal text-ink">
             {step === 1 && "Name your backend project"}
             {step === 2 && "Choose backend language"}
             {step === 3 && "Select web framework"}
             {step === 4 && "Assign AI Provider (BYOK)"}
           </DialogTitle>
-          <DialogDescription className="text-xs text-ash font-sans">
+          <DialogDescription className="text-xs text-ash font-normal">
             {step === 1 && "Enter a project name and optional summary description."}
             {step === 2 && "Forge will configure runtime environment and compilers."}
             {step === 3 && "Starter templates include OpenAPI routes and hot-reloading."}
@@ -112,7 +112,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
           {step === 1 && (
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="proj-name" className="text-xs uppercase tracking-[0.018em] text-ash">
+                <Label htmlFor="proj-name" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                   Project Name *
                 </Label>
                 <Input
@@ -125,7 +125,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="proj-desc" className="text-xs uppercase tracking-[0.018em] text-ash">
+                <Label htmlFor="proj-desc" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                   Description
                 </Label>
                 <Input
@@ -154,13 +154,13 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
           {step === 4 && (
             <div className="space-y-3 font-sans">
               <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-[0.018em] text-ash">
+                <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
                   Default AI Key
                 </Label>
                 <select
                   value={aiProviderId}
                   onChange={(e) => setAiProviderId(e.target.value)}
-                  className="w-full h-10 rounded-[10px] border border-hairline bg-transparent px-3 text-xs text-ink dark:text-paper"
+                  className="w-full h-10 rounded-[10px] border border-hairline bg-transparent px-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="">Default (First available or system)</option>
                   {providers.map((p) => (
@@ -172,36 +172,36 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               </div>
 
               {/* Summary Review Card */}
-              <div className="p-3.5 rounded-xl border border-hairline bg-bone dark:bg-muted/40 space-y-1 text-xs">
+              <div className="p-4 rounded-xl border border-hairline bg-bone space-y-1.5 text-xs font-normal">
                 <div className="flex justify-between">
                   <span className="text-ash">Project:</span>
-                  <span className="font-medium text-ink dark:text-paper">{name}</span>
+                  <span className="text-ink font-normal">{name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ash">Language / Framework:</span>
-                  <span className="font-medium text-ink dark:text-paper capitalize">
+                  <span className="text-ink font-normal capitalize">
                     {language} ({framework})
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ash">Port Range:</span>
-                  <span className="font-mono text-ash">127.0.0.1:8001-9000</span>
+                  <span className="font-mono text-ash font-normal">127.0.0.1:8001-9000</span>
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        <DialogFooter className="flex items-center justify-between sm:justify-between pt-2">
+        <DialogFooter className="flex items-center justify-between sm:justify-between pt-3 border-t border-hairline">
           {step > 1 ? (
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => setStep(step - 1)}
-              className="rounded-md border-hairline"
+              className="rounded-[6px] border-hairline text-xs font-normal"
             >
-              <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+              <ArrowLeft className="w-3.5 h-3.5 mr-1 text-ash" />
               Back
             </Button>
           ) : (
@@ -214,7 +214,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               size="sm"
               disabled={step === 1 && !name.trim()}
               onClick={() => setStep(step + 1)}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
             >
               Next
               <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -225,7 +225,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               size="sm"
               disabled={isCreating}
               onClick={handleSubmit}
-              className="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
             >
               {isCreating ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />

@@ -9,6 +9,7 @@
     "baseColor": "neutral",
     "cssVariables": true
   },
+  "radius": "0.375rem",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",

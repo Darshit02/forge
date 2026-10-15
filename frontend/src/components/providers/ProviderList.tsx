@@ -77,10 +77,10 @@ export function ProviderList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-normal text-ink dark:text-paper">
+          <h3 className="text-base font-normal text-ink">
             Registered AI Providers
           </h3>
-          <p className="text-xs text-ash mt-0.5">
+          <p className="text-xs text-ash mt-0.5 font-normal">
             Keys are encrypted at rest with AES-256-GCM. Used for agentic code generation in your workspaces.
           </p>
         </div>
@@ -92,9 +92,9 @@ export function ProviderList() {
           return (
             <div
               key={p.id}
-              className={`rounded-2xl border p-5 bg-paper dark:bg-card transition-all ${
+              className={`rounded-2xl border p-5 bg-paper transition-colors ${
                 p.isDefault
-                  ? "border-ink/40 dark:border-paper/40 ring-1 ring-ink/10 dark:ring-paper/10"
+                  ? "border-ink ring-1 ring-ink/20"
                   : "border-hairline hover:border-smoke"
               }`}
             >
@@ -102,35 +102,35 @@ export function ProviderList() {
                 {/* Provider Info */}
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs uppercase font-mono px-2 py-0.5 rounded bg-bone dark:bg-muted font-medium text-ink dark:text-paper border border-hairline">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[6px] bg-bone font-normal text-ink border border-hairline tracking-[0.018em]">
                       {p.provider}
                     </span>
-                    <span className="text-sm font-medium text-ink dark:text-paper">
+                    <span className="text-sm font-normal text-ink">
                       {p.label}
                     </span>
                     {p.isDefault && (
-                      <span className="flex items-center gap-1 text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-primary text-primary-foreground font-semibold">
+                      <span className="flex items-center gap-1 text-[10px] uppercase font-mono tracking-[0.018em] px-1.5 py-0.5 rounded-[4px] bg-primary text-ink font-normal">
                         <Star className="w-3 h-3 fill-current" />
                         Default
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-ash">
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-ash font-normal">
                     <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-ink" />
                       <span>{p.maskedKey}</span>
                     </div>
 
                     <div>
                       <span>Model: </span>
-                      <span className="text-ink dark:text-paper font-medium">
+                      <span className="text-ink font-normal">
                         {p.modelDefault}
                       </span>
                     </div>
 
                     {p.baseUrl && (
-                      <div className="text-[11px] text-ash truncate max-w-xs">
+                      <div className="text-[11px] text-ash truncate max-w-xs font-normal">
                         Endpoint: {p.baseUrl}
                       </div>
                     )}
@@ -148,7 +148,7 @@ export function ProviderList() {
                       size="sm"
                       onClick={() => setDefaultMutation.mutate(p.id)}
                       disabled={setDefaultMutation.isPending}
-                      className="text-xs h-8 text-ash hover:text-ink rounded-md"
+                      className="text-xs h-8 text-ash hover:text-ink rounded-[6px] font-normal"
                     >
                       Make Default
                     </Button>
@@ -161,7 +161,7 @@ export function ProviderList() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-ash hover:text-ink rounded-md"
+                        className="h-8 w-8 text-ash hover:text-ink rounded-[6px]"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </Button>
@@ -173,7 +173,7 @@ export function ProviderList() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setDeleteTarget(p)}
-                    className="h-8 w-8 text-ash hover:text-red-600 rounded-md"
+                    className="h-8 w-8 text-ash hover:text-red-600 rounded-[6px]"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>

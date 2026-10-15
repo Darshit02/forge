@@ -47,15 +47,15 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
 
   return (
     <>
-      <div className="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-paper dark:bg-card p-6 transition-all hover:border-ink/20 dark:hover:border-paper/30 hover:shadow-none">
+      <div className="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-paper p-6 transition-colors hover:border-ink/20">
         <div>
           {/* Header Row */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-mono px-2 py-0.5 rounded-md bg-bone dark:bg-muted text-ink dark:text-paper font-medium tracking-[0.018em] border border-hairline">
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[6px] bg-bone text-ink font-normal tracking-[0.018em] border border-hairline">
                 {project.framework}
               </span>
-              <span className="text-[11px] text-ash font-mono uppercase">
+              <span className="text-[10px] text-ash font-mono uppercase tracking-[0.018em]">
                 {project.language}
               </span>
             </div>
@@ -68,16 +68,16 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 text-ash hover:text-ink hover:bg-bone rounded-md"
+                    className="h-7 w-7 text-ash hover:text-ink hover:bg-bone rounded-[6px]"
                   >
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-44 rounded-xl border border-hairline bg-paper dark:bg-card">
+                <DropdownMenuContent align="end" className="w-44 rounded-xl border border-hairline bg-paper">
                   <DropdownMenuItem asChild>
                     <Link
                       to={`/project/${project.id}`}
-                      className="cursor-pointer gap-2 text-xs"
+                      className="cursor-pointer gap-2 text-xs font-normal"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       Open Workspace
@@ -86,7 +86,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                   <DropdownMenuSeparator className="bg-hairline" />
                   <DropdownMenuItem
                     onClick={() => setDeleteConfirmOpen(true)}
-                    className="cursor-pointer gap-2 text-xs text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/20"
+                    className="cursor-pointer gap-2 text-xs font-normal text-red-600 focus:text-red-600 focus:bg-bone"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Delete Project
@@ -100,11 +100,11 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
           <div className="mt-4">
             <Link
               to={`/project/${project.id}`}
-              className="text-lg font-normal text-ink dark:text-paper hover:underline decoration-1 underline-offset-4 line-clamp-1"
+              className="text-lg font-normal text-ink hover:underline decoration-1 underline-offset-4 line-clamp-1"
             >
               {project.name}
             </Link>
-            <p className="text-xs text-ash mt-1.5 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-ash mt-1.5 line-clamp-2 leading-relaxed font-normal">
               {project.description || "No description provided."}
             </p>
           </div>
@@ -114,16 +114,16 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-[11px] text-ash font-mono">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
-            <span>Updated {formattedDate}</span>
+            <span className="font-normal">Updated {formattedDate}</span>
           </div>
 
           {project.hostPort ? (
-            <div className="flex items-center gap-1 text-ink dark:text-paper">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <div className="flex items-center gap-1.5 text-ink font-normal">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span>:{project.hostPort}</span>
             </div>
           ) : (
-            <span className="text-ash/60">Container stopped</span>
+            <span className="text-ash/60 font-normal">Container stopped</span>
           )}
         </div>
       </div>

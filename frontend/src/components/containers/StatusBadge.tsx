@@ -12,36 +12,36 @@ export function StatusBadge({ status, port, className }: StatusBadgeProps) {
     switch (status) {
       case "running":
         return {
-          dotClass: "bg-emerald-500 animate-pulse",
-          textClass: "text-emerald-700 dark:text-emerald-400",
-          borderClass: "border-emerald-200 dark:border-emerald-900/50",
-          bgClass: "bg-emerald-50/50 dark:bg-emerald-950/20",
+          dotClass: "bg-primary",
+          textClass: "text-ink",
+          borderClass: "border-hairline",
+          bgClass: "bg-bone",
           label: port ? `Running :${port}` : "Running",
         };
       case "starting":
       case "building":
         return {
-          dotClass: "bg-amber-500 animate-pulse",
-          textClass: "text-amber-700 dark:text-amber-400",
-          borderClass: "border-amber-200 dark:border-amber-900/50",
-          bgClass: "bg-amber-50/50 dark:bg-amber-950/20",
+          dotClass: "bg-ink animate-pulse",
+          textClass: "text-ink",
+          borderClass: "border-hairline",
+          bgClass: "bg-bone",
           label: "Starting...",
         };
       case "error":
         return {
           dotClass: "bg-destructive",
           textClass: "text-destructive",
-          borderClass: "border-destructive/30",
-          bgClass: "bg-destructive/10",
+          borderClass: "border-hairline",
+          bgClass: "bg-bone",
           label: "Container Error",
         };
       case "stopped":
       default:
         return {
-          dotClass: "bg-ash",
+          dotClass: "bg-ash/50",
           textClass: "text-ash",
           borderClass: "border-hairline",
-          bgClass: "bg-wash dark:bg-muted/40",
+          bgClass: "bg-bone",
           label: "Stopped",
         };
     }
@@ -52,14 +52,14 @@ export function StatusBadge({ status, port, className }: StatusBadgeProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-sans tracking-wide",
+        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] border text-[10px] uppercase font-mono tracking-[0.018em] font-normal",
         badge.borderClass,
         badge.bgClass,
         badge.textClass,
         className
       )}
     >
-      <span className={cn("w-1.5 h-1.5 rounded-full", badge.dotClass)} />
+      <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", badge.dotClass)} />
       <span>{badge.label}</span>
     </div>
   );

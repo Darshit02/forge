@@ -29,16 +29,16 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[300px] p-6 text-center border border-hairline rounded-2xl bg-paper dark:bg-card">
+        <div className="flex flex-col items-center justify-center min-h-[300px] p-6 text-center border border-hairline rounded-2xl bg-paper">
           <AlertCircle className="w-10 h-10 text-destructive mb-3" />
-          <h2 className="text-lg font-normal text-ink dark:text-paper">
+          <h2 className="text-lg font-normal text-ink">
             {this.props.fallbackTitle || "Something went wrong"}
           </h2>
-          <p className="mt-1 text-sm text-ash max-w-md">
+          <p className="mt-1 text-sm text-ash max-w-md font-normal">
             {this.state.error?.message || "An unexpected error occurred in this view."}
           </p>
           <Button
-            className="mt-4"
+            className="mt-4 rounded-[6px] border-hairline text-ink font-normal"
             variant="outline"
             onClick={() => this.setState({ hasError: false, error: null })}
           >

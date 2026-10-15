@@ -40,7 +40,7 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
 
   if (environments.length === 0) {
     return (
-      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-md border border-hairline">
+      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-[6px] border border-hairline font-normal">
         <Layers className="w-3.5 h-3.5 text-ash" />
         <span>No Env</span>
       </div>
@@ -55,11 +55,11 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
           if (val !== "none") activateMutation.mutate(val);
         }}
       >
-        <SelectTrigger className="h-7 text-xs border-hairline rounded-md bg-paper dark:bg-card px-2 gap-1.5 text-ink dark:text-paper font-sans">
+        <SelectTrigger className="h-7 text-xs border-hairline rounded-[6px] bg-paper px-2 gap-1.5 text-ink font-sans font-normal">
           <Layers className="w-3.5 h-3.5 text-ash" />
           <SelectValue placeholder="Select Env" />
         </SelectTrigger>
-        <SelectContent className="rounded-xl border border-hairline bg-paper dark:bg-card">
+        <SelectContent className="rounded-xl border border-hairline bg-paper">
           {environments.map((env) => (
             <SelectItem key={env.id} value={env.id} className="text-xs font-sans">
               {env.name}

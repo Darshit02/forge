@@ -66,14 +66,14 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
   };
 
   return (
-    <div className="my-2 border border-hairline rounded-xl bg-wash dark:bg-muted/40 overflow-hidden text-xs font-sans">
+    <div className="my-2 border border-hairline rounded-xl bg-bone overflow-hidden text-xs font-sans">
       <div
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-hairline/40 transition-colors"
+        className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-hairline/30 transition-colors"
       >
         <div className="flex items-center gap-2 truncate">
           {meta.icon}
-          <span className="font-mono text-ink dark:text-paper font-medium truncate">
+          <span className="font-mono text-ink font-normal truncate">
             {meta.label}
           </span>
         </div>
@@ -88,7 +88,7 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
                 e.stopPropagation();
                 handleOpenInEditor();
               }}
-              className="text-ash hover:text-ink dark:hover:text-paper"
+              className="text-ash hover:text-ink rounded-[4px]"
             >
               <ExternalLink className="w-3 h-3" />
             </Button>
@@ -107,8 +107,8 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
       </div>
 
       {expanded && content && (
-        <div className="border-t border-hairline p-2 bg-paper dark:bg-card">
-          <pre className="p-2 rounded bg-bone dark:bg-muted/60 font-mono text-[11px] overflow-x-auto max-h-48 text-ink dark:text-paper">
+        <div className="border-t border-hairline p-2 bg-paper">
+          <pre className="p-2 rounded-[6px] bg-bone font-mono text-[11px] overflow-x-auto max-h-48 text-ink font-normal">
             {content}
           </pre>
         </div>

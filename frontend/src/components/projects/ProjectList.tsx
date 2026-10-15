@@ -69,7 +69,7 @@ export function ProjectList({
             placeholder="Search projects by name, language, or framework..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 rounded-xl border-hairline bg-paper dark:bg-card text-xs focus-visible:ring-1 focus-visible:ring-ink"
+            className="pl-9 pr-4 rounded-[10px] border-hairline bg-paper text-xs text-ink focus-visible:ring-1 focus-visible:ring-primary font-normal"
           />
         </div>
 
@@ -78,10 +78,10 @@ export function ProjectList({
           <button
             type="button"
             onClick={() => setFilterLang("all")}
-            className={`px-3 py-1 rounded-md text-xs font-mono transition-colors ${
+            className={`px-3 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
               filterLang === "all"
-                ? "bg-ink text-paper dark:bg-paper dark:text-ink font-medium"
-                : "bg-paper dark:bg-card text-ash border border-hairline hover:text-ink hover:border-smoke"
+                ? "bg-ink text-paper"
+                : "bg-paper text-ash border border-hairline hover:text-ink hover:border-smoke"
             }`}
           >
             All ({projects.length})
@@ -91,10 +91,10 @@ export function ProjectList({
               key={lang}
               type="button"
               onClick={() => setFilterLang(lang)}
-              className={`px-3 py-1 rounded-md text-xs font-mono uppercase transition-colors ${
+              className={`px-3 py-1 rounded-[6px] text-xs font-mono uppercase tracking-[0.018em] transition-colors font-normal ${
                 filterLang === lang
-                  ? "bg-ink text-paper dark:bg-paper dark:text-ink font-medium"
-                  : "bg-paper dark:bg-card text-ash border border-hairline hover:text-ink hover:border-smoke"
+                  ? "bg-ink text-paper"
+                  : "bg-paper text-ash border border-hairline hover:text-ink hover:border-smoke"
               }`}
             >
               {lang}
@@ -105,15 +105,15 @@ export function ProjectList({
 
       {/* Grid of Projects */}
       {filteredProjects.length === 0 ? (
-        <div className="rounded-2xl border border-hairline bg-paper dark:bg-card p-12 text-center">
-          <p className="text-sm text-ash">No projects match your search query "{search}".</p>
+        <div className="rounded-2xl border border-hairline bg-paper p-12 text-left">
+          <p className="text-sm text-ash font-normal">No projects match your search query "{search}".</p>
           <Button
             variant="ghost"
             onClick={() => {
               setSearch("");
               setFilterLang("all");
             }}
-            className="mt-3 text-xs text-ink dark:text-paper"
+            className="mt-3 text-xs text-ink rounded-[6px]"
           >
             Clear Filters
           </Button>
