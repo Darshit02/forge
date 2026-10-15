@@ -47,7 +47,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
 
   return (
     <>
-      <div className="group relative flex flex-col justify-between rounded-2xl  bg-paper p-6 transition-colors hover:border-ink/20">
+      <div className="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-paper p-6 transition-colors hover:border-ink/20">
         <div>
           {/* Header Row */}
           <div className="flex items-start justify-between gap-3">
@@ -73,7 +73,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-44 rounded-xl  bg-paper">
+                <DropdownMenuContent align="end" className="w-44 rounded-xl border border-hairline bg-paper">
                   <DropdownMenuItem asChild>
                     <Link
                       to={`/project/${project.id}`}

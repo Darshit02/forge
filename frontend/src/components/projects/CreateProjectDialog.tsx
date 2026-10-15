@@ -82,7 +82,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl  bg-paper max-w-lg p-6 shadow-none">
+      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-lg p-6 shadow-none">
         <DialogHeader>
           <div className="flex items-center justify-between text-xs text-ash mb-1">
             <span>Step {step} of 4</span>
@@ -160,7 +160,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                 <select
                   value={aiProviderId}
                   onChange={(e) => setAiProviderId(e.target.value)}
-                  className="w-full h-10 rounded-[10px]  bg-transparent px-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="w-full h-10 rounded-[10px] border border-hairline bg-transparent px-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="">Default (First available or system)</option>
                   {providers.map((p) => (
@@ -172,7 +172,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               </div>
 
               {/* Summary Review Card */}
-              <div className="p-4 rounded-xl  bg-bone space-y-1.5 text-xs font-normal">
+              <div className="p-4 rounded-xl border border-hairline bg-bone space-y-1.5 text-xs font-normal">
                 <div className="flex justify-between">
                   <span className="text-ash">Project:</span>
                   <span className="text-ink font-normal">{name}</span>

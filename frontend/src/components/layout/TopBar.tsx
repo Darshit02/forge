@@ -151,7 +151,7 @@ export function TopBar({ currentProject }: TopBarProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-48 rounded-xl  bg-paper"
+            className="w-48 rounded-xl border border-hairline bg-paper"
           >
             <div className="px-2 py-1.5">
               <p className="text-xs font-normal text-ink truncate">
