@@ -49,11 +49,7 @@ export function ProjectList({
         icon={<FolderGit2 className="w-8 h-8" />}
         title="No backend projects yet"
         description="Create your first AI-native backend project or import an existing codebase to begin testing and generating endpoints."
-        action={
-          <div className="flex items-center gap-2">
-            <CreateProjectDialog />
-            <ImportProjectDialog />
-          </div>
+        action={""
         }
       />
     );
@@ -69,7 +65,7 @@ export function ProjectList({
             placeholder="Search projects by name, language, or framework..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 rounded-[10px] border-hairline bg-paper text-xs text-ink focus-visible:ring-1 focus-visible:ring-primary font-normal"
+            className="pl-9 pr-4 rounded-[10px] bg-paper text-xs text-ink focus-visible:ring-1 focus-visible:ring-primary font-normal"
           />
         </div>
 
@@ -78,10 +74,10 @@ export function ProjectList({
           <button
             type="button"
             onClick={() => setFilterLang("all")}
-            className={`px-3 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+            className={`px-3 py-1 rounded-[6px] text-xs border transition-colors font-normal ${
               filterLang === "all"
-                ? "bg-ink text-paper"
-                : "bg-paper text-ash border border-hairline hover:text-ink hover:border-smoke"
+                ? "bg-ink text-paper border-ink"
+                : "bg-paper text-ash border-hairline hover:text-ink hover:border-smoke"
             }`}
           >
             All ({projects.length})
@@ -91,10 +87,10 @@ export function ProjectList({
               key={lang}
               type="button"
               onClick={() => setFilterLang(lang)}
-              className={`px-3 py-1 rounded-[6px] text-xs font-mono uppercase tracking-[0.018em] transition-colors font-normal ${
+              className={`px-3 py-1 rounded-[6px] text-xs border uppercase tracking-[0.018em] transition-colors font-normal ${
                 filterLang === lang
-                  ? "bg-ink text-paper"
-                  : "bg-paper text-ash border border-hairline hover:text-ink hover:border-smoke"
+                  ? "bg-ink text-paper border-ink"
+                  : "bg-paper text-ash border-hairline hover:text-ink hover:border-smoke"
               }`}
             >
               {lang}

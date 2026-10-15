@@ -32,56 +32,61 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper p-6 shadow-none">
-      <div className="mb-6">
-        <h1 className="text-2xl font-normal tracking-tight text-ink">
+    <div className="w-full max-w-[400px] rounded-2xl border border-hairline bg-paper p-8 shadow-none">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-normal tracking-tight text-ink">
           Sign in to Forge
         </h1>
-        <p className="mt-1 text-xs text-ash font-normal">
-          Access your AI pair programming workspace
+        <p className="mt-2 text-xs text-ash font-normal leading-relaxed">
+          Access your AI pair programming workspace and live container environments.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
-            Email
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-[10px] uppercase tracking-[0.05em] text-ash font-medium">
+            Email Address
           </Label>
           <Input
             id="email"
             type="email"
             placeholder="developer@forge.dev"
-            className="rounded-[10px] border-hairline bg-transparent"
+            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-xs text-ash font-normal">{errors.email.message}</p>
+            <p className="text-[10px] text-destructive font-normal">{errors.email.message}</p>
           )}
         </div>
 
-        <div className="space-y-1.5">
-          <Label
-            htmlFor="password"
-            className="text-xs uppercase tracking-[0.018em] text-ash font-normal"
-          >
-            Password
-          </Label>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label
+              htmlFor="password"
+              className="text-[10px] uppercase tracking-[0.05em] text-ash font-medium"
+            >
+              Password
+            </Label>
+            <Link to="#" className="text-[10px] text-ash hover:text-ink font-normal underline underline-offset-2">
+              Forgot?
+            </Link>
+          </div>
           <Input
             id="password"
             type="password"
             placeholder="••••••••"
-            className="rounded-[10px] border-hairline bg-transparent"
+            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-xs text-ash font-normal">{errors.password.message}</p>
+            <p className="text-[10px] text-destructive font-normal">{errors.password.message}</p>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isLoggingIn}
-          className="w-full h-10 rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
+          className="w-full h-11 rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-bold text-sm transition-all active:scale-[0.98]"
         >
           {isLoggingIn ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -90,12 +95,12 @@ export function LoginForm() {
         </Button>
       </form>
 
-      <div className="relative my-5">
+      <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-hairline" />
         </div>
-        <div className="relative flex justify-center text-[10px] uppercase tracking-[0.018em]">
-          <span className="bg-paper px-2 text-ash font-mono">or</span>
+        <div className="relative flex justify-center text-[10px] uppercase tracking-[0.05em]">
+          <span className="bg-paper px-4 text-ash/60">or continue with</span>
         </div>
       </div>
 
@@ -106,10 +111,10 @@ export function LoginForm() {
               type="button"
               variant="outline"
               disabled
-              className="w-full h-10 rounded-[6px] border-hairline opacity-60 cursor-not-allowed text-ink text-xs font-normal"
+              className="w-full h-11 rounded-[8px] border-hairline opacity-60 cursor-not-allowed text-ink text-sm font-normal gap-2"
             >
-              <Github className="w-4 h-4 mr-2 text-ash" />
-              Continue with GitHub (v2)
+              <Github className="w-4 h-4 text-ash" />
+              GitHub
             </Button>
           </TooltipTrigger>
           <TooltipContent className="rounded-xl border border-hairline bg-ink text-paper text-xs">
@@ -118,13 +123,13 @@ export function LoginForm() {
         </Tooltip>
       </TooltipProvider>
 
-      <p className="mt-6 text-center text-xs text-ash font-normal">
-        Don&apos;t have an account?{" "}
+      <p className="mt-8 text-center text-xs text-ash font-normal">
+        New to Forge?{" "}
         <Link
           to="/register"
-          className="text-ink underline underline-offset-4 hover:opacity-80"
+          className="text-ink font-medium underline underline-offset-4 hover:opacity-80"
         >
-          Sign up
+          Create an account
         </Link>
       </p>
     </div>

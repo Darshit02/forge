@@ -13,24 +13,14 @@ import {
 import { aiService } from "../services/ai.service.js";
 import { ConflictError, NotFoundError } from "../utils/errors.js";
 
+import {
+  CreateProviderRequestSchema,
+  UpdateProviderRequestSchema,
+} from "@forge/shared";
+
 export const providersRoutes = new Hono();
 
 providersRoutes.use("*", requireAuth);
-
-const createProviderSchema = z.object({
-  provider: z.enum(["openai", "anthropic", "google", "custom"]),
-  label: z.string().min(1).max(50),
-  apiKey: z.string().min(1, "API key is required"),
-  baseUrl: z.string().url().optional().nullable(),
-  modelDefault: z.string().min(1).optional(),
-});
-
-const updateProviderSchema = z.object({
-  label: z.string().min(1).max(50).optional(),
-  apiKey: z.string().min(1).optional(),
-  baseUrl: z.string().url().optional().nullable(),
-  modelDefault: z.string().min(1).optional(),
-});
 
 const DEFAULT_MODELS: Record<string, string> = {
   openai: "gpt-4o",
@@ -78,7 +68,7 @@ providersRoutes.get("/", async (c) => {
 /**
  * POST /api/providers - Add a new BYOK provider key
  */
-providersRoutes.post("/", zValidator("json", createProviderSchema), async (c) => {
+providersRoutes.post("/", zValidator("json", CreateProviderRequestSchema), async (c) => {
   const user = c.get("user");
   const body = c.req.valid("json");
 
@@ -147,9 +137,9 @@ providersRoutes.post("/", zValidator("json", createProviderSchema), async (c) =>
 /**
  * PATCH /api/providers/:id - Update provider configuration
  */
-providersRoutes.patch("/:id", zValidator("json", updateProviderSchema), async (c) => {
+providersRoutes.patch("/:id", zValidator("json", UpdateProviderRequestSchema), async (c) => {
   const user = c.get("user");
-  const providerId = c.req.param("id");
+  const providerId = c.req.param("id")!;
   const body = c.req.valid("json");
 
   const [existing] = await db
@@ -199,7 +189,7 @@ providersRoutes.patch("/:id", zValidator("json", updateProviderSchema), async (c
  */
 providersRoutes.delete("/:id", async (c) => {
   const user = c.get("user");
-  const providerId = c.req.param("id");
+  const providerId = c.req.param("id")!;
 
   const [deleted] = await db
     .delete(aiProviders)
@@ -223,7 +213,7 @@ providersRoutes.delete("/:id", async (c) => {
  */
 providersRoutes.post("/:id/test", async (c) => {
   const user = c.get("user");
-  const providerId = c.req.param("id");
+  const providerId = c.req.param("id")!;
 
   const [providerRecord] = await db
     .select()
@@ -256,7 +246,7 @@ providersRoutes.post("/:id/test", async (c) => {
  */
 providersRoutes.post("/:id/default", async (c) => {
   const user = c.get("user");
-  const providerId = c.req.param("id");
+  const providerId = c.req.param("id")!;
 
   // Verify ownership
   const [target] = await db

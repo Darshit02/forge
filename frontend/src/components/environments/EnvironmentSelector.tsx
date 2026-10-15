@@ -40,7 +40,7 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
 
   if (environments.length === 0) {
     return (
-      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-[6px] border border-hairline font-normal">
+      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-[6px]  font-normal">
         <Layers className="w-3.5 h-3.5 text-ash" />
         <span>No Env</span>
       </div>
@@ -59,7 +59,7 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
           <Layers className="w-3.5 h-3.5 text-ash" />
           <SelectValue placeholder="Select Env" />
         </SelectTrigger>
-        <SelectContent className="rounded-xl border border-hairline bg-paper">
+        <SelectContent className="rounded-xl  bg-paper">
           {environments.map((env) => (
             <SelectItem key={env.id} value={env.id} className="text-xs font-sans">
               {env.name}

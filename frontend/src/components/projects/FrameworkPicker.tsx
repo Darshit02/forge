@@ -123,7 +123,7 @@ export function FrameworkPicker({
               <span className="text-xs font-normal text-ink">
                 {fw.name}
               </span>
-              <span className="text-[10px] text-ash font-mono uppercase tracking-[0.018em]">
+              <span className="text-[10px] text-ash  uppercase tracking-[0.018em]">
                 {fw.openapiSupport}
               </span>
             </div>

@@ -66,14 +66,14 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
   };
 
   return (
-    <div className="my-2 border border-hairline rounded-xl bg-bone overflow-hidden text-xs font-sans">
+    <div className="my-2  rounded-xl bg-bone overflow-hidden text-xs font-sans">
       <div
         onClick={() => setExpanded(!expanded)}
         className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-hairline/30 transition-colors"
       >
         <div className="flex items-center gap-2 truncate">
           {meta.icon}
-          <span className="font-mono text-ink font-normal truncate">
+          <span className=" text-ink font-normal truncate">
             {meta.label}
           </span>
         </div>
@@ -108,7 +108,7 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
 
       {expanded && content && (
         <div className="border-t border-hairline p-2 bg-paper">
-          <pre className="p-2 rounded-[6px] bg-bone font-mono text-[11px] overflow-x-auto max-h-48 text-ink font-normal">
+          <pre className="p-2 rounded-[6px] bg-bone  text-[11px] overflow-x-auto max-h-48 text-ink font-normal">
             {content}
           </pre>
         </div>

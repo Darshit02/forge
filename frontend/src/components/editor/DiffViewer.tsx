@@ -23,9 +23,9 @@ export function DiffViewer({
   const theme = useUIStore((s) => s.theme);
 
   return (
-    <div className="flex flex-col h-full bg-paper border border-hairline rounded-xl overflow-hidden">
+    <div className="flex flex-col h-full bg-paper  rounded-xl overflow-hidden">
       <div className="h-9 px-3 border-b border-hairline bg-bone flex items-center justify-between text-xs select-none">
-        <span className="font-mono text-ink font-normal">
+        <span className=" text-ink font-normal">
           Diff: {filePath}
         </span>
         <div className="flex items-center gap-2">

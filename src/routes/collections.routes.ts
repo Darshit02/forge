@@ -7,43 +7,22 @@ import { db } from "../db/client.js";
 import { apiRequests, collections } from "../db/schema.js";
 import { NotFoundError } from "../utils/errors.js";
 
+import {
+  CreateCollectionRequestSchema,
+  UpdateCollectionRequestSchema,
+  CreateApiRequestRequestSchema,
+  UpdateApiRequestRequestSchema,
+} from "@forge/shared";
+
 export const collectionsRoutes = new Hono();
 
 collectionsRoutes.use("*", requireAuth);
-
-const createCollectionSchema = z.object({
-  name: z.string().min(1).max(100),
-  parentId: z.string().uuid().optional(),
-});
-
-const updateCollectionSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  orderIndex: z.number().int().optional(),
-});
-
-const createRequestSchema = z.object({
-  name: z.string().min(1).max(100),
-  method: z.string().min(1),
-  path: z.string().min(1),
-  headers: z.record(z.string()).optional(),
-  body: z.unknown().optional(),
-  authConfig: z.record(z.unknown()).optional(),
-});
-
-const updateRequestSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  method: z.string().min(1).optional(),
-  path: z.string().min(1).optional(),
-  headers: z.record(z.string()).optional(),
-  body: z.unknown().optional(),
-  authConfig: z.record(z.unknown()).optional(),
-});
 
 /**
  * GET /api/projects/:id/collections - List collections with their requests
  */
 collectionsRoutes.get("/projects/:id/collections", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const colls = await db
     .select()
@@ -72,9 +51,9 @@ collectionsRoutes.get("/projects/:id/collections", requireProjectOwner, async (c
 collectionsRoutes.post(
   "/projects/:id/collections",
   requireProjectOwner,
-  zValidator("json", createCollectionSchema),
+  zValidator("json", CreateCollectionRequestSchema),
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
     const { name, parentId } = c.req.valid("json");
 
     const [created] = await db
@@ -95,9 +74,9 @@ collectionsRoutes.post(
  */
 collectionsRoutes.patch(
   "/collections/:id",
-  zValidator("json", updateCollectionSchema),
+  zValidator("json", UpdateCollectionRequestSchema),
   async (c) => {
-    const collectionId = c.req.param("id");
+    const collectionId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     const [updated] = await db
@@ -121,7 +100,7 @@ collectionsRoutes.patch(
  * DELETE /api/collections/:id - Delete collection
  */
 collectionsRoutes.delete("/collections/:id", async (c) => {
-  const collectionId = c.req.param("id");
+  const collectionId = c.req.param("id")!;
 
   const [deleted] = await db
     .delete(collections)
@@ -140,9 +119,9 @@ collectionsRoutes.delete("/collections/:id", async (c) => {
  */
 collectionsRoutes.post(
   "/collections/:id/requests",
-  zValidator("json", createRequestSchema),
+  zValidator("json", CreateApiRequestRequestSchema),
   async (c) => {
-    const collectionId = c.req.param("id");
+    const collectionId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     const [collection] = await db
@@ -179,9 +158,9 @@ collectionsRoutes.post(
  */
 collectionsRoutes.patch(
   "/requests/:id",
-  zValidator("json", updateRequestSchema),
+  zValidator("json", UpdateApiRequestRequestSchema),
   async (c) => {
-    const requestId = c.req.param("id");
+    const requestId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     const [updated] = await db
@@ -211,7 +190,7 @@ collectionsRoutes.patch(
  * DELETE /api/requests/:id - Delete saved request
  */
 collectionsRoutes.delete("/requests/:id", async (c) => {
-  const requestId = c.req.param("id");
+  const requestId = c.req.param("id")!;
 
   const [deleted] = await db
     .delete(apiRequests)

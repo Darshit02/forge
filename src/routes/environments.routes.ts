@@ -7,21 +7,14 @@ import { db } from "../db/client.js";
 import { environments } from "../db/schema.js";
 import { NotFoundError } from "../utils/errors.js";
 
+import {
+  CreateEnvironmentRequestSchema,
+  UpdateEnvironmentRequestSchema,
+} from "@forge/shared";
+
 export const environmentsRoutes = new Hono();
 
 environmentsRoutes.use("*", requireAuth);
-
-const createEnvironmentSchema = z.object({
-  name: z.string().min(1).max(50),
-  variables: z.record(z.string()).default({}),
-  isActive: z.boolean().default(false),
-});
-
-const updateEnvironmentSchema = z.object({
-  name: z.string().min(1).max(50).optional(),
-  variables: z.record(z.string()).optional(),
-  isActive: z.boolean().optional(),
-});
 
 /**
  * GET /api/projects/:id/environments - List environments
@@ -30,7 +23,7 @@ environmentsRoutes.get(
   "/projects/:id/environments",
   requireProjectOwner,
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
 
     const envs = await db
       .select()
@@ -47,9 +40,9 @@ environmentsRoutes.get(
 environmentsRoutes.post(
   "/projects/:id/environments",
   requireProjectOwner,
-  zValidator("json", createEnvironmentSchema),
+  zValidator("json", CreateEnvironmentRequestSchema),
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     if (body.isActive) {
@@ -79,9 +72,9 @@ environmentsRoutes.post(
  */
 environmentsRoutes.patch(
   "/environments/:id",
-  zValidator("json", updateEnvironmentSchema),
+  zValidator("json", UpdateEnvironmentRequestSchema),
   async (c) => {
-    const envId = c.req.param("id");
+    const envId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     const [existing] = await db
@@ -119,7 +112,7 @@ environmentsRoutes.patch(
  * DELETE /api/environments/:id - Delete environment
  */
 environmentsRoutes.delete("/environments/:id", async (c) => {
-  const envId = c.req.param("id");
+  const envId = c.req.param("id")!;
 
   const [deleted] = await db
     .delete(environments)

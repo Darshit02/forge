@@ -213,7 +213,7 @@ export function FileTree({ projectId }: FileTreeProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-32 rounded-xl border border-hairline bg-paper text-xs font-sans"
+                className="w-32 rounded-xl  bg-paper text-xs font-sans"
               >
                 {isDir && (
                   <>
@@ -332,7 +332,7 @@ export function FileTree({ projectId }: FileTreeProps) {
           setCreateModal((prev) => ({ ...prev, open }))
         }
       >
-        <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-sm">
+        <DialogContent className="rounded-2xl  bg-paper max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-base font-normal text-ink">
               Create New {createModal.type === "file" ? "File" : "Folder"}

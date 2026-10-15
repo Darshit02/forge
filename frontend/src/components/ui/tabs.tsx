@@ -23,7 +23,7 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "inline-flex w-fit items-center justify-start rounded-[6px] border border-hairline bg-bone p-1 text-ash gap-1",
+  "inline-flex w-fit items-center justify-start rounded-[6px]  bg-bone p-1 text-ash gap-1",
   {
     variants: {
       variant: {

@@ -109,7 +109,7 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("chat")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
                       rightPanelTab === "chat"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
@@ -122,7 +122,7 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("tester")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
                       rightPanelTab === "tester"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
@@ -135,7 +135,7 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("console")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
                       rightPanelTab === "console"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"

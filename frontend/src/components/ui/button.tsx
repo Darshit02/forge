@@ -15,7 +15,7 @@ const buttonVariants = cva(
         outline:
           "border border-ink bg-transparent text-ink hover:bg-bone px-3",
         secondary:
-          "bg-bone text-ink hover:bg-smoke/30 border border-hairline",
+          "bg-bone text-ink hover:bg-smoke/30 ",
         ghost:
           "bg-transparent text-ink hover:bg-bone",
         link:

@@ -47,15 +47,15 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
 
   return (
     <>
-      <div className="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-paper p-6 transition-colors hover:border-ink/20">
+      <div className="group relative flex flex-col justify-between rounded-2xl  bg-paper p-6 transition-colors hover:border-ink/20">
         <div>
           {/* Header Row */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[6px] bg-bone text-ink font-normal tracking-[0.018em] border border-hairline">
+              <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[6px] bg-bone text-ink font-normal tracking-[0.018em] ">
                 {project.framework}
               </span>
-              <span className="text-[10px] text-ash font-mono uppercase tracking-[0.018em]">
+              <span className="text-[10px] text-ash  uppercase tracking-[0.018em]">
                 {project.language}
               </span>
             </div>
@@ -73,7 +73,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-44 rounded-xl border border-hairline bg-paper">
+                <DropdownMenuContent align="end" className="w-44 rounded-xl  bg-paper">
                   <DropdownMenuItem asChild>
                     <Link
                       to={`/project/${project.id}`}
@@ -111,7 +111,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         </div>
 
         {/* Footer Meta */}
-        <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-[11px] text-ash font-mono">
+        <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-[11px] text-ash ">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
             <span className="font-normal">Updated {formattedDate}</span>

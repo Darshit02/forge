@@ -32,10 +32,10 @@ export function MessageBubble({
     return (
       <div className="flex justify-end my-3">
         <div className="flex gap-2 max-w-[85%]">
-          <div className="rounded-2xl rounded-tr-xs bg-bone border border-hairline px-3.5 py-2.5 text-xs text-ink font-sans font-normal">
+          <div className="rounded-2xl rounded-tr-xs bg-bone  px-3.5 py-2.5 text-xs text-ink font-sans font-normal">
             <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
           </div>
-          <div className="w-6 h-6 rounded-[6px] bg-paper border border-hairline flex items-center justify-center shrink-0 text-ash mt-1">
+          <div className="w-6 h-6 rounded-[6px] bg-paper  flex items-center justify-center shrink-0 text-ash mt-1">
             <User className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -76,7 +76,7 @@ export function MessageBubble({
                   if (isInline) {
                     return (
                       <code
-                        className="px-1.5 py-0.5 rounded-[4px] bg-bone font-mono text-[11px] text-ink font-normal"
+                        className="px-1.5 py-0.5 rounded-[4px] bg-bone  text-[11px] text-ink font-normal"
                         {...props}
                       >
                         {children}
@@ -88,12 +88,12 @@ export function MessageBubble({
                   const blockId = Math.random().toString(36).slice(2, 7);
 
                   return (
-                    <div className="relative my-2 rounded-xl border border-hairline bg-paper overflow-hidden">
-                      <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-bone text-[10px] uppercase font-mono tracking-[0.018em] text-ash">
+                    <div className="relative my-2 rounded-xl  bg-paper overflow-hidden">
+                      <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-bone text-[10px] uppercase  tracking-[0.018em] text-ash">
                         <span>{match ? match[1] : "code"}</span>
                         <button
                           onClick={() => copyToClipboard(codeText, blockId)}
-                          className="flex items-center gap-1 hover:text-ink transition-colors font-mono text-[10px]"
+                          className="flex items-center gap-1 hover:text-ink transition-colors  text-[10px]"
                         >
                           {copiedCodeId === blockId ? (
                             <>
@@ -108,7 +108,7 @@ export function MessageBubble({
                           )}
                         </button>
                       </div>
-                      <pre className="p-3 font-mono text-[11px] overflow-x-auto text-ink m-0 bg-paper">
+                      <pre className="p-3  text-[11px] overflow-x-auto text-ink m-0 bg-paper">
                         <code>{children}</code>
                       </pre>
                     </div>

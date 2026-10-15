@@ -66,7 +66,7 @@ export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
               <span className="text-xs font-normal text-ink">
                 {lang.name}
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-[4px] border border-hairline bg-bone text-ash font-mono font-normal">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-[4px]  bg-bone text-ash  font-normal">
                 {lang.tag}
               </span>
             </div>

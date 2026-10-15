@@ -6,24 +6,20 @@ import { fileStoreService } from "../services/fileStore.service.js";
 import { wsHub } from "../ws/hub.js";
 import { BadRequestError } from "../utils/errors.js";
 
+import {
+  WriteFileRequestSchema,
+  DeleteFileRequestSchema,
+} from "@forge/shared";
+
 export const filesRoutes = new Hono();
 
 filesRoutes.use("*", requireAuth);
-
-const putContentSchema = z.object({
-  path: z.string().min(1, "File path is required"),
-  content: z.string(),
-});
-
-const deleteFileSchema = z.object({
-  path: z.string().min(1, "File path is required"),
-});
 
 /**
  * GET /api/projects/:id/files - Tree listing (?path=/)
  */
 filesRoutes.get("/:id/files", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const subPath = c.req.query("path") || "";
 
   const tree = await fileStoreService.listTree(projectId, subPath);
@@ -34,7 +30,7 @@ filesRoutes.get("/:id/files", requireProjectOwner, async (c) => {
  * GET /api/projects/:id/files/content - Read single file content (?path=main.py)
  */
 filesRoutes.get("/:id/files/content", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const filePath = c.req.query("path");
 
   if (!filePath) {
@@ -46,27 +42,36 @@ filesRoutes.get("/:id/files/content", requireProjectOwner, async (c) => {
 });
 
 /**
- * PUT /api/projects/:id/files/content - Write file content ({ path, content })
+ * PUT /api/projects/:id/files/content and /api/projects/:id/files - Write file content ({ path, content })
  */
+const handleWriteFile = async (c: any) => {
+  const projectId = c.req.param("id")!;
+  const { path: filePath, content } = c.req.valid("json");
+
+  const written = await fileStoreService.writeFile(
+    projectId,
+    filePath,
+    content
+  );
+
+  // Notify connected WebSocket clients
+  wsHub.broadcastFileChanged(projectId, written.path, written.content);
+
+  return c.json({ file: written });
+};
+
 filesRoutes.put(
   "/:id/files/content",
   requireProjectOwner,
-  zValidator("json", putContentSchema),
-  async (c) => {
-    const projectId = c.req.param("id");
-    const { path: filePath, content } = c.req.valid("json");
+  zValidator("json", WriteFileRequestSchema),
+  handleWriteFile
+);
 
-    const written = await fileStoreService.writeFile(
-      projectId,
-      filePath,
-      content
-    );
-
-    // Notify connected WebSocket clients
-    wsHub.broadcastFileChanged(projectId, written.path, written.content);
-
-    return c.json({ file: written });
-  }
+filesRoutes.put(
+  "/:id/files",
+  requireProjectOwner,
+  zValidator("json", WriteFileRequestSchema),
+  handleWriteFile
 );
 
 /**
@@ -75,9 +80,9 @@ filesRoutes.put(
 filesRoutes.delete(
   "/:id/files",
   requireProjectOwner,
-  zValidator("json", deleteFileSchema),
+  zValidator("json", DeleteFileRequestSchema),
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
     const { path: filePath } = c.req.valid("json");
 
     await fileStoreService.deleteFile(projectId, filePath);
@@ -93,7 +98,7 @@ filesRoutes.delete(
  * POST /api/projects/:id/files/upload - Multipart upload (e.g. zip import)
  */
 filesRoutes.post("/:id/files/upload", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const body = await c.req.parseBody();
 
   const file = body["file"];

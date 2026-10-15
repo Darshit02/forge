@@ -14,7 +14,7 @@ specRoutes.use("*", requireAuth);
  * GET /api/projects/:id/spec - Retrieve latest OpenAPI specification (cached)
  */
 specRoutes.get("/:id/spec", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const [specRecord] = await db
     .select()
@@ -38,7 +38,7 @@ specRoutes.get("/:id/spec", requireProjectOwner, async (c) => {
  * POST /api/projects/:id/spec/refresh - Force re-fetch spec from container/AST
  */
 specRoutes.post("/:id/spec/refresh", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const spec = await specExtractorService.extractAndSync(projectId);
 

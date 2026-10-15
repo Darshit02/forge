@@ -21,7 +21,7 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("files")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
               activeTab === "files"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
@@ -34,7 +34,7 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("collections")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
               activeTab === "collections"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
@@ -47,7 +47,7 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("environments")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-colors font-normal ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
               activeTab === "environments"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"

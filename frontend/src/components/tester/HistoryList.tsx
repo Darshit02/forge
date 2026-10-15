@@ -36,8 +36,8 @@ export function HistoryList({ history }: HistoryListProps) {
   }
 
   const getStatusColor = (status: number) => {
-    if (status >= 200 && status < 300) return "text-ink font-mono font-normal";
-    return "text-destructive font-mono font-normal";
+    if (status >= 200 && status < 300) return "text-ink  font-normal";
+    return "text-destructive  font-normal";
   };
 
   return (
@@ -46,16 +46,16 @@ export function HistoryList({ history }: HistoryListProps) {
         <div
           key={item.id}
           onClick={() => handleSelect(item)}
-          className="flex items-center justify-between p-2 rounded-[6px] hover:bg-bone cursor-pointer text-xs font-sans border border-hairline font-normal"
+          className="flex items-center justify-between p-2 rounded-[6px] hover:bg-bone cursor-pointer text-xs font-sans  font-normal"
         >
           <div className="flex items-center gap-2 truncate">
-            <span className="font-mono font-normal text-[10px] w-8 text-ink uppercase">
+            <span className=" font-normal text-[10px] w-8 text-ink uppercase">
               {item.method}
             </span>
-            <span className="font-mono truncate font-normal">{item.path}</span>
+            <span className=" truncate font-normal">{item.path}</span>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 font-mono text-[10px]">
+          <div className="flex items-center gap-3 shrink-0  text-[10px]">
             <span className={getStatusColor(item.statusCode)}>
               {item.statusCode}
             </span>

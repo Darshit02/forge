@@ -11,13 +11,31 @@ export function useAuth() {
   const { user, accessToken, isAuthenticated, setAuth, logout: storeLogout } =
     useAuthStore();
 
+  // Attempt cookie-based silent refresh on initial boot if in-memory token is absent
+  const refreshQuery = useQuery({
+    queryKey: ["auth-refresh"],
+    queryFn: async () => {
+      try {
+        const res = await authApi.refresh();
+        setAuth(res.user, res.accessToken);
+        queryClient.setQueryData(["auth-me"], res.user);
+        return res;
+      } catch {
+        return null;
+      }
+    },
+    enabled: !accessToken && !isAuthenticated,
+    retry: false,
+    staleTime: Infinity,
+  });
+
   const userQuery = useQuery({
     queryKey: ["auth-me"],
     queryFn: async () => {
       const res = await authApi.me();
       return res.user;
     },
-    enabled: !!accessToken,
+    enabled: !!accessToken || isAuthenticated,
     retry: false,
   });
 
@@ -62,7 +80,7 @@ export function useAuth() {
 
   return {
     user: user || userQuery.data,
-    isLoading: userQuery.isLoading,
+    isLoading: (!isAuthenticated && refreshQuery.isLoading) || userQuery.isLoading,
     isAuthenticated,
     login: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,

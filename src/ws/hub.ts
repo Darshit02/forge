@@ -1,4 +1,7 @@
 import type { ServerWebSocket } from "bun";
+import { eq } from "drizzle-orm";
+import { db } from "../db/client.js";
+import { projects, apiSpecs } from "../db/schema.js";
 import { projectChannels, type ConnectedClient } from "./channels.js";
 import type {
   ProjectStatus,
@@ -11,6 +14,58 @@ import { logger } from "../utils/logger.js";
 
 export class WebSocketHub {
   private clientRegistry = new Map<ServerWebSocket<unknown>, ConnectedClient>();
+
+  /**
+   * Directly sends a message to an individual connected client
+   */
+  sendToClient(client: ConnectedClient, message: WSServerMessage): void {
+    try {
+      client.ws.send(JSON.stringify(message));
+    } catch (err: any) {
+      logger.warn(
+        { clientId: client.id, projectId: client.projectId, err: err.message },
+        "Failed to send direct WebSocket message to client"
+      );
+    }
+  }
+
+  /**
+   * Hydrates client with current container status and cached OpenAPI spec
+   */
+  async hydrateClient(client: ConnectedClient): Promise<void> {
+    try {
+      const [project] = await db
+        .select({ status: projects.status })
+        .from(projects)
+        .where(eq(projects.id, client.projectId))
+        .limit(1);
+
+      if (project) {
+        this.sendToClient(client, {
+          type: "container.status",
+          status: project.status as ProjectStatus,
+        });
+      }
+
+      const [spec] = await db
+        .select({ specJson: apiSpecs.specJson })
+        .from(apiSpecs)
+        .where(eq(apiSpecs.projectId, client.projectId))
+        .limit(1);
+
+      if (spec?.specJson) {
+        this.sendToClient(client, {
+          type: "spec.updated",
+          spec: spec.specJson as Record<string, unknown>,
+        });
+      }
+    } catch (err: any) {
+      logger.warn(
+        { clientId: client.id, projectId: client.projectId, err: err.message },
+        "Error hydrating WebSocket client state"
+      );
+    }
+  }
 
   /**
    * Registers a new connected WebSocket client
@@ -36,6 +91,9 @@ export class WebSocketHub {
       "WebSocket client connected to Forge Hub"
     );
 
+    // Hydrate client with initial container status and cached spec
+    this.hydrateClient(client).catch(() => {});
+
     return client;
   }
 
@@ -60,6 +118,7 @@ export class WebSocketHub {
             projectChannels.unsubscribe(client.projectId, client);
             client.projectId = data.projectId;
             projectChannels.subscribe(data.projectId, client);
+            this.hydrateClient(client).catch(() => {});
           }
           break;
         case "unsubscribe":

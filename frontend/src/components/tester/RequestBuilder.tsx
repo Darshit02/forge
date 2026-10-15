@@ -19,7 +19,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
   const { activeRequest, setActiveRequest } = useTesterStore();
 
   const getMethodStyle = (_method: string) => {
-    return "text-ink font-mono font-normal";
+    return "text-ink  font-normal";
   };
 
   return (
@@ -30,7 +30,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
           value={activeRequest.method}
           onChange={(e) => setActiveRequest({ method: e.target.value })}
           className={cn(
-            "h-9 px-2.5 rounded-[6px] border border-hairline bg-transparent font-mono font-normal text-xs outline-none focus:ring-1 focus:ring-primary text-ink",
+            "h-9 px-2.5 rounded-[6px]  bg-transparent  font-normal text-xs outline-none focus:ring-1 focus:ring-primary text-ink",
             getMethodStyle(activeRequest.method)
           )}
         >
@@ -45,7 +45,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
           value={activeRequest.path}
           onChange={(e) => setActiveRequest({ path: e.target.value })}
           placeholder="/users"
-          className="flex-1 h-9 rounded-[10px] border-hairline font-mono text-xs"
+          className="flex-1 h-9 rounded-[10px] border-hairline  text-xs"
         />
 
         <Button

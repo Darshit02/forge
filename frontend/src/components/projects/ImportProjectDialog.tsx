@@ -16,7 +16,7 @@ import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs.js";
-import { GitBranch, Box, Loader2, DownloadCloud } from "lucide-react";
+import { GitBranch, Box, Loader2, DownloadCloud, Upload } from "lucide-react";
 import type { ProjectFramework, ProjectLanguage } from "../../types/api.js";
 
 interface ImportProjectDialogProps {
@@ -119,17 +119,17 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
         {trigger || (
           <Button
             variant="outline"
-            className="rounded-[6px] border-hairline hover:bg-bone font-normal gap-1.5 text-xs"
+            className="rounded-full border-ash border border-dashed cursor-pointer hover:bg-bone font-normal gap-1.5 text-xs"
           >
-            <DownloadCloud className="w-4 h-4 text-ash" />
+            <Upload className="w-4 h-4 text-ash" />
             Import Project
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-lg p-6 shadow-none">
+      <DialogContent className="rounded-2xl  bg-paper max-w-lg p-6 shadow-none">
         <DialogHeader>
           <div className="flex items-center justify-between text-xs text-ash mb-1">
-            <span className="uppercase tracking-[0.018em] font-mono">Import Workspace</span>
+            <span className="uppercase tracking-[0.018em] ">Import Workspace</span>
           </div>
           <DialogTitle className="text-xl font-normal text-ink">
             Import Backend Project
@@ -144,7 +144,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
           onValueChange={(val) => setImportMode(val as "git" | "template")}
           className="mt-2"
         >
-          <TabsList className="grid grid-cols-2 bg-bone rounded-[6px] p-1 border border-hairline">
+          <TabsList className="grid grid-cols-2 bg-bone rounded-[6px] p-1 ">
             <TabsTrigger
               value="git"
               className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
@@ -182,7 +182,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as ProjectLanguage)}
-                  className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="w-full h-10 px-3 rounded-[10px]  bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="python">Python</option>
                   <option value="node">Node.js (JS)</option>
@@ -199,7 +199,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                 <select
                   value={framework}
                   onChange={(e) => setFramework(e.target.value as ProjectFramework)}
-                  className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="w-full h-10 px-3 rounded-[10px]  bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="fastapi">FastAPI</option>
                   <option value="flask">Flask</option>
@@ -239,7 +239,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                         <span className="text-xs font-normal text-ink capitalize">
                           {tmpl.name}
                         </span>
-                        <span className="text-[10px] uppercase font-mono px-1 py-0.5 rounded-[4px] bg-bone text-ash border border-hairline">
+                        <span className="text-[10px] uppercase  px-1 py-0.5 rounded-[4px] bg-bone text-ash ">
                           {tmpl.language}
                         </span>
                       </div>
@@ -275,7 +275,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
             <select
               value={aiProviderId}
               onChange={(e) => setAiProviderId(e.target.value)}
-              className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="w-full h-10 px-3 rounded-[10px]  bg-transparent text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               <option value="">Default AI Provider</option>
               {providers.map((p) => (

@@ -70,7 +70,7 @@ export function useTestRunner(projectId: string | undefined) {
       setIsSending(true);
 
       return testerApi.run(projectId, {
-        method: activeRequest.method,
+        method: activeRequest.method as any,
         path: activeRequest.path,
         headers,
         body: parsedBody,

@@ -68,13 +68,13 @@ export function HeadersEditor({ headers, onChange }: HeadersEditorProps) {
               placeholder="Content-Type"
               value={row.key}
               onChange={(e) => updateHeaderRow(idx, e.target.value, row.value)}
-              className="col-span-5 h-7 text-xs font-mono rounded-[10px] border-hairline font-normal"
+              className="col-span-5 h-7 text-xs  rounded-[10px] border-hairline font-normal"
             />
             <Input
               placeholder="application/json"
               value={row.value}
               onChange={(e) => updateHeaderRow(idx, row.key, e.target.value)}
-              className="col-span-6 h-7 text-xs font-mono rounded-[10px] border-hairline font-normal"
+              className="col-span-6 h-7 text-xs  rounded-[10px] border-hairline font-normal"
             />
             <button
               onClick={() => removeRow(idx)}

@@ -123,26 +123,36 @@ export class DockerService {
 
       await this.ensureNetwork();
 
-      // Determine container image
-      const imageName = `${project.framework}-sandbox:latest`;
+      // Determine container image (try forge-sandbox-<fw>, then <fw>-sandbox, then language fallback)
+      const primaryImage = `forge-sandbox-${project.framework}:latest`;
+      const secondaryImage = `${project.framework}-sandbox:latest`;
 
-      // Verify image exists locally; if not, fallback to general runtime image
       const fallbackImage =
         project.language === "python"
           ? "python:3.11-slim"
           : project.language === "typescript"
           ? "oven/bun:1.1"
+          : project.language === "go"
+          ? "golang:1.22-alpine"
+          : project.language === "rust"
+          ? "rust:1.77-slim"
           : "node:20-slim";
 
-      let targetImage = imageName;
+      let targetImage = fallbackImage;
       try {
-        await this.docker.getImage(imageName).inspect();
+        await this.docker.getImage(primaryImage).inspect();
+        targetImage = primaryImage;
       } catch {
-        targetImage = fallbackImage;
-        logger.info(
-          { imageName, targetImage },
-          "Custom sandbox image not found, using fallback base image"
-        );
+        try {
+          await this.docker.getImage(secondaryImage).inspect();
+          targetImage = secondaryImage;
+        } catch {
+          targetImage = fallbackImage;
+          logger.info(
+            { primaryImage, secondaryImage, targetImage },
+            "Custom sandbox image not found, using fallback base image"
+          );
+        }
       }
 
       // 4. Create container with hardened security profile
@@ -151,6 +161,9 @@ export class DockerService {
         name: `forge-project-${projectId}`,
         WorkingDir: CONSTANTS.DOCKER.WORKSPACE_DIR,
         User: CONSTANTS.DOCKER.DEFAULT_USER,
+        ExposedPorts: {
+          [`${CONSTANTS.DOCKER.CONTAINER_INTERNAL_PORT}/tcp`]: {},
+        },
         HostConfig: {
           Binds: [`${hostWorkspace}:${CONSTANTS.DOCKER.WORKSPACE_DIR}`],
           PortBindings: {
@@ -170,6 +183,7 @@ export class DockerService {
         Labels: {
           "forge.project": projectId,
           "forge.user": project.userId,
+          "forge.framework": project.framework,
         },
         Env: [
           `PORT=${CONSTANTS.DOCKER.CONTAINER_INTERNAL_PORT}`,
@@ -182,7 +196,36 @@ export class DockerService {
       await container.start();
       const containerId = container.id;
 
-      // 6. Update project status in DB
+      // 6. Poll for readiness (up to 30s)
+      const timeoutMs = CONSTANTS.DOCKER.HEALTH_CHECK_TIMEOUT_MS;
+      const startTime = Date.now();
+      let isReady = false;
+
+      while (Date.now() - startTime < timeoutMs) {
+        try {
+          const res = await fetch(`http://127.0.0.1:${hostPort}/openapi.json`, {
+            signal: AbortSignal.timeout(1000),
+          }).catch(() =>
+            fetch(`http://127.0.0.1:${hostPort}/health`, {
+              signal: AbortSignal.timeout(1000),
+            })
+          ).catch(() =>
+            fetch(`http://127.0.0.1:${hostPort}/`, {
+              signal: AbortSignal.timeout(1000),
+            })
+          );
+
+          if (res) {
+            isReady = true;
+            break;
+          }
+        } catch {
+          // container not accepting connections yet
+        }
+        await new Promise((r) => setTimeout(r, 500));
+      }
+
+      // 7. Update project status in DB
       await db
         .update(projects)
         .set({
@@ -194,7 +237,7 @@ export class DockerService {
         .where(eq(projects.id, projectId));
 
       logger.info(
-        { projectId, containerId, hostPort },
+        { projectId, containerId, hostPort, isReady },
         "Container started successfully"
       );
 
@@ -325,7 +368,7 @@ export class DockerService {
     }
 
     const container = this.docker.getContainer(project.containerId);
-    const stream = (await container.logs({
+    const stream = (await (container as any).logs({
       stdout: true,
       stderr: true,
       tail,
@@ -403,10 +446,25 @@ export class DockerService {
             "Stopping stray container"
           );
           await this.safeRemoveContainer(containerInfo.Id);
+        } else if (
+          project.status === "running" &&
+          containerInfo.State === "running"
+        ) {
+          // Reattach container to project if containerId changed
+          if (project.containerId !== containerInfo.Id) {
+            await db
+              .update(projects)
+              .set({ containerId: containerInfo.Id, updatedAt: new Date() })
+              .where(eq(projects.id, projectId));
+            logger.info(
+              { containerId: containerInfo.Id, projectId },
+              "Reattached running container to project"
+            );
+          }
         }
       }
 
-      // Mark projects whose containers died as stopped
+      // Mark projects whose containers died as error
       for (const p of dbProjects) {
         if (p.status === "running") {
           const match = containers.find(
@@ -415,11 +473,11 @@ export class DockerService {
           if (!match) {
             await db
               .update(projects)
-              .set({ status: "stopped", containerId: null })
+              .set({ status: "error", containerId: null, updatedAt: new Date() })
               .where(eq(projects.id, p.id));
             logger.info(
               { projectId: p.id },
-              "Marked dead container project as stopped"
+              "Marked dead container project as error"
             );
           }
         }

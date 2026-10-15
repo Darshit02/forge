@@ -52,7 +52,7 @@ export function StatusBadge({ status, port, className }: StatusBadgeProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] border text-[10px] uppercase font-mono tracking-[0.018em] font-normal",
+        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] border text-[10px] uppercase  tracking-[0.018em] font-normal",
         badge.borderClass,
         badge.bgClass,
         badge.textClass,

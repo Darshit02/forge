@@ -28,7 +28,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
       <StatusBadge status={status} port={hostPort} />
 
       <TooltipProvider delayDuration={300}>
-        <div className="flex items-center gap-1 border border-hairline rounded-[6px] p-0.5 bg-paper">
+        <div className="flex items-center gap-1  rounded-[6px] p-0.5 bg-paper">
           {!isRunning ? (
             <Tooltip>
               <TooltipTrigger asChild>

@@ -32,52 +32,52 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-hairline bg-paper p-6 shadow-none">
-      <div className="mb-6">
-        <h1 className="text-2xl font-normal tracking-tight text-ink">
-          Create your Forge account
+    <div className="w-full max-w-[400px] rounded-2xl border border-hairline bg-paper p-8 shadow-none">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-normal tracking-tight text-ink">
+          Create your account
         </h1>
-        <p className="mt-1 text-xs text-ash font-normal">
-          Deploy backends with AI. Test endpoints instantly.
+        <p className="mt-2 text-xs text-ash font-normal leading-relaxed">
+          Start building and deploying backend services with AI-native workflows.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-[10px] uppercase tracking-[0.05em] text-ash font-medium">
             Full Name
           </Label>
           <Input
             id="name"
             placeholder="Jane Developer"
-            className="rounded-[10px] border-hairline bg-transparent"
+            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
             {...register("name")}
           />
           {errors.name && (
-            <p className="text-xs text-ash font-normal">{errors.name.message}</p>
+            <p className="text-[10px] text-destructive font-normal">{errors.name.message}</p>
           )}
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
-            Email
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-[10px] uppercase tracking-[0.05em] text-ash font-medium">
+            Email Address
           </Label>
           <Input
             id="email"
             type="email"
             placeholder="jane@company.com"
-            className="rounded-[10px] border-hairline bg-transparent"
+            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-xs text-ash font-normal">{errors.email.message}</p>
+            <p className="text-[10px] text-destructive font-normal">{errors.email.message}</p>
           )}
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <Label
             htmlFor="password"
-            className="text-xs uppercase tracking-[0.018em] text-ash font-normal"
+            className="text-[10px] uppercase tracking-[0.05em] text-ash font-medium"
           >
             Password
           </Label>
@@ -85,18 +85,18 @@ export function RegisterForm() {
             id="password"
             type="password"
             placeholder="At least 8 characters"
-            className="rounded-[10px] border-hairline bg-transparent"
+            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-xs text-ash font-normal">{errors.password.message}</p>
+            <p className="text-[10px] text-destructive font-normal">{errors.password.message}</p>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isRegistering}
-          className="w-full h-10 rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
+          className="w-full h-11 rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-bold text-sm transition-all active:scale-[0.98]"
         >
           {isRegistering ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -105,11 +105,11 @@ export function RegisterForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-ash font-normal">
+      <p className="mt-8 text-center text-xs text-ash font-normal">
         Already have an account?{" "}
         <Link
           to="/login"
-          className="text-ink underline underline-offset-4 hover:opacity-80"
+          className="text-ink font-medium underline underline-offset-4 hover:opacity-80"
         >
           Sign in
         </Link>

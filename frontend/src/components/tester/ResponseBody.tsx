@@ -67,7 +67,7 @@ export function ResponseBody({ body }: ResponseBodyProps) {
         </Button>
       </div>
 
-      <pre className="flex-1 p-3 m-0 overflow-auto font-mono text-xs text-ink select-text font-normal">
+      <pre className="flex-1 p-3 m-0 overflow-auto  text-xs text-ink select-text font-normal">
         {formattedText}
       </pre>
     </div>

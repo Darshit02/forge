@@ -35,7 +35,7 @@ const app = new Hono();
 app.use(
   "*",
   cors({
-    origin: (origin) => origin || "*",
+    origin: (origin) => origin || env.CORS_ORIGIN,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization", "X-Refresh-Token"],
     exposeHeaders: ["RateLimit-Limit", "RateLimit-Remaining", "RateLimit-Reset"],

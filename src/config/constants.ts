@@ -51,7 +51,7 @@ export const CONSTANTS = {
     CONTAINER_INTERNAL_PORT: 8000,
     DEFAULT_USER: "1000:1000",
     WORKSPACE_DIR: "/workspace",
-    NETWORK_NAME: "sandbox_net",
+    NETWORK_NAME: "forge-sandbox",
     MEMORY_LIMIT: 512 * 1024 * 1024, // 512 MB
     NANO_CPUS: 1_000_000_000, // 1 CPU
     PIDS_LIMIT: 100,

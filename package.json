@@ -1,20 +1,32 @@
 {
-  "name": "forge-backend",
+  "name": "forge",
   "version": "1.0.0",
-  "description": "AI-native backend IDE platform backend",
+  "description": "AI-native backend IDE platform",
   "main": "src/index.ts",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "frontend"
+  ],
   "scripts": {
-    "dev": "bun --watch src/index.ts",
+    "dev": "concurrently -n be,fe -c blue,green \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "dev:backend": "bun --watch src/index.ts",
+    "dev:frontend": "bun --cwd frontend dev",
     "start": "bun src/index.ts",
-    "frontend:dev": "cd frontend && bun run dev",
-    "frontend:build": "cd frontend && bun run build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "docker:setup": "bash ./scripts/setup-docker.sh",
+    "docker:ps": "docker ps --filter label=forge.project",
+    "docker:clean": "bash ./scripts/cleanup-containers.sh",
+    "smoke": "bash ./scripts/smoke-test.sh",
+    "typecheck": "tsc --noEmit && bun run --cwd frontend typecheck",
+    "lint": "echo 'No linter configured'",
     "test": "bun test"
   },
   "dependencies": {
+    "@forge/shared": "workspace:*",
     "@ai-sdk/anthropic": "^1.1.8",
     "@ai-sdk/google": "^1.1.10",
     "@ai-sdk/openai": "^1.1.9",
@@ -38,12 +50,14 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "@types/adm-zip": "^0.5.7",
     "@types/babel__traverse": "^7.20.6",
     "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
     "@types/dockerode": "^3.3.34",
     "@types/jsonwebtoken": "^9.0.9",
-    "drizzle-kit": "^0.30.0"
+    "drizzle-kit": "^0.30.0",
+    "typescript": "^5.7.3"
   }
 }

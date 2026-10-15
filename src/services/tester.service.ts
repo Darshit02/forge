@@ -34,6 +34,13 @@ export class TesterService {
 
     const hostname = parsed.hostname.toLowerCase();
 
+    // Check protocol
+    if (parsed.protocol !== "http:") {
+      throw new SSRFError(
+        "Access denied: Only HTTP protocol is permitted for container tests"
+      );
+    }
+
     // 1. Block metadata endpoints
     if (
       hostname === CONSTANTS.SSRF_PROTECTION.METADATA_ENDPOINT ||
@@ -147,6 +154,26 @@ export class TesterService {
 
     // Apply environment substitution to path
     let resolvedPath = this.interpolateVariables(payload.path, envVars);
+
+    // Reject absolute URLs, scheme specifications, and protocol-relative paths
+    if (
+      resolvedPath.startsWith("http://") ||
+      resolvedPath.startsWith("https://") ||
+      resolvedPath.startsWith("//") ||
+      /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(resolvedPath)
+    ) {
+      throw new SSRFError(
+        "Access denied: Absolute URLs and protocol-relative paths are forbidden"
+      );
+    }
+
+    // Reject path traversal sequences
+    if (resolvedPath.includes("..")) {
+      throw new SSRFError(
+        "Access denied: Path traversal sequences ('..') are forbidden"
+      );
+    }
+
     if (!resolvedPath.startsWith("/")) {
       resolvedPath = `/${resolvedPath}`;
     }

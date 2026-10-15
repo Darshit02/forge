@@ -168,7 +168,7 @@ export class ProjectService {
     projectId: string,
     updates: {
       name?: string;
-      description?: string;
+      description?: string | null;
       aiProviderId?: string | null;
     }
   ) {

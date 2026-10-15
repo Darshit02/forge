@@ -12,15 +12,9 @@ import { NotFoundError } from "../utils/errors.js";
 
 export const aiRoutes = new Hono();
 
-aiRoutes.use("*", requireAuth);
+import { ChatRequestSchema } from "@forge/shared";
 
-const chatRequestSchema = z.object({
-  sessionId: z.string().uuid().optional(),
-  message: z.string().min(1, "Message cannot be empty"),
-  providerId: z.string().uuid().optional(),
-  model: z.string().optional(),
-  mode: z.enum(["chat", "edit", "agent"]).default("edit"),
-});
+aiRoutes.use("*", requireAuth);
 
 /**
  * POST /api/projects/:id/chat - SSE stream for AI code generation & chat
@@ -29,9 +23,9 @@ aiRoutes.post(
   "/:id/chat",
   requireProjectOwner,
   chatRateLimiter,
-  zValidator("json", chatRequestSchema),
+  zValidator("json", ChatRequestSchema),
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
     const user = c.get("user");
     const body = c.req.valid("json");
 
@@ -85,7 +79,7 @@ aiRoutes.post(
  * GET /api/projects/:id/chat/sessions - List chat sessions for a project
  */
 aiRoutes.get("/:id/chat/sessions", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const sessions = await db
     .select()
@@ -103,7 +97,7 @@ aiRoutes.get(
   "/:id/chat/sessions/:sessionId/messages",
   requireProjectOwner,
   async (c) => {
-    const sessionId = c.req.param("sessionId");
+    const sessionId = c.req.param("sessionId")!;
 
     const [session] = await db
       .select()

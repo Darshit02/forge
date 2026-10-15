@@ -6,58 +6,14 @@ import { projectService } from "../services/project.service.js";
 import { scaffoldService } from "../services/scaffold.service.js";
 import type { ProjectFramework, ProjectLanguage } from "../types/index.js";
 
+import {
+  CreateProjectRequestSchema,
+  UpdateProjectRequestSchema,
+} from "@forge/shared";
+
 export const projectsRoutes = new Hono();
 
 projectsRoutes.use("*", requireAuth);
-
-const createProjectSchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
-  language: z.enum(["python", "node", "typescript", "go", "rust"]),
-  framework: z.enum([
-    "fastapi",
-    "flask",
-    "django",
-    "express",
-    "nestjs",
-    "hono",
-    "fastify",
-    "fiber",
-    "gin",
-    "axum",
-  ]),
-  aiProviderId: z.string().uuid().optional(),
-  source: z.enum(["scratch", "import"]).default("scratch"),
-  importSource: z
-    .discriminatedUnion("type", [
-      z.object({
-        type: z.literal("git"),
-        url: z.string().url("Valid Git URL is required"),
-      }),
-      z.object({
-        type: z.literal("template"),
-        templateId: z.enum([
-          "fastapi",
-          "flask",
-          "django",
-          "express",
-          "nestjs",
-          "hono",
-          "fastify",
-          "fiber",
-          "gin",
-          "axum",
-        ]),
-      }),
-    ])
-    .optional(),
-});
-
-const updateProjectSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  description: z.string().max(500).optional().nullable(),
-  aiProviderId: z.string().uuid().optional().nullable(),
-});
 
 /**
  * GET /api/projects/templates - List available starter templates
@@ -79,7 +35,7 @@ projectsRoutes.get("/", async (c) => {
 /**
  * POST /api/projects - Create a new project or import
  */
-projectsRoutes.post("/", zValidator("json", createProjectSchema), async (c) => {
+projectsRoutes.post("/", zValidator("json", CreateProjectRequestSchema), async (c) => {
   const user = c.get("user");
   const body = c.req.valid("json");
 
@@ -101,7 +57,7 @@ projectsRoutes.post("/", zValidator("json", createProjectSchema), async (c) => {
  * GET /api/projects/:id - Get project details
  */
 projectsRoutes.get("/:id", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const project = await projectService.getProject(projectId);
   return c.json({ project });
 });
@@ -112,9 +68,9 @@ projectsRoutes.get("/:id", requireProjectOwner, async (c) => {
 projectsRoutes.patch(
   "/:id",
   requireProjectOwner,
-  zValidator("json", updateProjectSchema),
+  zValidator("json", UpdateProjectRequestSchema),
   async (c) => {
-    const projectId = c.req.param("id");
+    const projectId = c.req.param("id")!;
     const body = c.req.valid("json");
 
     const updated = await projectService.updateProject(projectId, body);
@@ -126,7 +82,7 @@ projectsRoutes.patch(
  * DELETE /api/projects/:id - Delete project and all associated resources
  */
 projectsRoutes.delete("/:id", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   await projectService.deleteProject(projectId);
   return c.json({ ok: true, id: projectId });
 });

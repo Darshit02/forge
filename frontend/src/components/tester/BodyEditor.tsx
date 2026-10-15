@@ -70,11 +70,11 @@ export function BodyEditor({
           {bodyType === "json" && (
             <>
               {isValidJson ? (
-                <span className="flex items-center gap-1 text-[10px] text-ink font-mono font-normal">
+                <span className="flex items-center gap-1 text-[10px] text-ink  font-normal">
                   <Check className="w-3 h-3 text-ink" /> Valid JSON
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-[10px] text-destructive font-mono font-normal">
+                <span className="flex items-center gap-1 text-[10px] text-destructive  font-normal">
                   <AlertCircle className="w-3 h-3" /> Invalid JSON
                 </span>
               )}
@@ -93,7 +93,7 @@ export function BodyEditor({
         value={body}
         onChange={(e) => handleBodyChange(e.target.value)}
         placeholder='{\n  "key": "value"\n}'
-        className="flex-1 w-full min-h-[140px] p-2 rounded-[10px] border border-hairline bg-paper font-mono text-xs text-ink outline-none focus:border-primary resize-none font-normal"
+        className="flex-1 w-full min-h-[140px] p-2 rounded-[10px]  bg-paper  text-xs text-ink outline-none focus:border-primary resize-none font-normal"
       />
     </div>
   );

@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 import dotenv from "dotenv";
 
@@ -34,7 +36,17 @@ const envSchema = z.object({
       process.env.NODE_ENV === "production"
         ? "/var/app/data/projects"
         : `${process.cwd()}/.data/projects`
-    ),
+    )
+    .transform((val) => {
+      try {
+        fs.mkdirSync(val, { recursive: true });
+        return val;
+      } catch {
+        const fallback = path.resolve(process.cwd(), ".data/projects");
+        fs.mkdirSync(fallback, { recursive: true });
+        return fallback;
+      }
+    }),
   PORT_RANGE_START: z.coerce.number().int().default(8001),
   PORT_RANGE_END: z.coerce.number().int().default(9000),
   DOCKER_SOCKET: z
@@ -52,6 +64,7 @@ const envSchema = z.object({
     .default("info"),
   PORT: z.coerce.number().int().default(3000),
   HOST: z.string().default("0.0.0.0"),
+  CORS_ORIGIN: z.string().default("http://localhost:5173"),
 });
 
 const parsed = envSchema.safeParse(process.env);

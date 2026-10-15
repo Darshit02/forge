@@ -39,7 +39,7 @@ function DropdownMenuContent({
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-xl border border-hairline bg-paper p-1 text-ink shadow-none outline-none",
+          "z-50 min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-xl  bg-paper p-1 text-ink shadow-none outline-none",
           className
         )}
         {...props}
@@ -186,7 +186,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       className={cn(
-        "ml-auto text-xs tracking-widest text-ash font-normal font-mono",
+        "ml-auto text-xs tracking-widest text-ash font-normal ",
         className
       )}
       {...props}
@@ -232,7 +232,7 @@ function DropdownMenuSubContent({
     <DropdownMenuPrimitive.SubContent
       data-slot="dropdown-menu-sub-content"
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-hairline bg-paper p-1 text-ink shadow-none outline-none",
+        "z-50 min-w-[8rem] overflow-hidden rounded-xl  bg-paper p-1 text-ink shadow-none outline-none",
         className
       )}
       {...props}

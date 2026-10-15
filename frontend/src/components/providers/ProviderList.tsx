@@ -102,21 +102,21 @@ export function ProviderList() {
                 {/* Provider Info */}
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-[6px] bg-bone font-normal text-ink border border-hairline tracking-[0.018em]">
+                    <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[6px] bg-bone font-normal text-ink  tracking-[0.018em]">
                       {p.provider}
                     </span>
                     <span className="text-sm font-normal text-ink">
                       {p.label}
                     </span>
                     {p.isDefault && (
-                      <span className="flex items-center gap-1 text-[10px] uppercase font-mono tracking-[0.018em] px-1.5 py-0.5 rounded-[4px] bg-primary text-ink font-normal">
+                      <span className="flex items-center gap-1 text-[10px] uppercase  tracking-[0.018em] px-1.5 py-0.5 rounded-[4px] bg-primary text-ink font-normal">
                         <Star className="w-3 h-3 fill-current" />
                         Default
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-ash font-normal">
+                  <div className="flex flex-wrap items-center gap-4 text-xs  text-ash font-normal">
                     <div className="flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-ink" />
                       <span>{p.maskedKey}</span>

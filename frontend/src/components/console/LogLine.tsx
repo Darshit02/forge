@@ -22,7 +22,7 @@ export function LogLine({ line }: LogLineProps) {
   return (
     <div
       className={cn(
-        "font-mono text-xs leading-5 hover:bg-bone px-2 py-0.5 whitespace-pre-wrap break-all select-text font-normal",
+        " text-xs leading-5 hover:bg-bone px-2 py-0.5 whitespace-pre-wrap break-all select-text font-normal",
         getLineStyle()
       )}
     >

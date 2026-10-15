@@ -7,26 +7,17 @@ import { requireAuth } from "../middleware/auth.js";
 import { authRateLimiter } from "../middleware/rateLimit.js";
 import { CONSTANTS } from "../config/constants.js";
 
+import { RegisterRequestSchema, LoginRequestSchema } from "@forge/shared";
+
 export const authRoutes = new Hono();
 
 // Apply auth rate limiter (10 req/min/IP)
 authRoutes.use("*", authRateLimiter);
 
-const registerSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
-  name: z.string().min(1).max(100).optional(),
-});
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(1, "Password is required"),
-});
-
 /**
  * POST /api/auth/register
  */
-authRoutes.post("/register", zValidator("json", registerSchema), async (c) => {
+authRoutes.post("/register", zValidator("json", RegisterRequestSchema), async (c) => {
   const body = c.req.valid("json");
   const { user, accessToken, refreshToken } = await authService.register(body);
 
@@ -45,7 +36,7 @@ authRoutes.post("/register", zValidator("json", registerSchema), async (c) => {
 /**
  * POST /api/auth/login
  */
-authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
+authRoutes.post("/login", zValidator("json", LoginRequestSchema), async (c) => {
   const body = c.req.valid("json");
   const { user, accessToken, refreshToken } = await authService.login(body);
 

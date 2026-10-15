@@ -7,9 +7,7 @@ export function RegisterPage() {
     <div className="min-h-screen bg-bone flex flex-col justify-between p-6">
       <div className="flex items-center justify-between max-w-5xl w-full mx-auto">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-[4px] bg-primary flex items-center justify-center font-normal text-ink text-xs leading-none">
-            F
-          </div>
+
           <span className="font-normal tracking-tight text-base text-ink">
             Forge
           </span>

@@ -25,7 +25,7 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
   if (!response) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-ash bg-paper select-none">
-        <div className="w-10 h-10 rounded-2xl border border-hairline bg-bone flex items-center justify-center mb-3">
+        <div className="w-10 h-10 rounded-2xl  bg-bone flex items-center justify-center mb-3">
           <Send className="w-5 h-5 text-ash" />
         </div>
         <h4 className="text-sm font-normal text-ink">
@@ -56,7 +56,7 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
 
           <span
             className={cn(
-              "px-2 py-0.5 rounded-[6px] border font-mono text-[10px] font-normal tracking-[0.018em]",
+              "px-2 py-0.5 rounded-[6px] border  text-[10px] font-normal tracking-[0.018em]",
               getStatusColor(response.status)
             )}
           >
@@ -64,7 +64,7 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[11px] text-ash font-mono font-normal">
+        <div className="flex items-center gap-1.5 text-[11px] text-ash  font-normal">
           <Clock className="w-3 h-3" />
           <span>{formatDuration(response.durationMs)}</span>
         </div>
@@ -86,7 +86,7 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
         </TabsContent>
 
         <TabsContent value="headers" className="flex-1 m-0 overflow-y-auto p-3 no-scrollbar">
-          <div className="space-y-1 font-mono text-xs text-ink">
+          <div className="space-y-1  text-xs text-ink">
             {Object.entries(response.headers || {}).map(([key, value]) => (
               <div key={key} className="flex gap-2 py-0.5 border-b border-hairline/40">
                 <span className="text-ash font-normal w-40 truncate">{key}:</span>

@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[300px] p-6 text-center border border-hairline rounded-2xl bg-paper">
+        <div className="flex flex-col items-center justify-center min-h-[300px] p-6 text-center  rounded-2xl bg-paper">
           <AlertCircle className="w-10 h-10 text-destructive mb-3" />
           <h2 className="text-lg font-normal text-ink">
             {this.props.fallbackTitle || "Something went wrong"}

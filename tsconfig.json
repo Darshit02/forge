@@ -17,7 +17,12 @@
     "allowJs": true,
     "types": [
       "bun-types"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@forge/shared": ["./packages/shared/src/index.ts"],
+      "@forge/shared/*": ["./packages/shared/src/*"]
+    }
   },
-  "include": ["src/**/*", "templates/**/*"]
+  "include": ["src/**/*", "packages/**/*"]
 }

@@ -110,7 +110,7 @@ export function ChatInput({
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           {/* Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-[6px] border border-hairline bg-bone text-[11px] font-sans">
+          <div className="flex items-center p-0.5 rounded-[6px]  bg-bone text-[11px] font-sans">
             {(["edit", "chat", "agent"] as ChatMode[]).map((mode) => (
               <button
                 key={mode}
@@ -118,7 +118,7 @@ export function ChatInput({
                 className={cn(
                   "px-2 py-0.5 rounded-[4px] capitalize transition-colors font-normal",
                   chatMode === mode
-                    ? "bg-paper text-ink font-normal border border-hairline"
+                    ? "bg-paper text-ink font-normal "
                     : "text-ash hover:text-ink"
                 )}
               >
@@ -130,7 +130,7 @@ export function ChatInput({
           {/* Model Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 px-2 py-1 rounded-[6px] border border-hairline text-[11px] text-ink hover:bg-bone font-sans font-normal">
+              <button className="flex items-center gap-1 px-2 py-1 rounded-[6px]  text-[11px] text-ink hover:bg-bone font-sans font-normal">
                 <Sparkles className="w-3 h-3 text-primary" />
                 <span className="truncate max-w-[100px]">{selectedModel}</span>
                 <ChevronDown className="w-3 h-3 text-ash" />
@@ -138,7 +138,7 @@ export function ChatInput({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="rounded-xl border border-hairline bg-paper text-xs font-sans w-48"
+              className="rounded-xl  bg-paper text-xs font-sans w-48"
             >
               {providers.length > 0 ? (
                 providers.map((p) => (
@@ -170,16 +170,16 @@ export function ChatInput({
               size="icon-xs"
               variant="ghost"
               title="Attach File Context"
-              className="rounded-[6px] border border-hairline text-ash hover:text-ink"
+              className="rounded-[6px]  text-ash hover:text-ink"
             >
               <Paperclip className="w-3 h-3" />
             </Button>
           </PopoverTrigger>
           <PopoverContent
             align="end"
-            className="w-56 p-1.5 rounded-xl border border-hairline bg-paper text-xs font-sans"
+            className="w-56 p-1.5 rounded-xl  bg-paper text-xs font-sans"
           >
-            <div className="px-2 py-1 text-[10px] uppercase tracking-[0.018em] text-ash font-mono font-normal">
+            <div className="px-2 py-1 text-[10px] uppercase tracking-[0.018em] text-ash  font-normal">
               Attach File to Prompt
             </div>
             <div className="max-h-48 overflow-y-auto no-scrollbar space-y-0.5">
@@ -203,7 +203,7 @@ export function ChatInput({
       </div>
 
       {/* Input Textarea & Send / Cancel Button */}
-      <div className="relative rounded-[10px] border border-hairline bg-paper focus-within:border-primary transition-colors p-2">
+      <div className="relative rounded-[10px]  bg-paper focus-within:border-primary transition-colors p-2">
         <textarea
           ref={textareaRef}
           rows={2}

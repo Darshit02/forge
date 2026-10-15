@@ -29,7 +29,7 @@ export function AuthEditor({
         <select
           value={authType}
           onChange={(e) => onChange({ authType: e.target.value as any })}
-          className="h-7 rounded-[6px] border border-hairline bg-transparent px-2 text-xs text-ink font-sans font-normal outline-none focus:ring-1 focus:ring-primary"
+          className="h-7 rounded-[6px]  bg-transparent px-2 text-xs text-ink font-sans font-normal outline-none focus:ring-1 focus:ring-primary"
         >
           <option value="none">No Auth</option>
           <option value="bearer">Bearer Token</option>
@@ -45,7 +45,7 @@ export function AuthEditor({
             placeholder="eyJhbGciOi..."
             value={bearerToken}
             onChange={(e) => onChange({ bearerToken: e.target.value })}
-            className="font-mono text-xs h-8 rounded-[10px] border-hairline font-normal"
+            className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
           />
         </div>
       )}
@@ -80,7 +80,7 @@ export function AuthEditor({
               placeholder="X-API-Key"
               value={apiKeyName}
               onChange={(e) => onChange({ apiKeyName: e.target.value })}
-              className="font-mono text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
             />
           </div>
           <div className="space-y-1.5">
@@ -89,7 +89,7 @@ export function AuthEditor({
               placeholder="secret-key"
               value={apiKeyValue}
               onChange={(e) => onChange({ apiKeyValue: e.target.value })}
-              className="font-mono text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
             />
           </div>
           <div className="space-y-1.5">
@@ -97,7 +97,7 @@ export function AuthEditor({
             <select
               value={apiKeyLocation}
               onChange={(e) => onChange({ apiKeyLocation: e.target.value as any })}
-              className="w-full h-8 rounded-[6px] border border-hairline bg-transparent px-2 text-xs text-ink font-normal outline-none focus:ring-1 focus:ring-primary"
+              className="w-full h-8 rounded-[6px]  bg-transparent px-2 text-xs text-ink font-normal outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="header">Header</option>
               <option value="query">Query Params</option>

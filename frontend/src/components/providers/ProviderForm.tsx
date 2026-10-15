@@ -163,9 +163,9 @@ export function ProviderForm({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-md p-6 shadow-none">
+      <DialogContent className="rounded-2xl  bg-paper max-w-md p-6 shadow-none">
         <DialogHeader>
-          <div className="flex items-center gap-1.5 text-xs text-ash uppercase tracking-[0.018em] mb-1 font-mono font-normal">
+          <div className="flex items-center gap-1.5 text-xs text-ash uppercase tracking-[0.018em] mb-1  font-normal">
             <KeyRound className="w-3.5 h-3.5 text-ink" />
             <span>Bring Your Own Key</span>
           </div>
@@ -188,7 +188,7 @@ export function ProviderForm({
                 onChange={(e) =>
                   handleProviderChange(e.target.value as AIProviderType)
                 }
-                className="w-full h-10 px-3 rounded-[10px] border border-hairline bg-paper text-xs text-ink focus:outline-none focus:ring-1 focus:ring-primary font-normal"
+                className="w-full h-10 px-3 rounded-[10px]  bg-paper text-xs text-ink focus:outline-none focus:ring-1 focus:ring-primary font-normal"
               >
                 <option value="openai">OpenAI (GPT-4o, o1, etc.)</option>
                 <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
@@ -231,7 +231,7 @@ export function ProviderForm({
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={isEditing ? initialProvider?.maskedKey || "••••••••" : "sk-..."}
                 required={!isEditing}
-                className="rounded-[10px] border-hairline text-xs pr-9 font-mono font-normal"
+                className="rounded-[10px] border-hairline text-xs pr-9  font-normal"
               />
               <button
                 type="button"
@@ -259,7 +259,7 @@ export function ProviderForm({
                   PROVIDER_PRESETS[provider].placeholderUrl || "https://..."
                 }
                 required={provider === "custom"}
-                className="rounded-[10px] border-hairline text-xs font-mono font-normal"
+                className="rounded-[10px] border-hairline text-xs  font-normal"
               />
             </div>
           )}
@@ -273,7 +273,7 @@ export function ProviderForm({
               onChange={(e) => setModelDefault(e.target.value)}
               placeholder="e.g. gpt-4o, claude-3-5-sonnet-20241022"
               required
-              className="rounded-[10px] border-hairline text-xs font-mono font-normal"
+              className="rounded-[10px] border-hairline text-xs  font-normal"
             />
           </div>
 

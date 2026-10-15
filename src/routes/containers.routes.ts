@@ -14,7 +14,7 @@ containersRoutes.use("*", requireAuth);
  * POST /api/projects/:id/start - Starts project container & file watcher
  */
 containersRoutes.post("/:id/start", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const status = await dockerService.startProject(projectId);
   await watcherService.startWatcher(projectId);
@@ -31,7 +31,7 @@ containersRoutes.post("/:id/start", requireProjectOwner, async (c) => {
  * POST /api/projects/:id/stop - Stops project container & file watcher
  */
 containersRoutes.post("/:id/stop", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   await watcherService.stopWatcher(projectId);
   const status = await dockerService.stopProject(projectId);
@@ -45,7 +45,7 @@ containersRoutes.post("/:id/stop", requireProjectOwner, async (c) => {
  * POST /api/projects/:id/restart - Restarts container
  */
 containersRoutes.post("/:id/restart", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
 
   const status = await dockerService.restartProject(projectId);
   await watcherService.startWatcher(projectId);
@@ -61,7 +61,7 @@ containersRoutes.post("/:id/restart", requireProjectOwner, async (c) => {
  * GET /api/projects/:id/status - Container status
  */
 containersRoutes.get("/:id/status", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const status = await dockerService.getStatus(projectId);
   return c.json({ container: status });
 });
@@ -70,7 +70,7 @@ containersRoutes.get("/:id/status", requireProjectOwner, async (c) => {
  * GET /api/projects/:id/logs - SSE stream of container logs (?tail=200)
  */
 containersRoutes.get("/:id/logs", requireProjectOwner, async (c) => {
-  const projectId = c.req.param("id");
+  const projectId = c.req.param("id")!;
   const tail = parseInt(c.req.query("tail") || "200", 10);
 
   return streamSSE(c, async (stream) => {
@@ -104,7 +104,7 @@ containersRoutes.get("/:id/logs", requireProjectOwner, async (c) => {
       // Keep stream alive with periodic comment pings
       while (true) {
         await stream.sleep(15000);
-        await stream.writeSSE({ comment: "ping" });
+        await stream.writeSSE({ data: "ping", event: "ping" });
       }
     } catch (err: any) {
       await stream.writeSSE({

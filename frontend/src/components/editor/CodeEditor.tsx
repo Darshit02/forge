@@ -90,7 +90,7 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
   if (!currentFile) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-paper select-none">
-        <div className="w-12 h-12 rounded-2xl border border-hairline bg-bone flex items-center justify-center mb-4 text-ash">
+        <div className="w-12 h-12 rounded-2xl  bg-bone flex items-center justify-center mb-4 text-ash">
           <Code2 className="w-6 h-6" />
         </div>
         <h3 className="text-base font-normal text-ink">
@@ -107,7 +107,7 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
   return (
     <div className="flex flex-col h-full bg-paper">
       {/* Editor Sub-Header / Breadcrumb */}
-      <div className="h-7 px-3 border-b border-hairline bg-paper flex items-center justify-between text-[11px] text-ash select-none shrink-0 font-mono">
+      <div className="h-7 px-3 border-b border-hairline bg-paper flex items-center justify-between text-[11px] text-ash select-none shrink-0 ">
         <div className="flex items-center gap-1.5 truncate font-normal">
           <FileCode className="w-3.5 h-3.5 text-ash" />
           <span className="truncate">{currentFile.path}</span>

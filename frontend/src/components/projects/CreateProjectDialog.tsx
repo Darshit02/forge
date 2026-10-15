@@ -16,7 +16,7 @@ import {
 import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
-import { Plus, ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight, Loader2, PlusCircle } from "lucide-react";
 import type { ProjectFramework, ProjectLanguage } from "../../types/api.js";
 
 interface CreateProjectDialogProps {
@@ -76,17 +76,17 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal gap-1.5 text-xs">
-            <Plus className="w-4 h-4" />
+          <Button className="rounded-full bg-primary text-ink hover:bg-primary/90 font-normal gap-1.5 text-xs">
+            <PlusCircle className="w-4 h-4" />
             New Project
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="rounded-2xl border border-hairline bg-paper max-w-lg p-6 shadow-none">
+      <DialogContent className="rounded-2xl  bg-paper max-w-lg p-6 shadow-none">
         <DialogHeader>
           <div className="flex items-center justify-between text-xs text-ash mb-1">
             <span>Step {step} of 4</span>
-            <span className="uppercase tracking-[0.018em] font-mono">
+            <span className="uppercase tracking-[0.018em] ">
               {step === 1 && "Project Details"}
               {step === 2 && "Language"}
               {step === 3 && "Framework"}
@@ -160,7 +160,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                 <select
                   value={aiProviderId}
                   onChange={(e) => setAiProviderId(e.target.value)}
-                  className="w-full h-10 rounded-[10px] border border-hairline bg-transparent px-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="w-full h-10 rounded-[10px]  bg-transparent px-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="">Default (First available or system)</option>
                   {providers.map((p) => (
@@ -172,7 +172,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               </div>
 
               {/* Summary Review Card */}
-              <div className="p-4 rounded-xl border border-hairline bg-bone space-y-1.5 text-xs font-normal">
+              <div className="p-4 rounded-xl  bg-bone space-y-1.5 text-xs font-normal">
                 <div className="flex justify-between">
                   <span className="text-ash">Project:</span>
                   <span className="text-ink font-normal">{name}</span>
@@ -185,7 +185,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ash">Port Range:</span>
-                  <span className="font-mono text-ash font-normal">127.0.0.1:8001-9000</span>
+                  <span className=" text-ash font-normal">127.0.0.1:8001-9000</span>
                 </div>
               </div>
             </div>

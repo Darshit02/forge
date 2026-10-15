@@ -24,10 +24,11 @@ export class SpecExtractorService {
     const candidatePaths = [
       ...(CONSTANTS.SPEC_PATHS[framework] || []),
       "/openapi.json",
+      "/swagger.json",
+      "/docs/openapi.json",
       "/api-json",
       "/doc",
       "/api-docs.json",
-      "/swagger.json",
       "/apispec.json",
       "/api/schema/",
       "/api/schema.json",
@@ -49,7 +50,7 @@ export class SpecExtractorService {
         clearTimeout(timeoutId);
 
         if (response.ok) {
-          const json = await response.json();
+          const json = (await response.json()) as any;
           if (json && (json.openapi || json.swagger || json.paths)) {
             logger.info(
               { hostPort, path: specPath },

@@ -32,7 +32,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="rounded-2xl border border-hairline bg-paper">
+      <AlertDialogContent className="rounded-2xl  bg-paper">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-base font-normal text-ink">
             {title}
