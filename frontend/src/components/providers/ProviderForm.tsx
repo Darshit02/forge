@@ -25,27 +25,51 @@ interface ProviderFormProps {
 
 const PROVIDER_PRESETS: Record<
   AIProviderType,
-  { label: string; defaultModel: string; baseUrlRequired: boolean; placeholderUrl?: string }
+  {
+    label: string;
+    defaultModel: string;
+    suggestedModels: string[];
+    baseUrlRequired: boolean;
+    placeholderUrl?: string;
+  }
 > = {
+  google: {
+    label: "Google Gemini",
+    defaultModel: "gemini-2.5-pro",
+    suggestedModels: [
+      "gemini-2.5-pro",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-pro",
+    ],
+    baseUrlRequired: false,
+  },
   openai: {
     label: "OpenAI",
     defaultModel: "gpt-4o",
+    suggestedModels: ["gpt-4o", "gpt-4o-mini", "o3-mini", "o1"],
     baseUrlRequired: false,
     placeholderUrl: "https://api.openai.com/v1",
   },
   anthropic: {
     label: "Anthropic",
-    defaultModel: "claude-3-5-sonnet-20241022",
-    baseUrlRequired: false,
-  },
-  google: {
-    label: "Google Gemini",
-    defaultModel: "gemini-1.5-pro-latest",
+    defaultModel: "claude-3-7-sonnet-20250219",
+    suggestedModels: [
+      "claude-3-7-sonnet-20250219",
+      "claude-3-5-sonnet-20241022",
+      "claude-3-5-haiku-20241022",
+    ],
     baseUrlRequired: false,
   },
   custom: {
     label: "Custom / OpenAI-Compatible (Ollama, Groq, DeepSeek, vLLM)",
-    defaultModel: "deepseek-coder",
+    defaultModel: "deepseek-chat",
+    suggestedModels: [
+      "deepseek-chat",
+      "deepseek-coder",
+      "qwen2.5-coder",
+      "llama3.3",
+    ],
     baseUrlRequired: true,
     placeholderUrl: "http://localhost:11434/v1 or https://api.groq.com/openai/v1",
   },
@@ -190,11 +214,11 @@ export function ProviderForm({
                 }
                 className="w-full h-10 px-3 rounded-[10px]  bg-paper text-xs text-ink focus:outline-none focus:ring-1 focus:ring-primary font-normal"
               >
-                <option value="openai">OpenAI (GPT-4o, o1, etc.)</option>
-                <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
-                <option value="google">Google Gemini (Gemini 1.5 Pro)</option>
+                <option value="google">Google Gemini (Gemini 2.5 Pro & Flash)</option>
+                <option value="openai">OpenAI (GPT-4o, o3-mini, o1)</option>
+                <option value="anthropic">Anthropic (Claude 3.7 Sonnet, 3.5 Sonnet)</option>
                 <option value="custom">
-                  Custom OpenAI-Compatible (Ollama, Groq, DeepSeek, vLLM)
+                  Custom OpenAI-Compatible (DeepSeek, Groq, Ollama, vLLM)
                 </option>
               </select>
             </div>
@@ -265,16 +289,39 @@ export function ProviderForm({
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
-              Default Model
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
+                Default Model
+              </Label>
+              <span className="text-[10px] text-ash font-normal">
+                Click a preset or enter custom model
+              </span>
+            </div>
             <Input
               value={modelDefault}
               onChange={(e) => setModelDefault(e.target.value)}
-              placeholder="e.g. gpt-4o, claude-3-5-sonnet-20241022"
+              placeholder="e.g. gemini-2.5-pro, gpt-4o, claude-3-7-sonnet-20250219"
               required
-              className="rounded-[10px] border-hairline text-xs  font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
+              className="rounded-[10px] border-hairline text-xs font-mono font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
+            {PROVIDER_PRESETS[provider]?.suggestedModels && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {PROVIDER_PRESETS[provider].suggestedModels.map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setModelDefault(m)}
+                    className={`px-2 py-0.5 rounded-[5px] text-[10px] font-mono transition-colors border ${
+                      modelDefault === m
+                        ? "bg-primary/20 border-primary text-ink font-medium"
+                        : "bg-bone/70 border-hairline text-ash hover:text-ink hover:bg-bone"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <DialogFooter className="mt-5 pt-3 border-t border-hairline flex items-center justify-between sm:justify-between">

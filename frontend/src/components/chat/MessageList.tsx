@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { MessageBubble } from "./MessageBubble.js";
 import { useChatStore } from "../../stores/chat.store.js";
-import { Bot } from "lucide-react";
+import { getMascotAvatar } from "../../lib/mascot.js";
 import type { ChatMessage } from "../../types/api.js";
 
 interface MessageListProps {
@@ -26,8 +26,12 @@ export function MessageList({ messages, projectId }: MessageListProps) {
   if (displayMessages.length === 0 && !isStreaming) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none text-ash">
-        <div className="w-10 h-10 rounded-2xl  bg-bone flex items-center justify-center mb-3">
-          <Bot className="w-5 h-5 text-ash" />
+        <div className="w-12 h-12 rounded-2xl overflow-hidden mb-3 border border-hairline/60 bg-paper shadow-sm select-none">
+          <img
+            src={getMascotAvatar("bot")}
+            alt="Forge AI Mascot"
+            className="w-full h-full object-cover"
+          />
         </div>
         <h4 className="text-sm font-normal text-ink">
           Forge AI Assistant
@@ -55,7 +59,7 @@ export function MessageList({ messages, projectId }: MessageListProps) {
             id: "live-stream",
             sessionId: "",
             role: "assistant",
-            content: streamingBuffer,
+            content: streamingBuffer || "*Thinking...*",
             createdAt: new Date().toISOString(),
           }}
           isStreaming={true}

@@ -22,9 +22,36 @@ import {
   Sparkles,
   ChevronDown,
   FileCode,
+  Check,
 } from "lucide-react";
 import { cn } from "../../lib/utils.js";
 import type { ChatMode } from "../../types/api.js";
+
+const POPULAR_MODELS_BY_PROVIDER: Record<string, string[]> = {
+  google: [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-pro",
+  ],
+  openai: [
+    "gpt-4o",
+    "gpt-4o-mini",
+    "o3-mini",
+    "o1",
+  ],
+  anthropic: [
+    "claude-3-7-sonnet-20250219",
+    "claude-3-5-sonnet-20241022",
+    "claude-3-5-haiku-20241022",
+  ],
+  custom: [
+    "deepseek-chat",
+    "deepseek-coder",
+    "llama3.3",
+    "qwen2.5-coder",
+  ],
+};
 
 interface ChatInputProps {
   projectId: string;
@@ -69,6 +96,20 @@ export function ChatInput({
     enabled: filePickerOpen,
   });
 
+  const providers = providersQuery.data || [];
+
+  // Auto-sync provider and model when providers load
+  useEffect(() => {
+    if (providers.length > 0) {
+      const currentProvider = providers.find((p) => p.id === selectedProviderId);
+      if (!currentProvider) {
+        const defaultProvider = providers.find((p) => p.isDefault) || providers[0];
+        setSelectedProviderId(defaultProvider.id);
+        setSelectedModel(defaultProvider.modelDefault);
+      }
+    }
+  }, [providers, selectedProviderId, setSelectedProviderId, setSelectedModel]);
+
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
@@ -102,8 +143,6 @@ export function ChatInput({
     textareaRef.current?.focus();
   };
 
-  const providers = providersQuery.data || [];
-
   return (
     <div className="p-3 border-t border-hairline bg-paper">
       {/* Controls Strip: Mode Toggle + Model Picker + File Context */}
@@ -130,33 +169,62 @@ export function ChatInput({
           {/* Model Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 px-2 py-1 rounded-[6px]  text-[11px] text-ink hover:bg-bone font-sans font-normal">
-                <Sparkles className="w-3 h-3 text-primary" />
-                <span className="truncate max-w-[100px]">{selectedModel}</span>
-                <ChevronDown className="w-3 h-3 text-ash" />
+              <button
+                type="button"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[11px] text-ink hover:bg-bone font-sans font-normal border border-hairline/60"
+              >
+                <Sparkles className="w-3 h-3 text-primary shrink-0" />
+                <span className="truncate max-w-[130px] font-mono text-[11px]">{selectedModel}</span>
+                <ChevronDown className="w-3 h-3 text-ash shrink-0" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="rounded-xl  bg-paper text-xs font-sans w-48"
+              className="rounded-xl bg-paper text-xs font-sans w-64 max-h-80 overflow-y-auto p-1.5 border border-hairline shadow-md"
             >
               {providers.length > 0 ? (
-                providers.map((p) => (
-                  <DropdownMenuItem
-                    key={p.id}
-                    className="cursor-pointer text-xs font-normal"
-                    onClick={() => {
-                      setSelectedProviderId(p.id);
-                      setSelectedModel(p.modelDefault);
-                    }}
-                  >
-                    <span className="font-normal mr-1.5">{p.label}:</span>
-                    <span className="text-ash truncate">{p.modelDefault}</span>
-                  </DropdownMenuItem>
-                ))
+                providers.map((p, idx) => {
+                  const suggested = POPULAR_MODELS_BY_PROVIDER[p.provider] || [];
+                  const allModels = Array.from(new Set([p.modelDefault, ...suggested]));
+                  return (
+                    <div key={p.id} className={idx > 0 ? "pt-1.5 mt-1.5 border-t border-hairline/60" : ""}>
+                      <div className="px-2 py-1 flex items-center justify-between text-[10px] uppercase tracking-[0.018em] text-ash font-medium">
+                        <span className="truncate">{p.label}</span>
+                        <span className="text-[9px] px-1 py-0.5 rounded bg-bone font-mono text-ash/80 lowercase">
+                          {p.provider}
+                        </span>
+                      </div>
+                      {allModels.map((m) => {
+                        const isSelected = selectedProviderId === p.id && selectedModel === m;
+                        return (
+                          <DropdownMenuItem
+                            key={m}
+                            className={cn(
+                              "cursor-pointer text-xs font-normal flex items-center justify-between rounded-[6px] px-2 py-1.5 font-mono text-[11px]",
+                              isSelected ? "bg-bone text-ink font-medium" : "text-ash hover:text-ink"
+                            )}
+                            onClick={() => {
+                              setSelectedProviderId(p.id);
+                              setSelectedModel(m);
+                            }}
+                          >
+                            <span className="truncate">{m}</span>
+                            {isSelected && <Check className="w-3 h-3 text-primary shrink-0 ml-1" />}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </div>
+                  );
+                })
               ) : (
-                <div className="p-2 text-xs text-ash font-normal">
-                  No BYOK providers added. (Go to Settings)
+                <div className="p-3 text-xs text-ash font-normal text-center space-y-2">
+                  <p>No AI providers registered yet.</p>
+                  <a
+                    href="/settings"
+                    className="inline-block text-[11px] text-primary hover:underline font-medium"
+                  >
+                    Go to Settings &rarr;
+                  </a>
                 </div>
               )}
             </DropdownMenuContent>

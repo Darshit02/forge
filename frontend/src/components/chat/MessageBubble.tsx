@@ -1,11 +1,13 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Check, Copy, Bot, User } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { StreamingCursor } from "./StreamingCursor.js";
 import { ToolCallCard } from "./ToolCallCard.js";
 import { cn } from "../../lib/utils.js";
 import type { ChatMessage } from "../../types/api.js";
+import { useAuth } from "../../hooks/useAuth.js";
+import { getMascotAvatar, getMascotInfo } from "../../lib/mascot.js";
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -18,7 +20,15 @@ export function MessageBubble({
   isStreaming = false,
   projectId,
 }: MessageBubbleProps) {
+  const { user } = useAuth();
   const isUser = message.role === "user";
+
+  const userSeed = user?.id || user?.email || user?.name || "forge-developer";
+  const userMascotUrl = getMascotAvatar(userSeed);
+  const userMascotInfo = getMascotInfo(userSeed);
+
+  const botMascotUrl = getMascotAvatar("bot");
+  const botMascotInfo = getMascotInfo("bot");
 
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
 
@@ -35,8 +45,15 @@ export function MessageBubble({
           <div className="rounded-2xl rounded-tr-xs bg-bone  px-3.5 py-2.5 text-xs text-ink font-sans font-normal">
             <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
           </div>
-          <div className="w-6 h-6 rounded-[6px] bg-paper  flex items-center justify-center shrink-0 text-ash mt-1">
-            <User className="w-3.5 h-3.5" />
+          <div
+            className="w-7 h-7 rounded-[8px] overflow-hidden shrink-0 mt-0.5 border border-hairline/60 bg-paper shadow-sm select-none"
+            title={`${user?.name || "Developer"} (${userMascotInfo.name})`}
+          >
+            <img
+              src={userMascotUrl}
+              alt={userMascotInfo.name}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
@@ -46,8 +63,15 @@ export function MessageBubble({
   return (
     <div className="flex justify-start my-3">
       <div className="flex gap-2.5 max-w-[95%]">
-        <div className="w-6 h-6 rounded-[6px] bg-primary flex items-center justify-center shrink-0 text-ink font-normal text-xs mt-0.5">
-          <Bot className="w-3.5 h-3.5 text-ink" />
+        <div
+          className="w-7 h-7 rounded-[8px] overflow-hidden shrink-0 mt-0.5 border border-hairline/60 bg-paper shadow-sm select-none"
+          title={`Forge AI (${botMascotInfo.name})`}
+        >
+          <img
+            src={botMascotUrl}
+            alt={botMascotInfo.name}
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <div className="flex-1 space-y-2 overflow-hidden">

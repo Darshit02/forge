@@ -21,6 +21,7 @@ interface ChatState {
     toolCalls?: ToolCallExecution[] | null;
   }) => void;
   cancelStream: () => void;
+  setError: (error: string) => void;
   setSelectedModel: (model: string) => void;
   setSelectedProviderId: (id: string | null) => void;
   setChatMode: (mode: ChatMode) => void;
@@ -31,7 +32,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   streamingBuffer: "",
   isStreaming: false,
-  selectedModel: "gpt-4o",
+  selectedModel: "gemini-2.5-pro",
   selectedProviderId: null,
   chatMode: "edit",
 
@@ -86,6 +87,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   cancelStream: () => {
     set({ isStreaming: false });
+  },
+
+  setError: (error: string) => {
+    const { messages, streamingBuffer, activeSessionId } = get();
+    const errorContent = streamingBuffer
+      ? `${streamingBuffer}\n\n---\n⚠️ **AI Stream Interrupted**: ${error}`
+      : `⚠️ **AI Response Failed**\n\n${error}\n\n*Check your API key and model selection in **Settings > AI Providers (BYOK)**.*`;
+
+    const errorMessage: ChatMessage = {
+      id: "err-" + Date.now(),
+      sessionId: activeSessionId || "",
+      role: "assistant",
+      content: errorContent,
+      createdAt: new Date().toISOString(),
+    };
+
+    set({
+      messages: [...messages, errorMessage],
+      isStreaming: false,
+      streamingBuffer: "",
+    });
   },
 
   setSelectedModel: (selectedModel) => set({ selectedModel }),

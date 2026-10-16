@@ -30,6 +30,103 @@ export interface StreamChatOptions {
   onToolCall?: (toolCall: ToolCallExecution) => void;
 }
 
+/**
+ * Normalizes user-specified model names and aliases, preventing 404s and handling cross-provider overrides.
+ */
+export function normalizeModelName(
+  provider: string,
+  rawModel?: string,
+  fallbackDefault?: string
+): string {
+  const defaultByProvider: Record<string, string> = {
+    google: "gemini-2.5-pro",
+    openai: "gpt-4o",
+    anthropic: "claude-3-7-sonnet-20250219",
+    custom: "deepseek-chat",
+  };
+
+  const fallback = fallbackDefault || defaultByProvider[provider] || "gpt-4o";
+
+  if (!rawModel || !rawModel.trim()) {
+    return fallback;
+  }
+
+  const m = rawModel.trim();
+
+  if (provider === "google") {
+    // If user passed a model from another provider (e.g. gpt-4o, claude-3-5)
+    if (
+      m.startsWith("gpt-") ||
+      m.startsWith("o1") ||
+      m.startsWith("o3") ||
+      m.startsWith("o4") ||
+      m.startsWith("claude-")
+    ) {
+      return fallback.startsWith("gemini-") ? fallback : "gemini-2.5-pro";
+    }
+
+    const googleAliases: Record<string, string> = {
+      "gemini-2.5-pro-latest": "gemini-2.5-pro",
+      "gemini-2.5-flash-latest": "gemini-2.5-flash",
+      "gemini-2.0-flash-latest": "gemini-2.0-flash",
+      "gemini-2.0-pro-latest": "gemini-2.0-pro-exp-02-05",
+      "gemini-1.5-pro-latest": "gemini-1.5-pro",
+      "gemini-1.5-flash-latest": "gemini-1.5-flash",
+      "gemini-2.5": "gemini-2.5-pro",
+      "gemini-2.0": "gemini-2.0-flash",
+      "gemini-1.5": "gemini-1.5-pro",
+      "gemini-pro": "gemini-2.5-pro",
+      "gemini-flash": "gemini-2.5-flash",
+    };
+    return googleAliases[m] || m;
+  }
+
+  if (provider === "anthropic") {
+    if (
+      m.startsWith("gpt-") ||
+      m.startsWith("gemini-") ||
+      m.startsWith("o1") ||
+      m.startsWith("o3") ||
+      m.startsWith("o4")
+    ) {
+      return fallback.startsWith("claude-")
+        ? fallback
+        : "claude-3-7-sonnet-20250219";
+    }
+
+    const anthropicAliases: Record<string, string> = {
+      "claude-3-7-sonnet": "claude-3-7-sonnet-20250219",
+      "claude-3-5-sonnet": "claude-3-5-sonnet-20241022",
+      "claude-3-5-haiku": "claude-3-5-haiku-20241022",
+      "claude-3-opus": "claude-3-opus-20240229",
+      "claude-sonnet": "claude-3-7-sonnet-20250219",
+      "claude-haiku": "claude-3-5-haiku-20241022",
+      "claude-3.7-sonnet": "claude-3-7-sonnet-20250219",
+      "claude-3.5-sonnet": "claude-3-5-sonnet-20241022",
+    };
+    return anthropicAliases[m] || m;
+  }
+
+  if (provider === "openai") {
+    if (m.startsWith("gemini-") || m.startsWith("claude-")) {
+      return fallback.startsWith("gpt-") || fallback.startsWith("o")
+        ? fallback
+        : "gpt-4o";
+    }
+
+    const openaiAliases: Record<string, string> = {
+      "gpt-4o-latest": "chatgpt-4o-latest",
+      "o3": "o3-mini",
+      "o1": "o1-mini",
+      "gpt4o": "gpt-4o",
+      "gpt-4": "gpt-4o",
+    };
+    return openaiAliases[m] || m;
+  }
+
+  return m;
+}
+
 export class AiService {
   /**
    * Resolves the AI model instance for the user/project based on BYOK configuration
@@ -109,7 +206,11 @@ export class AiService {
 
     // Decrypt key strictly in memory
     const apiKey = decryptApiKey(providerRecord.encryptedKey);
-    const targetModel = modelOverride || providerRecord.modelDefault;
+    const targetModel = normalizeModelName(
+      providerRecord.provider,
+      modelOverride,
+      providerRecord.modelDefault
+    );
 
     switch (providerRecord.provider) {
       case "openai": {
@@ -118,9 +219,9 @@ export class AiService {
           baseURL: providerRecord.baseUrl || undefined,
         });
         return {
-          model: openai(targetModel || "gpt-4o"),
+          model: openai(targetModel),
           providerName: "openai",
-          modelName: targetModel || "gpt-4o",
+          modelName: targetModel,
         };
       }
 
@@ -130,9 +231,9 @@ export class AiService {
           baseURL: providerRecord.baseUrl || undefined,
         });
         return {
-          model: anthropic(targetModel || "claude-3-5-sonnet-20241022"),
+          model: anthropic(targetModel),
           providerName: "anthropic",
-          modelName: targetModel || "claude-3-5-sonnet-20241022",
+          modelName: targetModel,
         };
       }
 
@@ -142,9 +243,9 @@ export class AiService {
           baseURL: providerRecord.baseUrl || undefined,
         });
         return {
-          model: google(targetModel || "gemini-1.5-pro-latest"),
+          model: google(targetModel),
           providerName: "google",
-          modelName: targetModel || "gemini-1.5-pro-latest",
+          modelName: targetModel,
         };
       }
 
@@ -154,9 +255,9 @@ export class AiService {
           baseURL: providerRecord.baseUrl || "http://localhost:11434/v1",
         });
         return {
-          model: customOpenAi(targetModel || "llama3"),
+          model: customOpenAi(targetModel),
           providerName: "custom",
-          modelName: targetModel || "llama3",
+          modelName: targetModel,
         };
       }
 
@@ -396,56 +497,74 @@ CORE INSTRUCTIONS & CONSTRAINTS:
 
     const executedTools: ToolCallExecution[] = [];
 
+    // Tee the text stream so both the SSE route consumer and the background persistence promise
+    // can read concurrently without stream locking conflicts.
+    const [routeStream, internalStream] = result.textStream.tee();
+
     // Background consumer for streaming tokens & persisting message
     const streamPromise = (async () => {
-      let accumulatedText = "";
+      try {
+        let accumulatedText = "";
 
-      for await (const delta of result.textStream) {
-        accumulatedText += delta;
-        // Broadcast token via WebSocket
-        wsHub.broadcastAiToken(projectId, delta);
-        if (options.onChunk) {
-          options.onChunk(delta);
+        for await (const delta of internalStream) {
+          accumulatedText += delta;
+          // Broadcast token via WebSocket
+          wsHub.broadcastAiToken(projectId, delta);
+          if (options.onChunk) {
+            options.onChunk(delta);
+          }
         }
-      }
 
-      // Check tool calls
-      const toolCalls = await result.toolCalls;
-      if (toolCalls && toolCalls.length > 0) {
-        for (const tc of toolCalls) {
-          executedTools.push({
-            toolCallId: tc.toolCallId,
-            toolName: tc.toolName as any,
-            args: tc.args as Record<string, unknown>,
-          });
+        // Check tool calls
+        let toolCalls: any[] = [];
+        try {
+          toolCalls = (await result.toolCalls) || [];
+        } catch (tcErr: any) {
+          logger.warn({ tcErr: tcErr.message }, "Error reading tool calls");
         }
-      }
 
-      // Persist assistant message in DB
-      const [savedMessage] = await db
-        .insert(chatMessages)
-        .values({
+        if (toolCalls && toolCalls.length > 0) {
+          for (const tc of toolCalls) {
+            executedTools.push({
+              toolCallId: tc.toolCallId,
+              toolName: tc.toolName as any,
+              args: tc.args as Record<string, unknown>,
+            });
+          }
+        }
+
+        // Persist assistant message in DB
+        const [savedMessage] = await db
+          .insert(chatMessages)
+          .values({
+            sessionId,
+            role: "assistant",
+            content: accumulatedText,
+            toolCalls: executedTools.length > 0 ? executedTools : null,
+          })
+          .returning();
+
+        // Broadcast ai.done via WebSocket
+        wsHub.broadcastAiDone(projectId, savedMessage.id);
+
+        return {
+          messageId: savedMessage.id,
           sessionId,
-          role: "assistant",
           content: accumulatedText,
-          toolCalls: executedTools.length > 0 ? executedTools : null,
-        })
-        .returning();
-
-      // Broadcast ai.done via WebSocket
-      wsHub.broadcastAiDone(projectId, savedMessage.id);
-
-      return {
-        messageId: savedMessage.id,
-        sessionId,
-        content: accumulatedText,
-        toolCalls: executedTools,
-      };
+          toolCalls: executedTools,
+        };
+      } catch (err: any) {
+        logger.error(
+          { err: err.message, stack: err.stack, projectId, sessionId },
+          "Error in streamChat streamPromise"
+        );
+        throw err;
+      }
     })();
 
     return {
       sessionId,
-      textStream: result.textStream,
+      textStream: routeStream,
       fullStream: result.fullStream,
       toDataStreamResponse: () => result.toDataStreamResponse(),
       finishPromise: streamPromise,
@@ -463,25 +582,26 @@ CORE INSTRUCTIONS & CONSTRAINTS:
   ): Promise<{ ok: boolean; latencyMs: number; error?: string }> {
     const startTime = Date.now();
     try {
+      const targetModel = normalizeModelName(providerType, modelName || undefined);
       let model;
       if (providerType === "openai") {
         const client = createOpenAI({ apiKey, baseURL: baseUrl || undefined });
-        model = client(modelName || "gpt-4o-mini");
+        model = client(targetModel);
       } else if (providerType === "anthropic") {
         const client = createAnthropic({ apiKey, baseURL: baseUrl || undefined });
-        model = client(modelName || "claude-3-5-haiku-20241022");
+        model = client(targetModel);
       } else if (providerType === "google") {
         const client = createGoogleGenerativeAI({
           apiKey,
           baseURL: baseUrl || undefined,
         });
-        model = client(modelName || "gemini-1.5-flash-latest");
+        model = client(targetModel);
       } else {
         const client = createOpenAI({
           apiKey,
           baseURL: baseUrl || "http://localhost:11434/v1",
         });
-        model = client(modelName || "llama3");
+        model = client(targetModel);
       }
 
       const testResult = await streamText({

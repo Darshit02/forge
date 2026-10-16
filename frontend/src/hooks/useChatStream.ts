@@ -20,6 +20,7 @@ export function useChatStream(projectId: string | undefined) {
     appendToken,
     finishStream,
     cancelStream,
+    setError,
     setActiveSessionId,
   } = useChatStore();
 
@@ -76,8 +77,10 @@ export function useChatStream(projectId: string | undefined) {
             queryClient.invalidateQueries({ queryKey: ["files", projectId] });
           },
           onError: (errMsg) => {
-            cancelStream();
-            toast.error(errMsg || "Chat request failed");
+            setError(errMsg || "Chat request failed");
+            toast.error(errMsg || "Chat request failed", {
+              duration: 5000,
+            });
           },
         },
         abortControllerRef.current.signal
@@ -95,6 +98,7 @@ export function useChatStream(projectId: string | undefined) {
       appendToken,
       finishStream,
       cancelStream,
+      setError,
       setActiveSessionId,
       queryClient,
     ]
