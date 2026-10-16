@@ -1,3 +1,7 @@
+import os from "node:os";
+import fs from "node:fs/promises";
+import fsSync from "node:fs";
+import path from "node:path";
 import { eq, and, desc } from "drizzle-orm";
 import { simpleGit } from "simple-git";
 import { db } from "../db/client.js";
@@ -19,6 +23,7 @@ export interface CreateProjectInput {
   framework: ProjectFramework;
   aiProviderId?: string;
   source: "scratch" | "import";
+  folderPath?: string;
   importSource?:
     | { type: "git"; url: string }
     | { type: "zip"; zipBuffer: Buffer }
@@ -32,6 +37,18 @@ export class ProjectService {
   async createProject(input: CreateProjectInput) {
     scaffoldService.validateFramework(input.language, input.framework);
 
+    // Determine target workspace path
+    let targetWorkspace = "";
+    if (input.folderPath && input.folderPath.trim()) {
+      let resolved = input.folderPath.trim();
+      if (resolved.startsWith("~")) {
+        resolved = path.join(os.homedir(), resolved.slice(1));
+      } else {
+        resolved = path.resolve(process.cwd(), resolved);
+      }
+      targetWorkspace = resolved;
+    }
+
     // 1. Insert project record to get ID
     const [project] = await db
       .insert(projects)
@@ -41,19 +58,22 @@ export class ProjectService {
         description: input.description?.trim() || null,
         language: input.language,
         framework: input.framework,
-        workspacePath: "", // populated below
+        workspacePath: targetWorkspace || "", // populated below if default
         aiProviderId: input.aiProviderId || null,
         status: "stopped",
       })
       .returning();
 
-    const workspaceDir = fileStoreService.getWorkspaceDir(project.id);
+    const workspaceDir = targetWorkspace || fileStoreService.getWorkspaceDir(project.id);
+    fileStoreService.setWorkspaceDir(project.id, workspaceDir);
 
-    // Update workspace path in DB
-    await db
-      .update(projects)
-      .set({ workspacePath: workspaceDir })
-      .where(eq(projects.id, project.id));
+    if (!targetWorkspace) {
+      // Update default workspace path in DB
+      await db
+        .update(projects)
+        .set({ workspacePath: workspaceDir })
+        .where(eq(projects.id, project.id));
+    }
 
     project.workspacePath = workspaceDir;
 
@@ -211,6 +231,67 @@ export class ProjectService {
     await db.delete(projects).where(eq(projects.id, projectId));
 
     logger.info({ projectId }, "Project deleted and resources purged");
+  }
+
+  /**
+   * Explores directories on host filesystem so users can pick custom project destinations
+   */
+  async browseHostDirectories(targetPath?: string) {
+    let resolvedPath: string;
+    if (!targetPath || !targetPath.trim()) {
+      resolvedPath = os.homedir();
+    } else if (targetPath.startsWith("~")) {
+      resolvedPath = path.join(os.homedir(), targetPath.slice(1));
+    } else {
+      resolvedPath = path.resolve(process.cwd(), targetPath);
+    }
+
+    try {
+      const stat = await fs.stat(resolvedPath);
+      if (!stat.isDirectory()) {
+        resolvedPath = path.dirname(resolvedPath);
+      }
+    } catch {
+      resolvedPath = path.resolve(process.cwd(), ".data/projects");
+    }
+
+    let canWrite = false;
+    try {
+      fsSync.accessSync(resolvedPath, fsSync.constants.W_OK);
+      canWrite = true;
+    } catch {
+      canWrite = false;
+    }
+
+    const directories: Array<{ name: string; path: string }> = [];
+    try {
+      const entries = await fs.readdir(resolvedPath, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.isDirectory() && !entry.name.startsWith(".")) {
+          if (["node_modules", ".git", "Library", ".Trash"].includes(entry.name)) {
+            continue;
+          }
+          directories.push({
+            name: entry.name,
+            path: path.join(resolvedPath, entry.name),
+          });
+        }
+      }
+    } catch {
+      // Permission or reading error
+    }
+
+    directories.sort((a, b) => a.name.localeCompare(b.name));
+    const parentPath = path.dirname(resolvedPath);
+
+    return {
+      currentPath: resolvedPath,
+      parentPath: parentPath !== resolvedPath ? parentPath : null,
+      homePath: os.homedir(),
+      forgeRoot: path.resolve(process.cwd(), ".data/projects"),
+      canWrite,
+      directories,
+    };
   }
 }
 

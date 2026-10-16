@@ -45,7 +45,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
           value={activeRequest.path}
           onChange={(e) => setActiveRequest({ path: e.target.value })}
           placeholder="/users"
-          className="flex-1 h-9 rounded-[10px] border-hairline  text-xs"
+          className="flex-1 h-9 rounded-[10px] border-hairline  text-xs focus-visible:ring-primary focus-visible:ring-offset-0"
         />
 
         <Button

@@ -249,7 +249,7 @@ export function CollectionSidebar({ projectId }: CollectionSidebarProps) {
                 placeholder="Get User Details"
                 value={newReqName}
                 onChange={(e) => setNewReqName(e.target.value)}
-                className="rounded-[10px] border-hairline"
+                className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
               />
             </div>
 
@@ -275,7 +275,7 @@ export function CollectionSidebar({ projectId }: CollectionSidebarProps) {
                   placeholder="/users"
                   value={newReqPath}
                   onChange={(e) => setNewReqPath(e.target.value)}
-                  className="rounded-[10px] border-hairline  text-xs"
+                  className="rounded-[10px] border-hairline  text-xs focus-visible:ring-primary focus-visible:ring-offset-0"
                 />
               </div>
             </div>

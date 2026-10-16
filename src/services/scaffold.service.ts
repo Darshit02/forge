@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import path from "node:path";
 import { fileStoreService } from "./fileStore.service.js";
 import { BadRequestError } from "../utils/errors.js";
@@ -26,10 +27,16 @@ export const SUPPORTED_FRAMEWORKS: Record<
 };
 
 export class ScaffoldService {
-  private templatesRoot: string;
-
-  constructor() {
-    this.templatesRoot = path.resolve(process.cwd(), "templates");
+  private getTemplatesRoot(): string {
+    const cwdTemplates = path.resolve(process.cwd(), "templates");
+    if (fsSync.existsSync(cwdTemplates)) {
+      return cwdTemplates;
+    }
+    const relativeTemplates = path.resolve(import.meta.dirname, "../../templates");
+    if (fsSync.existsSync(relativeTemplates)) {
+      return relativeTemplates;
+    }
+    return cwdTemplates;
   }
 
   /**
@@ -99,6 +106,38 @@ export class ScaffoldService {
         defaultPort: 8000,
         openApiEndpoints: ["/api/schema.json", "/api/schema/"],
       },
+      {
+        id: "fastify",
+        name: "Fastify",
+        language: "typescript",
+        description: "Low overhead Node.js/TS web framework with OpenAPI",
+        defaultPort: 8000,
+        openApiEndpoints: ["/openapi.json"],
+      },
+      {
+        id: "fiber",
+        name: "Fiber",
+        language: "go",
+        description: "Express-inspired high-speed web framework written in Go",
+        defaultPort: 8000,
+        openApiEndpoints: ["/openapi.json"],
+      },
+      {
+        id: "gin",
+        name: "Gin",
+        language: "go",
+        description: "Fast HTTP web framework in Go",
+        defaultPort: 8000,
+        openApiEndpoints: ["/openapi.json"],
+      },
+      {
+        id: "axum",
+        name: "Axum",
+        language: "rust",
+        description: "Ergonomic and modular web framework built with Tokio and Tower",
+        defaultPort: 8000,
+        openApiEndpoints: ["/openapi.json"],
+      },
     ];
   }
 
@@ -112,7 +151,12 @@ export class ScaffoldService {
   ): Promise<void> {
     this.validateFramework(language, framework);
 
-    const templateDir = path.join(this.templatesRoot, framework);
+    const templateDir = path.join(this.getTemplatesRoot(), framework);
+    if (!fsSync.existsSync(templateDir)) {
+      throw new BadRequestError(
+        `Starter template for framework '${framework}' is not installed or available.`
+      );
+    }
     const workspaceDir = await fileStoreService.initWorkspace(projectId);
 
     try {

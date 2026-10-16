@@ -65,7 +65,7 @@ export function ProjectList({
             placeholder="Search projects by name, language, or framework..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 rounded-[10px] bg-paper text-xs text-ink focus-visible:ring-1 focus-visible:ring-primary font-normal"
+            className="pl-9 pr-4 rounded-[10px] bg-paper text-xs text-ink focus-visible:ring-1 focus-visible:ring-primary font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
           />
         </div>
 

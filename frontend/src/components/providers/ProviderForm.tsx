@@ -209,7 +209,7 @@ export function ProviderForm({
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. My Anthropic Key"
               required
-              className="rounded-[10px] border-hairline text-xs font-normal"
+              className="rounded-[10px] border-hairline text-xs font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
 
@@ -231,7 +231,7 @@ export function ProviderForm({
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={isEditing ? initialProvider?.maskedKey || "••••••••" : "sk-..."}
                 required={!isEditing}
-                className="rounded-[10px] border-hairline text-xs pr-9  font-normal"
+                className="rounded-[10px] border-hairline text-xs pr-9  font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
               />
               <button
                 type="button"
@@ -259,7 +259,7 @@ export function ProviderForm({
                   PROVIDER_PRESETS[provider].placeholderUrl || "https://..."
                 }
                 required={provider === "custom"}
-                className="rounded-[10px] border-hairline text-xs  font-normal"
+                className="rounded-[10px] border-hairline text-xs  font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
               />
             </div>
           )}
@@ -273,7 +273,7 @@ export function ProviderForm({
               onChange={(e) => setModelDefault(e.target.value)}
               placeholder="e.g. gpt-4o, claude-3-5-sonnet-20241022"
               required
-              className="rounded-[10px] border-hairline text-xs  font-normal"
+              className="rounded-[10px] border-hairline text-xs  font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
 

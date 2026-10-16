@@ -22,6 +22,7 @@ import {
   Cog,
   Zap,
 } from "lucide-react";
+import { ForgeAppIcon } from "../components/common/ForgeLogo.js";
 
 const STACKS = [
   { name: "FastAPI", icon: Zap },
@@ -105,7 +106,8 @@ export function LandingPage() {
       <nav className="sticky top-0 z-50 border-b border-hairline bg-bone/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2.5">
+              <ForgeAppIcon size="sm" />
               <span className="text-lg font-bold tracking-tight text-ink">Forge</span>
             </Link>
           </div>
@@ -393,9 +395,9 @@ export function LandingPage() {
         <div className="mx-auto max-w-[1200px] px-6 py-12">
           <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
             <div className="max-w-xs">
-              <div className="flex items-center gap-2">
-               
-                <span className="text-ink">Forge</span>
+              <div className="flex items-center gap-2.5">
+                <ForgeAppIcon size="sm" />
+                <span className="text-ink font-bold">Forge</span>
               </div>
               <p className="mt-3 text-xs leading-relaxed text-ash">
                 The AI-native backend IDE. Scaffold, run, and test services

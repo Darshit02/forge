@@ -363,7 +363,7 @@ export function FileTree({ projectId }: FileTreeProps) {
                   });
                 }
               }}
-              className="rounded-[10px] border-hairline"
+              className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
 

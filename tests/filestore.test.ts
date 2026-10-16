@@ -72,4 +72,25 @@ describe("FileStoreService", () => {
     const safeFile = await fileStoreService.readFile(testProjectId, "safe.txt");
     expect(safeFile.content).toBe("safe content");
   });
+
+  it("should support custom workspace directory", async () => {
+    const customProjId = "custom-proj-" + Math.random().toString(36).slice(2, 8);
+    const customDir = `/tmp/forge-custom-test-${customProjId}`;
+    fileStoreService.setWorkspaceDir(customProjId, customDir);
+
+    expect(fileStoreService.getWorkspaceDir(customProjId)).toBe(customDir);
+
+    await fileStoreService.initWorkspace(customProjId);
+    await fileStoreService.writeFile(customProjId, "custom.txt", "custom content");
+    await fileStoreService.deleteWorkspace(customProjId);
+  });
+
+  it("should browse host directories safely", async () => {
+    const { projectService } = await import("../src/services/project.service.js");
+    const result = await projectService.browseHostDirectories(process.cwd());
+    expect(result.currentPath).toBe(process.cwd());
+    expect(result.canWrite).toBe(true);
+    expect(Array.isArray(result.directories)).toBe(true);
+    expect(result.directories.length).toBeGreaterThan(0);
+  });
 });
