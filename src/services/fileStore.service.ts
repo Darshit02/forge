@@ -13,10 +13,42 @@ import type { FileContent, FileTreeNode } from "../types/index.js";
 import { logger } from "../utils/logger.js";
 
 export class FileStoreService {
+  private customWorkspaces = new Map<string, string>();
+
+  /**
+   * Registers a custom workspace directory for a project
+   */
+  setWorkspaceDir(projectId: string, dir: string): void {
+    this.customWorkspaces.set(projectId, path.resolve(dir));
+  }
+
+  /**
+   * Preloads custom workspace paths from DB on startup
+   */
+  async loadWorkspacesFromDb(): Promise<void> {
+    try {
+      const { db } = await import("../db/client.js");
+      const { projects } = await import("../db/schema.js");
+      const rows = await db
+        .select({ id: projects.id, workspacePath: projects.workspacePath })
+        .from(projects);
+      for (const row of rows) {
+        if (row.workspacePath) {
+          this.setWorkspaceDir(row.id, row.workspacePath);
+        }
+      }
+      logger.info({ count: rows.length }, "Loaded project workspace locations");
+    } catch (err: any) {
+      logger.warn({ err: err.message }, "Could not preload workspaces from DB");
+    }
+  }
+
   /**
    * Returns the base workspace directory for a project
    */
   getWorkspaceDir(projectId: string): string {
+    const custom = this.customWorkspaces.get(projectId);
+    if (custom) return custom;
     return path.resolve(env.PROJECTS_ROOT, projectId, "workspace");
   }
 
@@ -33,10 +65,18 @@ export class FileStoreService {
    * Completely removes the project workspace directory from host FS
    */
   async deleteWorkspace(projectId: string): Promise<void> {
-    const projectDir = path.resolve(env.PROJECTS_ROOT, projectId);
+    const projectDir = this.getWorkspaceDir(projectId);
+    const custom = this.customWorkspaces.get(projectId);
+    this.customWorkspaces.delete(projectId);
+
     try {
-      await fs.rm(projectDir, { recursive: true, force: true });
-      logger.info({ projectId }, "Project workspace directory removed");
+      if (custom) {
+        await fs.rm(custom, { recursive: true, force: true });
+      } else {
+        const rootProjectDir = path.resolve(env.PROJECTS_ROOT, projectId);
+        await fs.rm(rootProjectDir, { recursive: true, force: true });
+      }
+      logger.info({ projectId, projectDir }, "Project workspace directory removed");
     } catch (err) {
       logger.error({ projectId, err }, "Failed to remove project directory");
     }

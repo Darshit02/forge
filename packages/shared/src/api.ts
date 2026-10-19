@@ -85,12 +85,28 @@ export const TemplateMetadataSchema = z.object({
 export type TemplateMetadata = z.infer<typeof TemplateMetadataSchema>;
 
 export const CreateProjectRequestSchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
+  name: z.string().min(1, "Project name is required").max(100),
+  description: z
+    .string()
+    .max(500)
+    .optional()
+    .nullable()
+    .transform((val) => val || undefined),
   language: ProjectLanguageSchema,
   framework: ProjectFrameworkSchema,
-  aiProviderId: z.string().uuid().optional(),
+  aiProviderId: z
+    .string()
+    .uuid()
+    .optional()
+    .nullable()
+    .or(z.literal(""))
+    .transform((val) => val || undefined),
   source: z.enum(["scratch", "import"]).default("scratch"),
+  folderPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => val || undefined),
   importSource: z
     .discriminatedUnion("type", [
       z.object({

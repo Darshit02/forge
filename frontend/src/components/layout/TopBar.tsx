@@ -20,9 +20,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu.js";
-import { Avatar, AvatarFallback } from "../ui/avatar.js";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useUIStore } from "../../stores/ui.store.js";
+import { ForgeAppIcon } from "../common/ForgeLogo.js";
+import { getMascotAvatar, getMascotInfo } from "../../lib/mascot.js";
 import { useProjects } from "../../hooks/useProject.js";
 import type { Project } from "../../types/api.js";
 
@@ -45,6 +47,10 @@ export function TopBar({ currentProject }: TopBarProps) {
       .slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || "U";
 
+  const userSeed = user?.id || user?.email || user?.name || "forge-developer";
+  const mascotUrl = getMascotAvatar(userSeed);
+  const mascotInfo = getMascotInfo(userSeed);
+
   return (
     <header className="h-12 bg-paper px-10   flex items-center justify-between shrink-0 select-none [box-shadow:rgba(255,255,255,0.6)_0_0_2px_0_inset] sticky top-0 z-40">
       {/* Left side: Logo & Project Switcher */}
@@ -53,7 +59,7 @@ export function TopBar({ currentProject }: TopBarProps) {
           to="/dashboard"
           className="flex items-center gap-2 text-ink hover:opacity-85 transition-opacity"
         >
-
+          <ForgeAppIcon size="sm" />
           <span className="font-normal tracking-tight text-sm text-ink">
             Forge
           </span>
@@ -141,9 +147,13 @@ export function TopBar({ currentProject }: TopBarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center rounded-[10px] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-              <Avatar className="w-7 h-7  rounded-[10px]">
-                <AvatarFallback className="bg-bone text-ink text-[11px]  font-normal">
+            <button
+              className="flex items-center rounded-[10px] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-transform active:scale-95"
+              title={`${user?.name || "Developer"} (${mascotInfo.name})`}
+            >
+              <Avatar className="w-7 h-7 rounded-[10px] border border-hairline/60">
+                <AvatarImage src={mascotUrl} alt={mascotInfo.name} />
+                <AvatarFallback className="bg-bone text-ink text-[11px] font-normal">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -151,13 +161,23 @@ export function TopBar({ currentProject }: TopBarProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-48 rounded-xl border border-hairline bg-paper"
+            className="w-56 rounded-xl border border-hairline bg-paper"
           >
-            <div className="px-2 py-1.5">
-              <p className="text-xs font-normal text-ink truncate">
-                {user?.name || "Developer"}
-              </p>
-              <p className="text-[11px] text-ash truncate font-normal">{user?.email}</p>
+            <div className="flex items-center gap-2.5 px-2.5 py-2">
+              <Avatar className="w-8 h-8 rounded-[6px] border border-hairline/60 shrink-0">
+                <AvatarImage src={mascotUrl} alt={mascotInfo.name} />
+                <AvatarFallback className="bg-bone text-ink text-xs font-normal">
+                  {userInitials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-ink truncate">
+                  {user?.name || "Developer"}
+                </p>
+                <p className="text-[10px] text-ash truncate font-normal">
+                  {mascotInfo.name} • {user?.email || "developer@forge.dev"}
+                </p>
+              </div>
             </div>
             <DropdownMenuSeparator className="bg-hairline" />
             <DropdownMenuItem

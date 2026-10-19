@@ -49,7 +49,16 @@ export const aiApi = {
       });
 
       if (!response.ok) {
-        throw new Error(`Chat stream failed with status ${response.status}`);
+        let errorMsg = `Chat stream failed with status ${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson?.error || errJson?.message) {
+            errorMsg = errJson.error || errJson.message;
+          }
+        } catch {
+          // non-JSON response body
+        }
+        throw new Error(errorMsg);
       }
 
       if (!response.body) {

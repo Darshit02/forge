@@ -83,7 +83,7 @@ export function ConsolePanel({ projectId }: ConsolePanelProps) {
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               placeholder="Filter logs..."
-              className="h-6 pl-7 text-[11px] rounded-[10px] border-hairline  font-normal"
+              className="h-6 pl-7 text-[11px] rounded-[10px] border-hairline  font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
         </div>

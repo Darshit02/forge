@@ -192,7 +192,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                 placeholder="e.g. Staging, Production, Local"
                 value={newEnvName}
                 onChange={(e) => setNewEnvName(e.target.value)}
-                className="rounded-[10px] border-hairline text-xs font-normal"
+                className="rounded-[10px] border-hairline text-xs font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
               />
             </div>
             <DialogFooter className="mt-4 pt-3 border-t border-hairline">
@@ -370,7 +370,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           onChange={(e) =>
                             handleUpdateRow(idx, "key", e.target.value)
                           }
-                          className="h-8 text-xs  rounded-[10px] border-hairline font-normal"
+                          className="h-8 text-xs  rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
                         />
                       </div>
                       <div className="col-span-6">
@@ -380,7 +380,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           onChange={(e) =>
                             handleUpdateRow(idx, "value", e.target.value)
                           }
-                          className="h-8 text-xs  rounded-[10px] border-hairline font-normal"
+                          className="h-8 text-xs  rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
                         />
                       </div>
                       <div className="col-span-1 flex justify-center">

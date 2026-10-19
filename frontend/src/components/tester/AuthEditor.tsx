@@ -45,7 +45,7 @@ export function AuthEditor({
             placeholder="eyJhbGciOi..."
             value={bearerToken}
             onChange={(e) => onChange({ bearerToken: e.target.value })}
-            className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
+            className=" text-xs h-8 rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
           />
         </div>
       )}
@@ -57,7 +57,7 @@ export function AuthEditor({
             <Input
               value={basicUser}
               onChange={(e) => onChange({ basicUser: e.target.value })}
-              className="text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className="text-xs h-8 rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
           <div className="space-y-1.5">
@@ -66,7 +66,7 @@ export function AuthEditor({
               type="password"
               value={basicPass}
               onChange={(e) => onChange({ basicPass: e.target.value })}
-              className="text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className="text-xs h-8 rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
         </div>
@@ -80,7 +80,7 @@ export function AuthEditor({
               placeholder="X-API-Key"
               value={apiKeyName}
               onChange={(e) => onChange({ apiKeyName: e.target.value })}
-              className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className=" text-xs h-8 rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
           <div className="space-y-1.5">
@@ -89,7 +89,7 @@ export function AuthEditor({
               placeholder="secret-key"
               value={apiKeyValue}
               onChange={(e) => onChange({ apiKeyValue: e.target.value })}
-              className=" text-xs h-8 rounded-[10px] border-hairline font-normal"
+              className=" text-xs h-8 rounded-[10px] border-hairline font-normal focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
           <div className="space-y-1.5">

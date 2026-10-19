@@ -16,8 +16,9 @@ import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs.js";
-import { GitBranch, Box, Loader2, DownloadCloud, Upload } from "lucide-react";
+import { GitBranch, Box, Loader2, DownloadCloud, Upload, FolderOpen } from "lucide-react";
 import type { ProjectFramework, ProjectLanguage } from "../../types/api.js";
+import { FolderBrowserDialog } from "./FolderBrowserDialog.js";
 
 interface ImportProjectDialogProps {
   trigger?: React.ReactNode;
@@ -35,6 +36,9 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
   const [language, setLanguage] = useState<ProjectLanguage>("python");
   const [framework, setFramework] = useState<ProjectFramework>("fastapi");
   const [aiProviderId, setAiProviderId] = useState<string>("");
+  const [isCustomFolder, setIsCustomFolder] = useState<boolean>(false);
+  const [folderPath, setFolderPath] = useState<string>("");
+  const [browserOpen, setBrowserOpen] = useState<boolean>(false);
 
   const { createProject, isCreating } = useProjects();
 
@@ -76,6 +80,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
   };
 
   const handleSubmit = async () => {
+    const targetFolder = isCustomFolder && folderPath.trim() ? folderPath.trim() : undefined;
     if (importMode === "git") {
       await createProject({
         name: name.trim(),
@@ -83,6 +88,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
         language,
         framework,
         aiProviderId: aiProviderId || undefined,
+        folderPath: targetFolder,
         source: "import",
         importSource: {
           type: "git",
@@ -96,6 +102,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
         language,
         framework: selectedTemplate,
         aiProviderId: aiProviderId || undefined,
+        folderPath: targetFolder,
         source: "import",
         importSource: {
           type: "template",
@@ -108,6 +115,8 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
     setName("");
     setDescription("");
     setGitUrl("");
+    setIsCustomFolder(false);
+    setFolderPath("");
   };
 
   const templates = templatesQuery.data || [];
@@ -170,7 +179,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                 placeholder="https://github.com/owner/repository.git"
                 value={gitUrl}
                 onChange={(e) => handleGitUrlChange(e.target.value)}
-                className="rounded-[10px] border-hairline"
+                className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
               />
             </div>
 
@@ -263,7 +272,7 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
               placeholder="e.g. billing-service"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="rounded-[10px] border-hairline"
+              className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
             />
           </div>
 
@@ -283,6 +292,68 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="space-y-2 pt-2 border-t border-hairline/60">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
+                Destination Folder
+              </Label>
+              <div className="flex items-center gap-1 bg-bone p-0.5 rounded-[6px]">
+                <button
+                  type="button"
+                  onClick={() => setIsCustomFolder(false)}
+                  className={`px-2 py-0.5 text-[11px] rounded-[4px] transition-colors ${
+                    !isCustomFolder
+                      ? "bg-paper text-ink shadow-sm font-medium"
+                      : "text-ash hover:text-ink"
+                  }`}
+                >
+                  Default
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsCustomFolder(true)}
+                  className={`px-2 py-0.5 text-[11px] rounded-[4px] transition-colors ${
+                    isCustomFolder
+                      ? "bg-paper text-ink shadow-sm font-medium"
+                      : "text-ash hover:text-ink"
+                  }`}
+                >
+                  Custom Folder
+                </button>
+              </div>
+            </div>
+
+            {!isCustomFolder ? (
+              <p className="text-[11px] text-ash font-normal leading-relaxed">
+                Cloned/scaffolded in Forge&apos;s workspace storage (<code className="font-mono text-[10px] bg-bone px-1 py-0.5 rounded">.data/projects/...</code>).
+              </p>
+            ) : (
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-1.5">
+                  <Input
+                    placeholder="/Users/username/Projects/my-app"
+                    value={folderPath}
+                    onChange={(e) => setFolderPath(e.target.value)}
+                    className="rounded-[8px] font-mono text-xs border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBrowserOpen(true)}
+                    className="rounded-[8px] border-hairline text-xs font-normal shrink-0 gap-1.5 px-3"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5 text-ash" />
+                    Browse...
+                  </Button>
+                </div>
+                <p className="text-[11px] text-ash font-normal">
+                  Select or type the destination folder on your machine.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -308,6 +379,13 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      <FolderBrowserDialog
+        open={browserOpen}
+        onOpenChange={setBrowserOpen}
+        initialPath={folderPath}
+        onSelect={(selectedPath) => setFolderPath(selectedPath)}
+      />
     </Dialog>
   );
 }

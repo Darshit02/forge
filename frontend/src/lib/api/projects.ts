@@ -9,12 +9,25 @@ export const projectsApi = {
   templates: () =>
     apiClient<{ templates: TemplateMetadata[] }>("/api/projects/templates"),
 
+  browseDirectories: (path?: string) =>
+    apiClient<{
+      currentPath: string;
+      parentPath: string | null;
+      homePath: string;
+      forgeRoot: string;
+      canWrite: boolean;
+      directories: Array<{ name: string; path: string }>;
+    }>(
+      `/api/projects/directories${path ? `?path=${encodeURIComponent(path)}` : ""}`
+    ),
+
   create: (data: {
     name: string;
     description?: string;
     language: string;
     framework: string;
     aiProviderId?: string;
+    folderPath?: string;
     source?: "scratch" | "import";
     importSource?:
       | { type: "git"; url: string }

@@ -38,9 +38,13 @@ const envSchema = z.object({
         : `${process.cwd()}/.data/projects`
     )
     .transform((val) => {
+      const resolved = path.isAbsolute(val)
+        ? val
+        : path.resolve(process.cwd(), val);
       try {
-        fs.mkdirSync(val, { recursive: true });
-        return val;
+        fs.mkdirSync(resolved, { recursive: true });
+        fs.accessSync(resolved, fs.constants.W_OK);
+        return resolved;
       } catch {
         const fallback = path.resolve(process.cwd(), ".data/projects");
         fs.mkdirSync(fallback, { recursive: true });

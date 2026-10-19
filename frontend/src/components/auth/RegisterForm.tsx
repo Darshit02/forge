@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -5,8 +6,9 @@ import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
 import { useAuth } from "../../hooks/useAuth.js";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ForgeAppIcon } from "../common/ForgeLogo.js";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -17,6 +19,7 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const { register: registerUser, isRegistering } = useAuth();
 
   const {
@@ -33,7 +36,8 @@ export function RegisterForm() {
 
   return (
     <div className="w-full max-w-[400px] rounded-2xl border border-hairline bg-paper p-8 shadow-none">
-      <div className="mb-8 text-center">
+      <div className="mb-8 text-center flex flex-col items-center">
+        <ForgeAppIcon size="lg" className="mb-4" />
         <h1 className="text-3xl font-normal tracking-tight text-ink">
           Create your account
         </h1>
@@ -81,13 +85,27 @@ export function RegisterForm() {
           >
             Password
           </Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="At least 8 characters"
-            className="h-11 rounded-[10px] border-hairline bg-transparent px-4 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
-            {...register("password")}
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="At least 8 characters"
+              className="h-11 rounded-[10px] border-hairline bg-transparent pl-4 pr-11 text-sm focus-visible:ring-primary focus-visible:ring-offset-0"
+              {...register("password")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ash hover:text-ink transition-colors focus:outline-none p-1"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          </div>
           {errors.password && (
             <p className="text-[10px] text-destructive font-normal">{errors.password.message}</p>
           )}

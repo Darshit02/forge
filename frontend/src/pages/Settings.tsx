@@ -7,11 +7,16 @@ import { Button } from "../components/ui/button.js";
 import { Input } from "../components/ui/input.js";
 import { Label } from "../components/ui/label.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.js";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar.js";
+import { getMascotAvatar, getMascotInfo } from "../lib/mascot.js";
 import { KeyRound, User, Sliders, LogOut, Sun, Moon, Laptop } from "lucide-react";
 
 export function SettingsPage() {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useUIStore();
+  const userSeed = user?.id || user?.email || user?.name || "forge-developer";
+  const mascotUrl = getMascotAvatar(userSeed);
+  const mascotInfo = getMascotInfo(userSeed);
 
   return (
     <div className="min-h-screen bg-bone text-ink flex flex-col">
@@ -68,6 +73,23 @@ export function SettingsPage() {
                 <p className="text-xs text-ash mt-0.5 font-normal">
                   Your identity and authentication profile.
                 </p>
+              </div>
+
+              {/* User Mascot Banner */}
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-hairline bg-bone/40 max-w-md">
+                <Avatar className="w-14 h-14 rounded-xl border border-hairline shadow-xs shrink-0">
+                  <AvatarImage src={mascotUrl} alt={mascotInfo.name} />
+                  <AvatarFallback className="bg-bone text-ink text-sm font-normal">
+                    {user?.name?.[0] || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <span className="text-[10px] uppercase tracking-[0.018em] text-ash font-medium block">
+                    Assigned Mascot
+                  </span>
+                  <p className="text-sm font-medium text-ink truncate">{mascotInfo.name}</p>
+                  <p className="text-xs text-ash font-normal">Uniquely generated for your account</p>
+                </div>
               </div>
 
               <div className="space-y-4 max-w-md">

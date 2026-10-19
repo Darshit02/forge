@@ -16,8 +16,9 @@ import {
 import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
-import { Plus, ArrowLeft, ArrowRight, Loader2, PlusCircle } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight, Loader2, PlusCircle, FolderOpen } from "lucide-react";
 import type { ProjectFramework, ProjectLanguage } from "../../types/api.js";
+import { FolderBrowserDialog } from "./FolderBrowserDialog.js";
 
 interface CreateProjectDialogProps {
   trigger?: React.ReactNode;
@@ -33,6 +34,9 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
   const [language, setLanguage] = useState<ProjectLanguage>("python");
   const [framework, setFramework] = useState<ProjectFramework>("fastapi");
   const [aiProviderId, setAiProviderId] = useState<string>("");
+  const [isCustomFolder, setIsCustomFolder] = useState<boolean>(false);
+  const [folderPath, setFolderPath] = useState<string>("");
+  const [browserOpen, setBrowserOpen] = useState<boolean>(false);
 
   const { createProject, isCreating } = useProjects();
 
@@ -62,12 +66,15 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
       framework,
       aiProviderId: aiProviderId || undefined,
       source: "scratch",
+      folderPath: isCustomFolder && folderPath.trim() ? folderPath.trim() : undefined,
     });
     setOpen(false);
     // Reset form
     setStep(1);
     setName("");
     setDescription("");
+    setIsCustomFolder(false);
+    setFolderPath("");
   };
 
   const providers = providersQuery.data || [];
@@ -120,7 +127,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                   placeholder="payments-service"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="rounded-[10px] border-hairline"
+                  className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
                 />
               </div>
 
@@ -133,8 +140,70 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                   placeholder="REST API microservice with auth & Stripe webhook endpoints"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="rounded-[10px] border-hairline"
+                  className="rounded-[10px] border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
                 />
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-hairline/60">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs uppercase tracking-[0.018em] text-ash font-normal">
+                    Project Destination
+                  </Label>
+                  <div className="flex items-center gap-1 bg-bone p-0.5 rounded-[6px]">
+                    <button
+                      type="button"
+                      onClick={() => setIsCustomFolder(false)}
+                      className={`px-2 py-0.5 text-[11px] rounded-[4px] transition-colors ${
+                        !isCustomFolder
+                          ? "bg-paper text-ink shadow-sm font-medium"
+                          : "text-ash hover:text-ink"
+                      }`}
+                    >
+                      Default
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsCustomFolder(true)}
+                      className={`px-2 py-0.5 text-[11px] rounded-[4px] transition-colors ${
+                        isCustomFolder
+                          ? "bg-paper text-ink shadow-sm font-medium"
+                          : "text-ash hover:text-ink"
+                      }`}
+                    >
+                      Custom Folder
+                    </button>
+                  </div>
+                </div>
+
+                {!isCustomFolder ? (
+                  <p className="text-[11px] text-ash font-normal leading-relaxed">
+                    Managed automatically in Forge&apos;s workspace storage (<code className="font-mono text-[10px] bg-bone px-1 py-0.5 rounded">.data/projects/...</code>).
+                  </p>
+                ) : (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <Input
+                        placeholder="/Users/username/Projects/my-app"
+                        value={folderPath}
+                        onChange={(e) => setFolderPath(e.target.value)}
+                        className="rounded-[8px] font-mono text-xs border-hairline focus-visible:ring-primary focus-visible:ring-offset-0"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBrowserOpen(true)}
+                        className="rounded-[8px] border-hairline text-xs font-normal shrink-0 gap-1.5 px-3"
+                      >
+                        <FolderOpen className="w-3.5 h-3.5 text-ash" />
+                        Browse...
+                      </Button>
+                    </div>
+                    <p className="text-[11px] text-ash font-normal">
+                      Select or type any folder on your machine where project files will be created.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -183,6 +252,15 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
                     {language} ({framework})
                   </span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-ash">Destination:</span>
+                  <span
+                    className="text-ink font-mono text-[11px] truncate max-w-[240px]"
+                    title={isCustomFolder && folderPath.trim() ? folderPath.trim() : "Default workspace"}
+                  >
+                    {isCustomFolder && folderPath.trim() ? folderPath.trim() : "Default (.data/projects/...)"}
+                  </span>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-ash">Port Range:</span>
                   <span className=" text-ash font-normal">127.0.0.1:8001-9000</span>
@@ -212,7 +290,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
             <Button
               type="button"
               size="sm"
-              disabled={step === 1 && !name.trim()}
+              disabled={step === 1 && (!name.trim() || (isCustomFolder && !folderPath.trim()))}
               onClick={() => setStep(step + 1)}
               className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
             >
@@ -235,6 +313,13 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
           )}
         </DialogFooter>
       </DialogContent>
+
+      <FolderBrowserDialog
+        open={browserOpen}
+        onOpenChange={setBrowserOpen}
+        initialPath={folderPath}
+        onSelect={(selectedPath) => setFolderPath(selectedPath)}
+      />
     </Dialog>
   );
 }

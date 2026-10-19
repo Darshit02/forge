@@ -9,6 +9,7 @@ import { aiService } from "../services/ai.service.js";
 import { db } from "../db/client.js";
 import { chatMessages, chatSessions } from "../db/schema.js";
 import { NotFoundError } from "../utils/errors.js";
+import { logger } from "../utils/logger.js";
 
 export const aiRoutes = new Hono();
 
@@ -66,9 +67,11 @@ aiRoutes.post(
           }),
         });
       } catch (err: any) {
+        const errorMsg = err.message || "AI stream failed";
+        logger.error({ err: errorMsg, stack: err.stack, projectId }, "AI stream route error");
         await stream.writeSSE({
           event: "error",
-          data: JSON.stringify({ error: err.message || "AI stream failed" }),
+          data: JSON.stringify({ error: errorMsg }),
         });
       }
     });

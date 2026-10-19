@@ -33,6 +33,15 @@ projectsRoutes.get("/", async (c) => {
 });
 
 /**
+ * GET /api/projects/directories - Browse host directories for project creation
+ */
+projectsRoutes.get("/directories", async (c) => {
+  const queryPath = c.req.query("path");
+  const result = await projectService.browseHostDirectories(queryPath);
+  return c.json(result);
+});
+
+/**
  * POST /api/projects - Create a new project or import
  */
 projectsRoutes.post("/", zValidator("json", CreateProjectRequestSchema), async (c) => {
@@ -47,6 +56,7 @@ projectsRoutes.post("/", zValidator("json", CreateProjectRequestSchema), async (
     framework: body.framework as ProjectFramework,
     aiProviderId: body.aiProviderId,
     source: body.source,
+    folderPath: body.folderPath,
     importSource: body.importSource,
   });
 

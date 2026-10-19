@@ -10,6 +10,7 @@ import { logger } from "./utils/logger.js";
 import { checkDatabaseConnection, closeDatabaseConnection } from "./db/client.js";
 import { dockerService } from "./services/docker.service.js";
 import { watcherService } from "./services/watcher.service.js";
+import { fileStoreService } from "./services/fileStore.service.js";
 import { authService } from "./services/auth.service.js";
 import { wsHub } from "./ws/hub.js";
 
@@ -143,8 +144,9 @@ app.get("/", (c) => {
 async function bootstrap() {
   logger.info("Initializing Forge Backend services...");
 
-  // 1. Verify DB
+  // 1. Verify DB and load project workspaces
   await checkDatabaseConnection();
+  await fileStoreService.loadWorkspacesFromDb();
 
   // 2. Reconcile Docker containers
   await dockerService.reconcile();
