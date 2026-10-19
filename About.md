@@ -12,9 +12,9 @@ Forge unifies these isolated steps into an integrated, browser-native developer 
 - **Bring Your Own Key (BYOK)**: Connect API keys for OpenAI, Anthropic Claude, Google Gemini, or custom OpenAI-compatible endpoints with client-side or AES-256-GCM encrypted server storage.
 - **Scaffold Instantly**: Select from 10 production-ready framework templates spanning Python, Go, Rust, and Node.js/Bun.
 - **AI-Driven Code Generation & Tooling**: Chat with an integrated backend engineer agent that can inspect files, create directories, write code, run diagnostics, and stream changes directly into the project workspace.
-- **Automated OpenAPI Extraction**: Containers automatically expose their OpenAPI/Swagger specifications via HTTP probers or AST (Abstract Syntax Tree) fallbacks.
+- **Automated OpenAPI Extraction**: Backends automatically expose their OpenAPI/Swagger specifications via HTTP probers or AST (Abstract Syntax Tree) fallbacks.
 - **Zero-Setup API Testing**: An integrated, SSRF-protected HTTP client automatically mirrors discovered endpoints, letting developers test routes the moment code is saved.
-- **Isolated Docker Container Sandboxing**: Every project runs in an isolated container sandbox with strict CPU, memory, and capability constraints.
+- **Docker-Free Universal Execution Engine**: Seamlessly executes backend microservices either natively via the managed process execution engine (requiring zero Docker on the user's machine) or through isolated container sandboxes with automatic fallback detection.
 
 ---
 

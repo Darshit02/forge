@@ -13,6 +13,7 @@ import {
 } from "../db/schema.js";
 import { decryptApiKey } from "./crypto.service.js";
 import { fileStoreService } from "./fileStore.service.js";
+import { executionService } from "./execution/index.js";
 import { wsHub } from "../ws/hub.js";
 import { BadRequestError, NotFoundError } from "../utils/errors.js";
 import { logger } from "../utils/logger.js";
@@ -477,11 +478,26 @@ CORE INSTRUCTIONS & CONSTRAINTS:
             };
           }
 
-          return {
-            success: true,
-            cmd,
-            message: `Command '${cmd}' scheduled for execution in container sandbox.`,
-          };
+          try {
+            const res = await executionService.executeCommand(projectId, cmd);
+            return {
+              success: res.exitCode === 0,
+              cmd,
+              exitCode: res.exitCode,
+              stdout: res.stdout,
+              stderr: res.stderr,
+              message:
+                res.exitCode === 0
+                  ? `Executed '${cmd}' successfully.`
+                  : `Command failed with exit code ${res.exitCode}: ${res.stderr || res.stdout}`,
+            };
+          } catch (err: any) {
+            return {
+              success: false,
+              cmd,
+              error: `Execution error: ${err.message}`,
+            };
+          }
         },
       }),
     };

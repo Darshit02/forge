@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import { requireAuth, requireProjectOwner } from "../middleware/auth.js";
-import { dockerService } from "../services/docker.service.js";
+import { executionService } from "../services/execution/index.js";
 import { watcherService } from "../services/watcher.service.js";
 import { specExtractorService } from "../services/specExtractor.service.js";
 import { wsHub } from "../ws/hub.js";
@@ -11,12 +11,12 @@ export const containersRoutes = new Hono();
 containersRoutes.use("*", requireAuth);
 
 /**
- * POST /api/projects/:id/start - Starts project container & file watcher
+ * POST /api/projects/:id/start - Starts project backend & file watcher
  */
 containersRoutes.post("/:id/start", requireProjectOwner, async (c) => {
   const projectId = c.req.param("id")!;
 
-  const status = await dockerService.startProject(projectId);
+  const status = await executionService.start(projectId);
   await watcherService.startWatcher(projectId);
 
   // Trigger initial spec extract
@@ -28,13 +28,13 @@ containersRoutes.post("/:id/start", requireProjectOwner, async (c) => {
 });
 
 /**
- * POST /api/projects/:id/stop - Stops project container & file watcher
+ * POST /api/projects/:id/stop - Stops project backend & file watcher
  */
 containersRoutes.post("/:id/stop", requireProjectOwner, async (c) => {
   const projectId = c.req.param("id")!;
 
   await watcherService.stopWatcher(projectId);
-  const status = await dockerService.stopProject(projectId);
+  const status = await executionService.stop(projectId);
 
   wsHub.broadcastContainerStatus(projectId, status.status);
 
@@ -42,12 +42,12 @@ containersRoutes.post("/:id/stop", requireProjectOwner, async (c) => {
 });
 
 /**
- * POST /api/projects/:id/restart - Restarts container
+ * POST /api/projects/:id/restart - Restarts backend
  */
 containersRoutes.post("/:id/restart", requireProjectOwner, async (c) => {
   const projectId = c.req.param("id")!;
 
-  const status = await dockerService.restartProject(projectId);
+  const status = await executionService.restart(projectId);
   await watcherService.startWatcher(projectId);
 
   specExtractorService.extractAndSync(projectId).catch(() => {});
@@ -58,16 +58,16 @@ containersRoutes.post("/:id/restart", requireProjectOwner, async (c) => {
 });
 
 /**
- * GET /api/projects/:id/status - Container status
+ * GET /api/projects/:id/status - Execution status
  */
 containersRoutes.get("/:id/status", requireProjectOwner, async (c) => {
   const projectId = c.req.param("id")!;
-  const status = await dockerService.getStatus(projectId);
+  const status = await executionService.getStatus(projectId);
   return c.json({ container: status });
 });
 
 /**
- * GET /api/projects/:id/logs - SSE stream of container logs (?tail=200)
+ * GET /api/projects/:id/logs - SSE stream of backend logs (?tail=200)
  */
 containersRoutes.get("/:id/logs", requireProjectOwner, async (c) => {
   const projectId = c.req.param("id")!;
@@ -75,7 +75,7 @@ containersRoutes.get("/:id/logs", requireProjectOwner, async (c) => {
 
   return streamSSE(c, async (stream) => {
     try {
-      const logStream = await dockerService.getContainerLogs(
+      const logStream = await executionService.getLogs(
         projectId,
         tail,
         true

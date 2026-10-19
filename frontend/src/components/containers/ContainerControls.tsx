@@ -46,7 +46,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
-                Start Container
+                Run Backend
               </TooltipContent>
             </Tooltip>
           ) : (
@@ -67,7 +67,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
-                Stop Container
+                Stop Backend
               </TooltipContent>
             </Tooltip>
           )}
@@ -89,7 +89,7 @@ export function ContainerControls({ projectId }: ContainerControlsProps) {
               </Button>
             </TooltipTrigger>
             <TooltipContent className="text-xs bg-obsidian text-paper rounded-xl font-normal">
-              Restart Container
+              Restart Backend
             </TooltipContent>
           </Tooltip>
         </div>
