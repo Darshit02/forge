@@ -24,5 +24,17 @@ export const authApi = {
       method: "POST",
     }),
 
+  forgotPassword: (data: { email: string }) =>
+    apiClient<{ ok: boolean; resetToken?: string; message: string }>("/api/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  resetPassword: (data: { email: string; resetToken: string; newPassword: string }) =>
+    apiClient<{ ok: boolean; message: string }>("/api/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
   me: () => apiClient<{ user: User }>("/api/auth/me"),
 };
