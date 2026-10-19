@@ -115,7 +115,7 @@ export class FileStoreService {
    */
   getRelativePath(projectId: string, absolutePath: string): string {
     const workspaceDir = this.getWorkspaceDir(projectId);
-    return path.relative(workspaceDir, absolutePath);
+    return path.relative(workspaceDir, absolutePath).replace(/\\/g, "/");
   }
 
   /**
