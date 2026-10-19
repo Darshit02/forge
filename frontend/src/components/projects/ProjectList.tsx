@@ -74,11 +74,10 @@ export function ProjectList({
           <button
             type="button"
             onClick={() => setFilterLang("all")}
-            className={`px-3 py-1 rounded-[6px] text-xs border transition-colors font-normal ${
-              filterLang === "all"
+            className={`px-3 py-1 rounded-[10px] text-xs border transition-colors font-normal ${filterLang === "all"
                 ? "bg-ink text-paper border-ink"
                 : "bg-paper text-ash border-hairline hover:text-ink hover:border-smoke"
-            }`}
+              }`}
           >
             All ({projects.length})
           </button>
@@ -87,11 +86,10 @@ export function ProjectList({
               key={lang}
               type="button"
               onClick={() => setFilterLang(lang)}
-              className={`px-3 py-1 rounded-[6px] text-xs border uppercase tracking-[0.018em] transition-colors font-normal ${
-                filterLang === lang
+              className={`px-3 py-1 rounded-[10px] text-xs border uppercase tracking-[0.018em] transition-colors font-normal ${filterLang === lang
                   ? "bg-ink text-paper border-ink"
                   : "bg-paper text-ash border-hairline hover:text-ink hover:border-smoke"
-              }`}
+                }`}
             >
               {lang}
             </button>
@@ -109,7 +107,7 @@ export function ProjectList({
               setSearch("");
               setFilterLang("all");
             }}
-            className="mt-3 text-xs text-ink rounded-[6px]"
+            className="mt-3 text-xs text-ink rounded-[10px]"
           >
             Clear Filters
           </Button>

@@ -92,17 +92,16 @@ export function ProviderList() {
           return (
             <div
               key={p.id}
-              className={`rounded-2xl border p-5 bg-paper transition-colors ${
-                p.isDefault
+              className={`rounded-2xl border p-5 bg-paper transition-colors ${p.isDefault
                   ? "border-ink ring-1 ring-ink/20"
                   : "border-hairline hover:border-smoke"
-              }`}
+                }`}
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 {/* Provider Info */}
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[6px] bg-bone font-normal text-ink  tracking-[0.018em]">
+                    <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[10px] bg-bone font-normal text-ink  tracking-[0.018em]">
                       {p.provider}
                     </span>
                     <span className="text-sm font-normal text-ink">
@@ -148,7 +147,7 @@ export function ProviderList() {
                       size="sm"
                       onClick={() => setDefaultMutation.mutate(p.id)}
                       disabled={setDefaultMutation.isPending}
-                      className="text-xs h-8 text-ash hover:text-ink rounded-[6px] font-normal"
+                      className="text-xs h-8 text-ash hover:text-ink rounded-[10px] font-normal"
                     >
                       Make Default
                     </Button>
@@ -161,7 +160,7 @@ export function ProviderList() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-ash hover:text-ink rounded-[6px]"
+                        className="h-8 w-8 text-ash hover:text-ink rounded-[10px]"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </Button>
@@ -173,7 +172,7 @@ export function ProviderList() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setDeleteTarget(p)}
-                    className="h-8 w-8 text-ash hover:text-red-600 rounded-[6px]"
+                    className="h-8 w-8 text-ash hover:text-red-600 rounded-[10px]"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>

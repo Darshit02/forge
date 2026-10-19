@@ -110,7 +110,7 @@ export function ChatInput({
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           {/* Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-[6px]  bg-bone text-[11px] font-sans">
+          <div className="flex items-center p-0.5 rounded-[10px]  bg-bone text-[11px] font-sans">
             {(["edit", "chat", "agent"] as ChatMode[]).map((mode) => (
               <button
                 key={mode}
@@ -130,7 +130,7 @@ export function ChatInput({
           {/* Model Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 px-2 py-1 rounded-[6px]  text-[11px] text-ink hover:bg-bone font-sans font-normal">
+              <button className="flex items-center gap-1 px-2 py-1 rounded-[10px]  text-[11px] text-ink hover:bg-bone font-sans font-normal">
                 <Sparkles className="w-3 h-3 text-primary" />
                 <span className="truncate max-w-[100px]">{selectedModel}</span>
                 <ChevronDown className="w-3 h-3 text-ash" />
@@ -170,7 +170,7 @@ export function ChatInput({
               size="icon-xs"
               variant="ghost"
               title="Attach File Context"
-              className="rounded-[6px]  text-ash hover:text-ink"
+              className="rounded-[10px]  text-ash hover:text-ink"
             >
               <Paperclip className="w-3 h-3" />
             </Button>
@@ -224,7 +224,7 @@ export function ChatInput({
               size="xs"
               variant="outline"
               onClick={onCancel}
-              className="rounded-[6px] border-hairline text-destructive hover:bg-bone font-normal"
+              className="rounded-[10px] border-hairline text-destructive hover:bg-bone font-normal"
             >
               <StopCircle className="w-3.5 h-3.5 mr-1" />
               Stop
@@ -234,7 +234,7 @@ export function ChatInput({
               size="xs"
               disabled={!text.trim()}
               onClick={handleSend}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal px-2.5"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal px-2.5"
             >
               <Send className="w-3 h-3 mr-1" />
               Send

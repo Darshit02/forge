@@ -30,7 +30,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
           value={activeRequest.method}
           onChange={(e) => setActiveRequest({ method: e.target.value })}
           className={cn(
-            "h-9 px-2.5 rounded-[6px]  bg-transparent  font-normal text-xs outline-none focus:ring-1 focus:ring-primary text-ink",
+            "h-9 px-2.5 rounded-[10px]  bg-transparent  font-normal text-xs outline-none focus:ring-1 focus:ring-primary text-ink",
             getMethodStyle(activeRequest.method)
           )}
         >
@@ -51,7 +51,7 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
         <Button
           onClick={onSend}
           disabled={isSending}
-          className="h-9 px-4 rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs gap-1.5 shrink-0"
+          className="h-9 px-4 rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs gap-1.5 shrink-0"
         >
           {isSending ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -65,13 +65,13 @@ export function RequestBuilder({ onSend, isSending }: RequestBuilderProps) {
       {/* Sub Tabs: Params, Headers, Body, Auth */}
       <Tabs value={subTab} onValueChange={setSubTab} className="w-full">
         <TabsList className="h-8 justify-start border-b border-hairline bg-paper px-3 gap-1 rounded-none">
-          <TabsTrigger value="body" className="text-xs h-6 px-2.5 rounded-[6px] font-sans font-normal">
+          <TabsTrigger value="body" className="text-xs h-6 px-2.5 rounded-[10px] font-sans font-normal">
             Body
           </TabsTrigger>
-          <TabsTrigger value="headers" className="text-xs h-6 px-2.5 rounded-[6px] font-sans font-normal">
+          <TabsTrigger value="headers" className="text-xs h-6 px-2.5 rounded-[10px] font-sans font-normal">
             Headers ({Object.keys(activeRequest.headers || {}).length})
           </TabsTrigger>
-          <TabsTrigger value="auth" className="text-xs h-6 px-2.5 rounded-[6px] font-sans font-normal">
+          <TabsTrigger value="auth" className="text-xs h-6 px-2.5 rounded-[10px] font-sans font-normal">
             Auth
           </TabsTrigger>
         </TabsList>

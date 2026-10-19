@@ -48,7 +48,7 @@ export function ProviderTestButton({ providerId }: ProviderTestButtonProps) {
         size="sm"
         onClick={handleTest}
         disabled={testing}
-        className="rounded-[6px] border-hairline text-xs  h-8 px-2.5 text-ash hover:text-ink hover:bg-bone font-normal"
+        className="rounded-[10px] border-hairline text-xs  h-8 px-2.5 text-ash hover:text-ink hover:bg-bone font-normal"
       >
         {testing ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
@@ -60,11 +60,10 @@ export function ProviderTestButton({ providerId }: ProviderTestButtonProps) {
 
       {result && (
         <div
-          className={`flex items-center gap-1 text-[10px] uppercase  tracking-[0.018em] px-2 py-0.5 rounded-[6px] border font-normal ${
-            result.ok
+          className={`flex items-center gap-1 text-[10px] uppercase  tracking-[0.018em] px-2 py-0.5 rounded-[10px] border font-normal ${result.ok
               ? "bg-primary text-ink border-primary"
               : "bg-bone text-destructive border-hairline"
-          }`}
+            }`}
         >
           {result.ok ? (
             <>

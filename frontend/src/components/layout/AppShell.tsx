@@ -109,11 +109,10 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("chat")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-                      rightPanelTab === "chat"
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${rightPanelTab === "chat"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
-                    }`}
+                      }`}
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
                     <span>AI Assistant</span>
@@ -122,11 +121,10 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("tester")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-                      rightPanelTab === "tester"
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${rightPanelTab === "tester"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
-                    }`}
+                      }`}
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>API Tester</span>
@@ -135,11 +133,10 @@ export function AppShell({ project }: AppShellProps) {
                   <button
                     type="button"
                     onClick={() => setRightPanelTab("console")}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-                      rightPanelTab === "console"
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${rightPanelTab === "console"
                         ? "bg-paper text-ink border-b-2 border-primary"
                         : "text-ash hover:text-ink"
-                    }`}
+                      }`}
                   >
                     <Terminal className="w-3.5 h-3.5" />
                     <span>Console</span>

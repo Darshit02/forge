@@ -29,7 +29,7 @@ export function AuthEditor({
         <select
           value={authType}
           onChange={(e) => onChange({ authType: e.target.value as any })}
-          className="h-7 rounded-[6px]  bg-transparent px-2 text-xs text-ink font-sans font-normal outline-none focus:ring-1 focus:ring-primary"
+          className="h-7 rounded-[10px]  bg-transparent px-2 text-xs text-ink font-sans font-normal outline-none focus:ring-1 focus:ring-primary"
         >
           <option value="none">No Auth</option>
           <option value="bearer">Bearer Token</option>
@@ -97,7 +97,7 @@ export function AuthEditor({
             <select
               value={apiKeyLocation}
               onChange={(e) => onChange({ apiKeyLocation: e.target.value as any })}
-              className="w-full h-8 rounded-[6px]  bg-transparent px-2 text-xs text-ink font-normal outline-none focus:ring-1 focus:ring-primary"
+              className="w-full h-8 rounded-[10px]  bg-transparent px-2 text-xs text-ink font-normal outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="header">Header</option>
               <option value="query">Query Params</option>

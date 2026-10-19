@@ -108,7 +108,7 @@ export function ToolCallCard({ toolCall, projectId }: ToolCallCardProps) {
 
       {expanded && content && (
         <div className="border-t border-hairline p-2 bg-paper">
-          <pre className="p-2 rounded-[6px] bg-bone  text-[11px] overflow-x-auto max-h-48 text-ink font-normal">
+          <pre className="p-2 rounded-[10px] bg-bone  text-[11px] overflow-x-auto max-h-48 text-ink font-normal">
             {content}
           </pre>
         </div>

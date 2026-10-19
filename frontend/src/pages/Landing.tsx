@@ -229,7 +229,7 @@ export function LandingPage() {
                 key={feature.title}
                 className="group flex flex-col rounded-2xl  bg-paper p-6 transition-colors duration-300 hover:border-ink/25"
               >
-                <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-[6px] bg-bone text-ink transition-colors group-hover:bg-primary">
+                <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-[10px] bg-bone text-ink transition-colors group-hover:bg-primary">
                   <feature.icon className="h-4 w-4" />
                 </div>
                 <h3 className="text-lg text-ink">{feature.title}</h3>
@@ -394,7 +394,7 @@ export function LandingPage() {
           <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
             <div className="max-w-xs">
               <div className="flex items-center gap-2">
-               
+
                 <span className="text-ink">Forge</span>
               </div>
               <p className="mt-3 text-xs leading-relaxed text-ash">
@@ -472,7 +472,7 @@ function IDEMockup() {
             <li className="px-2 py-1 text-ash/80">app/</li>
             <li className="px-2 py-1 text-ash/80">  main.py</li>
             <li className="rounded-[4px] bg-primary/30 px-2 py-1 text-ink font-medium">
-                routes.py
+              routes.py
             </li>
             <li className="px-2 py-1 text-ash/80">requirements.txt</li>
             <li className="px-2 py-1 text-ash/80">Dockerfile</li>
@@ -489,7 +489,7 @@ function IDEMockup() {
               main.py
             </div>
           </div>
-          
+
           <div className="relative flex-1 bg-paper p-6">
             <pre className=" text-[13px] leading-[1.8] text-ink/90">
               <code>
@@ -594,13 +594,13 @@ function TesterMockup() {
   return (
     <div className="rounded-2xl border border-hairline bg-paper p-5">
       <div className="flex items-center gap-2">
-        <span className="rounded-[6px] bg-primary px-2.5 py-1.5  text-[11px] text-ink">
+        <span className="rounded-[10px] bg-primary px-2.5 py-1.5  text-[11px] text-ink">
           GET
         </span>
-        <div className="flex-1 truncate rounded-[6px] border border-hairline bg-bone px-3 py-2  text-[11px] text-ink">
+        <div className="flex-1 truncate rounded-[10px] border border-hairline bg-bone px-3 py-2  text-[11px] text-ink">
           http://localhost:8000/orders/42
         </div>
-        <span className="rounded-[6px] bg-ink px-4 py-2 text-[11px] text-paper">
+        <span className="rounded-[10px] bg-ink px-4 py-2 text-[11px] text-paper">
           Send
         </span>
       </div>

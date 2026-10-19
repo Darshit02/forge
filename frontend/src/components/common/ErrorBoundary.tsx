@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {this.state.error?.message || "An unexpected error occurred in this view."}
           </p>
           <Button
-            className="mt-4 rounded-[6px] border-hairline text-ink font-normal"
+            className="mt-4 rounded-[10px] border-hairline text-ink font-normal"
             variant="outline"
             onClick={() => this.setState({ hasError: false, error: null })}
           >

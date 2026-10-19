@@ -23,7 +23,7 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "inline-flex w-fit items-center justify-start rounded-[6px]  bg-bone p-1 text-ash gap-1",
+  "inline-flex w-fit items-center justify-start rounded-[10px]  bg-bone p-1 text-ash gap-1",
   {
     variants: {
       variant: {
@@ -61,7 +61,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex items-center justify-center gap-1.5 rounded-[6px] px-3 py-1.5 text-xs font-normal whitespace-nowrap text-ash transition-colors outline-none",
+        "relative inline-flex items-center justify-center gap-1.5 rounded-[10px] px-3 py-1.5 text-xs font-normal whitespace-nowrap text-ash transition-colors outline-none",
         "hover:text-ink focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
         "data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none",
         "disabled:pointer-events-none disabled:opacity-50",

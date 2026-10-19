@@ -32,21 +32,21 @@ export function SettingsPage() {
           <TabsList className="bg-bone p-1 rounded-xl  h-11 w-full sm:w-auto grid grid-cols-3 sm:inline-flex">
             <TabsTrigger
               value="providers"
-              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
+              className="gap-2 rounded-[10px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
             >
               <KeyRound className="w-3.5 h-3.5" />
               AI Keys (BYOK)
             </TabsTrigger>
             <TabsTrigger
               value="profile"
-              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
+              className="gap-2 rounded-[10px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
             >
               <User className="w-3.5 h-3.5" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
+              className="gap-2 rounded-[10px] data-[state=active]:bg-paper data-[state=active]:shadow-none text-xs font-normal"
             >
               <Sliders className="w-3.5 h-3.5" />
               Appearance
@@ -98,7 +98,7 @@ export function SettingsPage() {
                 <Button
                   variant="outline"
                   onClick={() => logout()}
-                  className="rounded-[6px] border-hairline text-red-600 hover:text-red-700 hover:bg-bone text-xs gap-1.5 h-8 font-normal"
+                  className="rounded-[10px] border-hairline text-red-600 hover:text-red-700 hover:bg-bone text-xs gap-1.5 h-8 font-normal"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Sign Out
@@ -121,7 +121,7 @@ export function SettingsPage() {
 
               <div className="max-w-md">
                 <div className="flex items-center gap-3 p-4 rounded-xl  bg-bone text-xs">
-                  <div className="w-8 h-8 rounded-[6px] bg-primary flex items-center justify-center text-ink">
+                  <div className="w-8 h-8 rounded-[10px] bg-primary flex items-center justify-center text-ink">
                     <Sun className="w-4 h-4" />
                   </div>
                   <div>

@@ -76,7 +76,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-full bg-primary text-ink hover:bg-primary/90 font-normal gap-1.5 text-xs">
+          <Button className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal gap-1.5 text-xs">
             <PlusCircle className="w-4 h-4" />
             New Project
           </Button>
@@ -199,7 +199,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               variant="outline"
               size="sm"
               onClick={() => setStep(step - 1)}
-              className="rounded-[6px] border-hairline text-xs font-normal"
+              className="rounded-[10px] border-hairline text-xs font-normal"
             >
               <ArrowLeft className="w-3.5 h-3.5 mr-1 text-ash" />
               Back
@@ -214,7 +214,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               size="sm"
               disabled={step === 1 && !name.trim()}
               onClick={() => setStep(step + 1)}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
             >
               Next
               <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -225,7 +225,7 @@ export function CreateProjectDialog({ trigger }: CreateProjectDialogProps) {
               size="sm"
               disabled={isCreating}
               onClick={handleSubmit}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs"
             >
               {isCreating ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />

@@ -94,9 +94,8 @@ export function ConsolePanel({ projectId }: ConsolePanelProps) {
             variant="ghost"
             title="Auto-scroll"
             onClick={() => setAutoScroll(!autoScroll)}
-            className={`h-6 px-1.5 rounded-[6px] gap-1 font-normal ${
-              autoScroll ? "text-ink bg-primary" : "text-ash hover:text-ink"
-            }`}
+            className={`h-6 px-1.5 rounded-[10px] gap-1 font-normal ${autoScroll ? "text-ink bg-primary" : "text-ash hover:text-ink"
+              }`}
           >
             <ArrowDownCircle className="w-3 h-3" />
             <span className="text-[10px]">Auto-scroll</span>

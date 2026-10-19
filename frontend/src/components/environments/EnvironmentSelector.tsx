@@ -40,7 +40,7 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
 
   if (environments.length === 0) {
     return (
-      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-[6px]  font-normal">
+      <div className="flex items-center gap-1 text-xs text-ash px-2 py-1 rounded-[10px]  font-normal">
         <Layers className="w-3.5 h-3.5 text-ash" />
         <span>No Env</span>
       </div>
@@ -55,7 +55,7 @@ export function EnvironmentSelector({ projectId }: EnvironmentSelectorProps) {
           if (val !== "none") activateMutation.mutate(val);
         }}
       >
-        <SelectTrigger className="h-7 text-xs border-hairline rounded-[6px] bg-paper px-2 gap-1.5 text-ink font-sans font-normal">
+        <SelectTrigger className="h-7 text-xs border-hairline rounded-[10px] bg-paper px-2 gap-1.5 text-ink font-sans font-normal">
           <Layers className="w-3.5 h-3.5 text-ash" />
           <SelectValue placeholder="Select Env" />
         </SelectTrigger>

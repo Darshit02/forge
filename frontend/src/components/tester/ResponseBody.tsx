@@ -27,21 +27,19 @@ export function ResponseBody({ body }: ResponseBodyProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsRaw(false)}
-            className={`px-2 py-0.5 rounded-[6px] text-[11px] font-sans font-normal ${
-              !isRaw
+            className={`px-2 py-0.5 rounded-[10px] text-[11px] font-sans font-normal ${!isRaw
                 ? "bg-bone text-ink"
                 : "text-ash hover:text-ink"
-            }`}
+              }`}
           >
             Formatted
           </button>
           <button
             onClick={() => setIsRaw(true)}
-            className={`px-2 py-0.5 rounded-[6px] text-[11px] font-sans font-normal ${
-              isRaw
+            className={`px-2 py-0.5 rounded-[10px] text-[11px] font-sans font-normal ${isRaw
                 ? "bg-bone text-ink"
                 : "text-ash hover:text-ink"
-            }`}
+              }`}
           >
             Raw
           </button>
@@ -51,7 +49,7 @@ export function ResponseBody({ body }: ResponseBodyProps) {
           size="xs"
           variant="ghost"
           onClick={handleCopy}
-          className="text-xs text-ash hover:text-ink h-6 px-2 gap-1 rounded-[6px] font-normal"
+          className="text-xs text-ash hover:text-ink h-6 px-2 gap-1 rounded-[10px] font-normal"
         >
           {copied ? (
             <>

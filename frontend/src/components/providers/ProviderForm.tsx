@@ -157,7 +157,7 @@ export function ProviderForm({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs gap-1.5">
+          <Button className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs gap-1.5">
             <Plus className="w-3.5 h-3.5" />
             Add AI Provider (BYOK)
           </Button>
@@ -282,14 +282,14 @@ export function ProviderForm({
               type="button"
               variant="ghost"
               onClick={() => setOpen(false)}
-              className="text-xs text-ash hover:text-ink rounded-[6px] font-normal"
+              className="text-xs text-ash hover:text-ink rounded-[10px] font-normal"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isPending || (!isEditing && !apiKey.trim())}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
             >
               {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />}
               {isEditing ? "Update Provider" : "Save Key"}

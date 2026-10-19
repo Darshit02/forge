@@ -46,7 +46,7 @@ export function HistoryList({ history }: HistoryListProps) {
         <div
           key={item.id}
           onClick={() => handleSelect(item)}
-          className="flex items-center justify-between p-2 rounded-[6px] hover:bg-bone cursor-pointer text-xs font-sans  font-normal"
+          className="flex items-center justify-between p-2 rounded-[10px] hover:bg-bone cursor-pointer text-xs font-sans  font-normal"
         >
           <div className="flex items-center gap-2 truncate">
             <span className=" font-normal text-[10px] w-8 text-ink uppercase">

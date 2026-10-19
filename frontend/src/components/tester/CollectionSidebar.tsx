@@ -125,7 +125,7 @@ export function CollectionSidebar({ projectId }: CollectionSidebarProps) {
                     return next;
                   });
                 }}
-                className="flex items-center justify-between px-2 py-1.5 rounded-[6px] hover:bg-bone text-ash hover:text-ink cursor-pointer font-normal"
+                className="flex items-center justify-between px-2 py-1.5 rounded-[10px] hover:bg-bone text-ash hover:text-ink cursor-pointer font-normal"
               >
                 <div className="flex items-center gap-1.5 truncate">
                   {isCollapsed ? (
@@ -154,7 +154,7 @@ export function CollectionSidebar({ projectId }: CollectionSidebarProps) {
                         key={req.id}
                         onClick={() => loadSavedRequest(req)}
                         className={cn(
-                          "group flex items-center justify-between px-2 py-1.5 rounded-[6px] cursor-pointer transition-colors text-xs truncate font-normal",
+                          "group flex items-center justify-between px-2 py-1.5 rounded-[10px] cursor-pointer transition-colors text-xs truncate font-normal",
                           isSelected
                             ? "bg-bone text-ink "
                             : "text-ash hover:bg-bone hover:text-ink"
@@ -297,7 +297,7 @@ export function CollectionSidebar({ projectId }: CollectionSidebarProps) {
                   path: newReqPath.trim(),
                 });
               }}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal"
             >
               Create Request
             </Button>

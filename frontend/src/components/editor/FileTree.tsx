@@ -175,7 +175,7 @@ export function FileTree({ projectId }: FileTreeProps) {
             onClick={() => handleOpenFile(node)}
             style={{ paddingLeft: `${depth * 12 + 8}px` }}
             className={cn(
-              "group flex items-center justify-between h-7 pr-2 cursor-pointer rounded-[6px] transition-colors select-none font-normal",
+              "group flex items-center justify-between h-7 pr-2 cursor-pointer rounded-[10px] transition-colors select-none font-normal",
               isActive
                 ? "bg-bone text-ink"
                 : "text-ash hover:bg-bone hover:text-ink"
@@ -374,7 +374,7 @@ export function FileTree({ projectId }: FileTreeProps) {
               onClick={() =>
                 setCreateModal({ open: false, type: "file", parentPath: "" })
               }
-              className="rounded-[6px] border-hairline font-normal"
+              className="rounded-[10px] border-hairline font-normal"
             >
               Cancel
             </Button>
@@ -390,7 +390,7 @@ export function FileTree({ projectId }: FileTreeProps) {
                   type: createModal.type,
                 });
               }}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal"
             >
               Create
             </Button>

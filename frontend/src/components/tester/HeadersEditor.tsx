@@ -90,7 +90,7 @@ export function HeadersEditor({ headers, onChange }: HeadersEditorProps) {
         size="xs"
         variant="outline"
         onClick={addRow}
-        className="mt-2 text-xs rounded-[6px] border-hairline text-ash hover:text-ink font-normal"
+        className="mt-2 text-xs rounded-[10px] border-hairline text-ash hover:text-ink font-normal"
       >
         <Plus className="w-3 h-3 mr-1" />
         Add Header

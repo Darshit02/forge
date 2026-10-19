@@ -35,7 +35,7 @@ export function MessageBubble({
           <div className="rounded-2xl rounded-tr-xs bg-bone  px-3.5 py-2.5 text-xs text-ink font-sans font-normal">
             <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
           </div>
-          <div className="w-6 h-6 rounded-[6px] bg-paper  flex items-center justify-center shrink-0 text-ash mt-1">
+          <div className="w-6 h-6 rounded-[10px] bg-paper  flex items-center justify-center shrink-0 text-ash mt-1">
             <User className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -46,7 +46,7 @@ export function MessageBubble({
   return (
     <div className="flex justify-start my-3">
       <div className="flex gap-2.5 max-w-[95%]">
-        <div className="w-6 h-6 rounded-[6px] bg-primary flex items-center justify-center shrink-0 text-ink font-normal text-xs mt-0.5">
+        <div className="w-6 h-6 rounded-[10px] bg-primary flex items-center justify-center shrink-0 text-ink font-normal text-xs mt-0.5">
           <Bot className="w-3.5 h-3.5 text-ink" />
         </div>
 

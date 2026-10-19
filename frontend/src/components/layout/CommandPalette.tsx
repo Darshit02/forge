@@ -81,7 +81,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
               <CommandItem
                 key={file.path}
                 onSelect={() => runCommand(() => setActiveFile(file.path))}
-                className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+                className="gap-2 text-xs  rounded-[10px] cursor-pointer"
               >
                 <FileCode className="w-3.5 h-3.5 text-ash" />
                 <span className="truncate">{file.path}</span>
@@ -96,14 +96,14 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
             <CommandItem
               onSelect={() => runCommand(() => { start(); })}
               disabled={isStarting}
-              className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+              className="gap-2 text-xs  rounded-[10px] cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 text-ink" />
               <span>Start Backend Container</span>
             </CommandItem>
             <CommandItem
               onSelect={() => runCommand(() => { restart(); })}
-              className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+              className="gap-2 text-xs  rounded-[10px] cursor-pointer"
             >
               <RotateCw className="w-3.5 h-3.5 text-ink" />
               <span>Restart Container</span>
@@ -111,7 +111,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
             <CommandItem
               onSelect={() => runCommand(() => { stop(); })}
               disabled={isStopping}
-              className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+              className="gap-2 text-xs  rounded-[10px] cursor-pointer"
             >
               <Square className="w-3.5 h-3.5 text-ink" />
               <span>Stop Container</span>
@@ -123,7 +123,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
         <CommandGroup heading="Panels & Views">
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("chat"))}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5 text-ash" />
             <span>Open AI Chat Assistant</span>
@@ -131,7 +131,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("tester"))}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <Send className="w-3.5 h-3.5 text-ash" />
             <span>Open API Tester</span>
@@ -139,7 +139,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => setRightPanelTab("console"))}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <Terminal className="w-3.5 h-3.5 text-ash" />
             <span>Open Container Logs Console</span>
@@ -147,7 +147,7 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => toggleSidebar())}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <FolderTree className="w-3.5 h-3.5 text-ash" />
             <span>Toggle Left Sidebar</span>
@@ -161,14 +161,14 @@ export function CommandPalette({ projectId }: CommandPaletteProps) {
         <CommandGroup heading="Navigation">
           <CommandItem
             onSelect={() => runCommand(() => navigate("/dashboard"))}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <LayoutDashboard className="w-3.5 h-3.5 text-ash" />
             <span>Dashboard</span>
           </CommandItem>
           <CommandItem
             onSelect={() => runCommand(() => navigate("/settings"))}
-            className="gap-2 text-xs  rounded-[6px] cursor-pointer"
+            className="gap-2 text-xs  rounded-[10px] cursor-pointer"
           >
             <Settings className="w-3.5 h-3.5 text-ash" />
             <span>Settings & BYOK Keys</span>

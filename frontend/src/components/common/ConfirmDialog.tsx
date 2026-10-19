@@ -42,14 +42,14 @@ export function ConfirmDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="rounded-[6px] border-hairline text-ink font-normal">
+          <AlertDialogCancel className="rounded-[10px] border-hairline text-ink font-normal">
             {cancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
             className={
               destructive
-                ? "rounded-[6px] bg-destructive text-white hover:bg-destructive/90 font-normal"
-                : "rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
+                ? "rounded-[10px] bg-destructive text-white hover:bg-destructive/90 font-normal"
+                : "rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal"
             }
             onClick={onConfirm}
           >
