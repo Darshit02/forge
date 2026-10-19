@@ -1,30 +1,38 @@
 # About Forge
 
-**Forge** is an open-source, AI-native backend web IDE platform engineered for developers to create, write, run, inspect, and test backend microservices and APIs in real-time — directly from the browser without context switching.
+**Forge** is an open-source, AI-native backend web IDE platform engineered for developers to create, write, run, inspect, and test backend microservices and APIs in real-time — directly from the browser without context switching or local environment friction.
 
 ---
 
 ## 1. Executive Summary & Mission
 
-Traditional backend development requires juggling separate terminals, local runtimes, database clients, API testing tools (e.g. Postman), and disparate AI chat windows.
+Traditional backend development requires juggling separate terminals, local runtimes, container engines, database clients, API testing tools (e.g. Postman), and disparate AI chat windows.
 
 Forge unifies these isolated steps into an integrated, browser-native developer workspace. With Forge, developers can:
-- **Bring Your Own Key (BYOK)**: Connect API keys for OpenAI, Anthropic Claude, Google Gemini, or custom OpenAI-compatible endpoints with client-side or AES-256-GCM encrypted server storage.
+- **Bring Your Own Key (BYOK)**: Connect API keys for Google Gemini, OpenAI, Anthropic Claude, or custom OpenAI-compatible endpoints (Ollama, Groq, DeepSeek) with client-side or AES-256-GCM encrypted server storage.
 - **Scaffold Instantly**: Select from 10 production-ready framework templates spanning Python, Go, Rust, and Node.js/Bun.
-- **AI-Driven Code Generation & Tooling**: Chat with an integrated backend engineer agent that can inspect files, create directories, write code, run diagnostics, and stream changes directly into the project workspace.
+- **AI-Driven Project Building & Tooling**: Chat with an integrated backend engineer agent that can inspect files, create directories, write code, run package installations, and stream changes directly into the project workspace in real-time.
+- **Docker-Free Universal Execution Engine**: Run and test backend microservices out-of-the-box directly through the browser. Zero Docker installation or local container configuration required — Forge provisions native managed processes with dynamic port mapping, log streaming, and process supervision, with seamless fallback to isolated containers when Docker is available.
 - **Automated OpenAPI Extraction**: Backends automatically expose their OpenAPI/Swagger specifications via HTTP probers or AST (Abstract Syntax Tree) fallbacks.
 - **Zero-Setup API Testing**: An integrated, SSRF-protected HTTP client automatically mirrors discovered endpoints, letting developers test routes the moment code is saved.
-- **Docker-Free Universal Execution Engine**: Seamlessly executes backend microservices either natively via the managed process execution engine (requiring zero Docker on the user's machine) or through isolated container sandboxes with automatic fallback detection.
 
 ---
 
 ## 2. Key Capabilities & Features
 
 ### 🤖 AI-Native Architecture & BYOK Multi-Model Support
-- **Flexible Model Selection**: Seamlessly toggle between models (e.g., Claude 3.5 Sonnet, GPT-4o, Gemini 2.0 Flash) or self-hosted models per chat session.
-- **Agentic File Tools**: AI models are augmented with tool-calling capabilities (`readFile`, `writeFile`, `listFiles`, `deleteFile`, `executeCommand`) to directly refactor or construct backend codebases.
-- **Real-Time Streaming**: Low-latency token and tool streaming powered by the Vercel AI SDK and native Bun WebSockets.
+- **Flexible Model Selection**: Seamlessly toggle between models (e.g., Gemini 2.0 Flash, GPT-4o, Claude 3.7 Sonnet) or self-hosted models per chat session.
+- **Multi-Step Agentic Tool Calling**: The AI model is equipped with workspace tools (`writeFile`, `readFile`, `deleteFile`, `runCommand`) to generate complete microservices, write unit tests, and install dependencies across multiple reasoning steps.
+- **Live Event-Stream SSE & WebSockets**: Streaming token deltas and live tool execution cards (`tool-call`, `tool-result`) are streamed progressively to the UI, providing immediate feedback as files are written and verified.
 - **Developer & AI Mascots**: Playful visual avatar system based on developer identity seeds.
+- **Error Resilience & 1-Click Retry**: Graceful handling of provider rate limits, network interruptions, or invalid keys with clear user remediation and one-click retry actions.
+
+### 🚀 Docker-Free Universal Execution Engine
+- **Browser-Based Execution**: Launch, interact with, and stop microservices directly on the website without installing Docker, running local daemon commands, or configuring container runtimes.
+- **Managed Process Engine (`ProcessEngine`)**: Automatically resolves language runtimes (Python, Node/Bun, Go, Rust), allocates non-conflicting host ports in `[8001, 9000]`, injects environment variables (`PORT`, `HOST`), and tracks process PIDs.
+- **Graceful Lifecycle Management**: Controlled startup, SIGTERM/SIGKILL termination, and zombie process cleanup on service shutdown.
+- **Live Terminal & WebSocket Log Streaming**: Real-time stdout and stderr log capture streamed over WebSockets directly to the integrated browser console.
+- **Container Sandbox Fallback (`DockerEngine`)**: When Docker is installed and running, Forge can optionally execute workloads inside hardened Docker containers (`uid:gid 1000:1000`, `CapDrop: ALL`, memory limits).
 
 ### ⚡ Rapid Project Bootstrapping & Flexible Storage
 - **10 First-Class Framework Templates**:
@@ -36,22 +44,16 @@ Forge unifies these isolated steps into an integrated, browser-native developer 
 - **Git & Zip Ingestion**: Import existing repositories or upload zipped archives with built-in path traversal (Zip Slip) sanitization.
 
 ### 🔄 The Real-Time "Magic Loop"
-1. **File Change**: The developer edits code in Monaco or the AI tool writes a file to the host workspace.
+1. **Code Modification**: The developer edits code in Monaco or the AI agent calls `writeFile` to create/update files in the workspace.
 2. **FS Watcher**: Chokidar detects modifications and pushes `file.changed` events across native WebSockets.
-3. **Hot Reload**: The sandbox container detects changes and reloads the server process in milliseconds.
-4. **Spec Extraction**: The spec extractor probes the container HTTP port for Swagger/OpenAPI docs or parses ASTs if the server is offline.
-5. **Tester Sync**: Discovered routes immediately sync to the Tester sidebar for instant execution.
+3. **Hot Reload / Process Refresh**: The running backend detects changes and hot-reloads in milliseconds.
+4. **Spec Extraction**: The spec extractor probes the HTTP port for Swagger/OpenAPI docs or parses ASTs if the server is offline.
+5. **Tester Sync**: Discovered routes immediately sync to the API Tester sidebar for instant testing.
 
 ### 🧪 Integrated Hardened API Tester
 - **Interactive Request Builder**: Configure HTTP methods, path params, query parameters, custom headers, and JSON/form bodies.
-- **SSRF Protection**: Hardened against Server-Side Request Forgery; restricts outbound requests strictly to local container sandbox addresses (`127.0.0.1:[allocated_port]`) and blocks cloud metadata endpoints (e.g. `169.254.169.254`).
+- **SSRF Protection**: Hardened against Server-Side Request Forgery; restricts outbound requests strictly to local execution addresses (`127.0.0.1:[allocated_port]`) and blocks cloud metadata endpoints (e.g. `169.254.169.254`).
 - **Collections & History**: Save request collections, view response headers, status codes, payload formatting, and request durations.
-
-### 🛡️ Enterprise Security & Sandboxing
-- **Container Isolation**: Non-root execution (`uid:gid 1000:1000`), Linux capability drops (`CapDrop: ALL`), memory caps (512MB default), and CPU throttles (1.0 core).
-- **Dynamic Port Allocation**: Safe non-conflicting host port allocation tracked within range `[8001, 9000]`.
-- **Encrypted Credentials**: User AI keys are encrypted at rest using AES-256-GCM with authenticated authentication tags.
-- **JWT & Rate Limiting**: Secure access tokens with refresh rotation and sliding-window rate limiters.
 
 ---
 
@@ -61,28 +63,28 @@ Forge unifies these isolated steps into an integrated, browser-native developer 
 ┌────────────────────────────────────────────────────────────────────────┐
 │                      Forge Frontend (React 19 + Vite)                  │
 │  - Monaco Editor       - Resizable Split-Panels    - AI Chat Stream    │
-│  - API Tester Console  - Container Log Terminal    - Project Tree      │
+│  - API Tester Console  - Execution Log Terminal    - Project Tree      │
 └──────────────────┬─────────────────────────────────▲───────────────────┘
                    │ HTTP REST (Hono)                │ WebSockets (/ws)
                    ▼                                 │
 ┌────────────────────────────────────────────────────┴───────────────────┐
 │                      Forge Backend (Bun + Hono)                        │
 │                                                                        │
-│  ├── Routes: auth, projects, files, containers, ai, spec, tester       │
+│  ├── Routes: auth, projects, files, containers/execution, ai, tester   │
 │  ├── Services:                                                         │
-│  │   ├── DockerService (dockerode container sandbox lifecycle)         │
-│  │   ├── SpecExtractor (container probe & AST parsing)                 │
+│  │   ├── ExecutionEngine (Unified interface: ProcessEngine | Docker)   │
+│  │   ├── SpecExtractor (container/process probe & AST parsing)         │
 │  │   ├── AIService (Vercel AI SDK multi-provider tool dispatcher)      │
 │  │   ├── FileStoreService (workspace FS manager & zip extractor)       │
 │  │   └── TesterService (SSRF-protected HTTP proxy)                     │
 │  └── DB & State: PostgreSQL + Drizzle ORM                              │
 └──────────────────┬─────────────────────────────────┬───────────────────┘
-                   │ Host Bind Mount                 │ Docker Daemon
+                   │ Workspace Files                 │ Supervised Runtimes
                    ▼                                 ▼
 ┌──────────────────────────────────────┐  ┌──────────────────────────────┐
-│       Host File System Storage       │  │  Isolated Docker Sandbox     │
+│       Host File System Storage       │  │  Universal Execution Engine  │
 │  .data/projects/<project-id>/...     │◄─┼─► Port: 127.0.0.1:<port>     │
-│  or user-selected local directory    │  │  User: 1000:1000 | CapDrop   │
+│  or user-selected local directory    │  │  Process or Docker Sandbox   │
 └──────────────────────────────────────┘  └──────────────────────────────┘
 ```
 
@@ -95,65 +97,33 @@ Forge unifies these isolated steps into an integrated, browser-native developer 
 | **Backend Runtime** | [Bun](https://bun.sh/) | High-performance JavaScript/TypeScript runtime with native WebSocket server support |
 | **Backend Framework** | [Hono](https://hono.dev/) | Ultra-lightweight, typed HTTP router seamlessly integrated with Bun |
 | **Database & ORM** | [PostgreSQL](https://www.postgresql.org/) & [Drizzle ORM](https://orm.drizzle.team/) | Relational data integrity, schema migrations, and type-safe query execution |
-| **Container Engine** | [Docker](https://www.docker.com/) via [dockerode](https://github.com/apocas/dockerode) | Safe programmatic container creation, log streaming, and lifecycle management |
+| **Execution Engine** | Dual: Native Process Engine + [Docker](https://www.docker.com/) via [dockerode](https://github.com/apocas/dockerode) | Docker-free browser execution out-of-the-box with optional container sandbox isolation |
 | **Frontend Framework**| [React 19](https://react.dev/) + [Vite](https://vitejs.dev/) | Fast modern reactive UI paired with instant HMR build tooling |
 | **Styling & Design**  | [Tailwind CSS v4](https://tailwindcss.com/) + Radix UI | Ramp-inspired editorial aesthetic with accessible interactive UI primitives |
 | **Editor**            | [Monaco Editor](https://microsoft.github.io/monaco-editor/) | VS Code editor core in the browser with syntax highlighting and diff views |
-| **AI Integration**    | [Vercel AI SDK](https://sdk.vercel.ai/) (`ai`) | Unified abstraction layer supporting OpenAI, Anthropic, and Google providers |
+| **AI Integration**    | [Vercel AI SDK](https://sdk.vercel.ai/) (`ai`) | Unified abstraction layer supporting Google Gemini, OpenAI, and Anthropic providers |
 | **File Watching**     | [Chokidar](https://github.com/paulmillr/chokidar) | Reliable, debounced host filesystem event monitoring |
 | **Testing Engine**    | Bun Test | Fast native unit and integration test runner |
 
 ---
 
-## 5. Monorepo Structure
-
-```
-forge/
-├── .data/                  # Persistent project workspace files & container mounts
-├── docker/                 # Container definition files and compose configs
-├── frontend/               # React 19 single-page application
-│   ├── public/             # Static assets, logos, and mascots
-│   └── src/
-│       ├── components/     # UI components (editor, chat, tester, console, layout)
-│       ├── hooks/          # React hooks (auth, chat streams, websockets)
-│       ├── lib/            # Utilities, API clients, mascot logic
-│       ├── pages/          # Route views (Landing, Dashboard, Project, Settings)
-│       └── stores/         # Zustand state stores (chat, project, editor)
-├── packages/
-│   └── shared/             # Shared TypeScript schemas, enums, API contracts, and types
-├── sandbox-images/         # Base Dockerfile definitions for framework runtimes
-├── scripts/                # Utility scripts for setup, cleanup, and smoke tests
-├── src/                    # Backend server source code
-│   ├── config/             # Environment variables and system constants
-│   ├── db/                 # Drizzle schemas, connection pool, and migrations
-│   ├── middleware/         # Auth, rate limiting, and error handling middleware
-│   ├── routes/             # Hono HTTP route modules
-│   ├── services/           # Core domain logic (AI, Docker, Spec, Tester, FileStore)
-│   ├── utils/              # Cryptographic, logger, and ULID/UUID utilities
-│   └── ws/                 # Realtime WebSocket hub and channels
-├── templates/              # Framework starter codebases (FastAPI, Gin, Axum, etc.)
-└── tests/                  # Integration and security test suites
-```
-
----
-
-## 6. Security Posture
+## 5. Security Posture
 
 Forge is engineered with defense-in-depth principles:
-- **SSRF Hardening**: Outgoing tester requests are validated against strict IP blacklists (RFC 1918 private subnets, cloud metadata addresses `169.254.169.254`, link-local ranges, broadcast, loopback restrictions) allowing only the assigned container port on `127.0.0.1`.
+- **SSRF Hardening**: Outgoing tester requests are validated against strict IP blacklists (RFC 1918 private subnets, cloud metadata addresses `169.254.169.254`, link-local ranges, broadcast, loopback restrictions) allowing only the assigned execution port on `127.0.0.1`.
 - **Zip Slip Prevention**: All zip file archive extractions validate that target paths resolve strictly within the project root directory.
 - **Path Traversal Guards**: All file reads/writes pass through canonical path validation to prevent escaping the project workspace root.
-- **Container Sandboxing**: Runtimes run unprivileged with minimal capabilities dropped, preventing container escape exploits.
-- **Encrypted Secrets**: Sensitive API keys and access tokens are secured with AES-256-GCM cryptographic encryption.
+- **Restricted Tool Allowlist**: AI agent shell execution is restricted to safe package installations and test runners (`npm install`, `pip install`, `bun add`, `pytest`, `cargo add`, `go get`).
+- **Encrypted Secrets**: Sensitive user API keys and access tokens are secured at rest using AES-256-GCM encryption with authenticated authentication tags.
 
 ---
 
-## 7. Getting Started
+## 6. Getting Started
 
 ### Prerequisites
 - **Bun** (v1.1 or higher)
 - **PostgreSQL** (v14 or higher)
-- **Docker** engine active and running
+- *Optional:* **Docker** (only if you wish to run microservices in isolated container sandboxes; not required for standard execution)
 
 ### Quick Installation
 ```bash
@@ -174,6 +144,6 @@ The frontend will be accessible at `http://localhost:5173` and the backend API a
 
 ---
 
-## 8. License & Attribution
+## 7. License & Attribution
 
 Forge is open-source software built for developers who demand velocity and precision in backend engineering.

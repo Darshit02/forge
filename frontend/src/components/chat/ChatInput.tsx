@@ -26,13 +26,15 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils.js";
 import type { ChatMode } from "../../types/api.js";
+import { ProviderForm } from "../providers/ProviderForm.js";
+import { KeyRound, Plus } from "lucide-react";
 
 const POPULAR_MODELS_BY_PROVIDER: Record<string, string[]> = {
   google: [
-    "gemini-2.5-pro",
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
     "gemini-1.5-pro",
+    "gemini-1.5-flash",
   ],
   openai: [
     "gpt-4o",
@@ -122,7 +124,7 @@ export function ChatInput({
   }, [text]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -145,6 +147,28 @@ export function ChatInput({
 
   return (
     <div className="p-3 border-t border-hairline bg-paper">
+      {/* No Provider Warning / Quick Setup Banner */}
+      {providers.length === 0 && (
+        <div className="mb-2 p-2 rounded-xl bg-bone border border-hairline/80 flex items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-ash">
+            <KeyRound className="w-3.5 h-3.5 text-primary shrink-0" />
+            <span className="text-[11px]">No AI key connected. Add BYOK key to build:</span>
+          </div>
+          <ProviderForm
+            trigger={
+              <Button
+                size="xs"
+                variant="outline"
+                className="rounded-[8px] text-[11px] h-6 px-2 font-normal border-hairline text-ink hover:bg-paper"
+              >
+                <Plus className="w-3 h-3 mr-1 text-primary" />
+                Add Key
+              </Button>
+            }
+          />
+        </div>
+      )}
+
       {/* Controls Strip: Mode Toggle + Model Picker + File Context */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
@@ -219,12 +243,14 @@ export function ChatInput({
               ) : (
                 <div className="p-3 text-xs text-ash font-normal text-center space-y-2">
                   <p>No AI providers registered yet.</p>
-                  <a
-                    href="/settings"
-                    className="inline-block text-[11px] text-primary hover:underline font-medium"
-                  >
-                    Go to Settings &rarr;
-                  </a>
+                  <ProviderForm
+                    trigger={
+                      <Button size="xs" className="rounded-[8px] text-[11px] font-normal bg-primary text-ink hover:bg-primary/90">
+                        <Plus className="w-3 h-3 mr-1" />
+                        Configure AI Key
+                      </Button>
+                    }
+                  />
                 </div>
               )}
             </DropdownMenuContent>
@@ -271,20 +297,20 @@ export function ChatInput({
       </div>
 
       {/* Input Textarea & Send / Cancel Button */}
-      <div className="relative rounded-[10px]  bg-paper focus-within:border-primary transition-colors p-2">
+      <div className="relative rounded-[10px] border border-hairline/80 bg-paper focus-within:border-primary transition-colors p-2">
         <textarea
           ref={textareaRef}
           rows={2}
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Describe backend features, endpoints, or ask for refactors (⌘+Enter)..."
+          placeholder="Describe backend features, endpoints, or ask for refactors..."
           className="w-full resize-none border-0 bg-transparent text-xs text-ink placeholder:text-ash outline-none font-sans font-normal"
         />
 
         <div className="flex items-center justify-between pt-1">
           <span className="text-[10px] text-ash font-sans font-normal">
-            ⌘+Enter to send
+            Enter to send, Shift+Enter for newline
           </span>
 
           {isStreaming ? (

@@ -40,7 +40,7 @@ export function normalizeModelName(
   fallbackDefault?: string
 ): string {
   const defaultByProvider: Record<string, string> = {
-    google: "gemini-2.5-pro",
+    google: "gemini-2.0-flash",
     openai: "gpt-4o",
     anthropic: "claude-3-7-sonnet-20250219",
     custom: "deepseek-chat",
@@ -63,21 +63,28 @@ export function normalizeModelName(
       m.startsWith("o4") ||
       m.startsWith("claude-")
     ) {
-      return fallback.startsWith("gemini-") ? fallback : "gemini-2.5-pro";
+      return fallback.startsWith("gemini-") ? fallback : "gemini-2.0-flash";
     }
 
     const googleAliases: Record<string, string> = {
-      "gemini-2.5-pro-latest": "gemini-2.5-pro",
-      "gemini-2.5-flash-latest": "gemini-2.5-flash",
+      "gemini-2.5-pro": "gemini-2.0-flash",
+      "gemini-2.5-flash": "gemini-2.0-flash",
+      "gemini-2.5-pro-latest": "gemini-2.0-flash",
+      "gemini-2.5-flash-latest": "gemini-2.0-flash",
       "gemini-2.0-flash-latest": "gemini-2.0-flash",
+      "gemini-2.0-flash": "gemini-2.0-flash",
+      "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
+      "gemini-2.0-pro-exp-02-05": "gemini-2.0-pro-exp-02-05",
       "gemini-2.0-pro-latest": "gemini-2.0-pro-exp-02-05",
       "gemini-1.5-pro-latest": "gemini-1.5-pro",
+      "gemini-1.5-pro": "gemini-1.5-pro",
       "gemini-1.5-flash-latest": "gemini-1.5-flash",
-      "gemini-2.5": "gemini-2.5-pro",
+      "gemini-1.5-flash": "gemini-1.5-flash",
+      "gemini-2.5": "gemini-2.0-flash",
       "gemini-2.0": "gemini-2.0-flash",
       "gemini-1.5": "gemini-1.5-pro",
-      "gemini-pro": "gemini-2.5-pro",
-      "gemini-flash": "gemini-2.5-flash",
+      "gemini-pro": "gemini-2.0-flash",
+      "gemini-flash": "gemini-2.0-flash",
     };
     return googleAliases[m] || m;
   }
@@ -512,75 +519,116 @@ CORE INSTRUCTIONS & CONSTRAINTS:
     });
 
     const executedTools: ToolCallExecution[] = [];
+    let accumulatedText = "";
 
-    // Tee the text stream so both the SSE route consumer and the background persistence promise
-    // can read concurrently without stream locking conflicts.
-    const [routeStream, internalStream] = result.textStream.tee();
+    type StreamEvent =
+      | { type: "token"; delta: string }
+      | { type: "tool-call"; toolCallId: string; toolName: string; args: any }
+      | { type: "tool-result"; toolCallId: string; toolName: string; result: any };
+
+    const queue: StreamEvent[] = [];
+    let notifyResolver: (() => void) | null = null;
+    let isStreamDone = false;
+    let streamError: Error | null = null;
 
     // Background consumer for streaming tokens & persisting message
     const streamPromise = (async () => {
       try {
-        let accumulatedText = "";
-
-        for await (const delta of internalStream) {
-          accumulatedText += delta;
-          // Broadcast token via WebSocket
-          wsHub.broadcastAiToken(projectId, delta);
-          if (options.onChunk) {
-            options.onChunk(delta);
-          }
-        }
-
-        // Check tool calls
-        let toolCalls: any[] = [];
-        try {
-          toolCalls = (await result.toolCalls) || [];
-        } catch (tcErr: any) {
-          logger.warn({ tcErr: tcErr.message }, "Error reading tool calls");
-        }
-
-        if (toolCalls && toolCalls.length > 0) {
-          for (const tc of toolCalls) {
-            executedTools.push({
-              toolCallId: tc.toolCallId,
-              toolName: tc.toolName as any,
-              args: tc.args as Record<string, unknown>,
+        for await (const part of result.fullStream) {
+          if (part.type === "text-delta") {
+            accumulatedText += part.textDelta;
+            wsHub.broadcastAiToken(projectId, part.textDelta);
+            if (options.onChunk) {
+              options.onChunk(part.textDelta);
+            }
+            queue.push({ type: "token", delta: part.textDelta });
+          } else if (part.type === "tool-call") {
+            const tc: ToolCallExecution = {
+              toolCallId: part.toolCallId,
+              toolName: part.toolName as any,
+              args: part.args as Record<string, unknown>,
+            };
+            executedTools.push(tc);
+            if (options.onToolCall) {
+              options.onToolCall(tc);
+            }
+            queue.push({
+              type: "tool-call",
+              toolCallId: part.toolCallId,
+              toolName: part.toolName,
+              args: part.args,
+            });
+          } else if (part.type === "tool-result") {
+            queue.push({
+              type: "tool-result",
+              toolCallId: part.toolCallId,
+              toolName: part.toolName,
+              result: part.result,
             });
           }
+          if (notifyResolver) {
+            notifyResolver();
+            notifyResolver = null;
+          }
         }
-
-        // Persist assistant message in DB
-        const [savedMessage] = await db
-          .insert(chatMessages)
-          .values({
-            sessionId,
-            role: "assistant",
-            content: accumulatedText,
-            toolCalls: executedTools.length > 0 ? executedTools : null,
-          })
-          .returning();
-
-        // Broadcast ai.done via WebSocket
-        wsHub.broadcastAiDone(projectId, savedMessage.id);
-
-        return {
-          messageId: savedMessage.id,
-          sessionId,
-          content: accumulatedText,
-          toolCalls: executedTools,
-        };
       } catch (err: any) {
-        logger.error(
-          { err: err.message, stack: err.stack, projectId, sessionId },
-          "Error in streamChat streamPromise"
-        );
-        throw err;
+        streamError = err;
+        logger.error({ err: err.message, stack: err.stack, projectId, sessionId }, "Error in streamChat fullStream loop");
+      } finally {
+        isStreamDone = true;
+        if (notifyResolver) {
+          notifyResolver();
+          notifyResolver = null;
+        }
       }
+
+      if (streamError) {
+        throw streamError;
+      }
+
+      // Persist assistant message in DB
+      const [savedMessage] = await db
+        .insert(chatMessages)
+        .values({
+          sessionId,
+          role: "assistant",
+          content: accumulatedText,
+          toolCalls: executedTools.length > 0 ? executedTools : null,
+        })
+        .returning();
+
+      // Broadcast ai.done via WebSocket
+      wsHub.broadcastAiDone(projectId, savedMessage.id);
+
+      return {
+        messageId: savedMessage.id,
+        sessionId,
+        content: accumulatedText,
+        toolCalls: executedTools,
+      };
     })();
+
+    async function* eventStream(): AsyncGenerator<StreamEvent> {
+      while (!isStreamDone || queue.length > 0) {
+        while (queue.length > 0) {
+          yield queue.shift()!;
+        }
+        if (isStreamDone) break;
+        await new Promise<void>((resolve) => {
+          notifyResolver = resolve;
+        });
+      }
+      if (streamError) {
+        throw streamError;
+      }
+    }
+
+    const [routeTextStream] = result.textStream.tee();
 
     return {
       sessionId,
-      textStream: routeStream,
+      eventStream: eventStream(),
+      textStream: routeTextStream,
       fullStream: result.fullStream,
       toDataStreamResponse: () => result.toDataStreamResponse(),
       finishPromise: streamPromise,
@@ -620,29 +668,40 @@ CORE INSTRUCTIONS & CONSTRAINTS:
         model = client(targetModel);
       }
 
-      const testResult = await streamText({
+      const testResult = streamText({
         model,
-        prompt: "ping",
+        prompt: "Say hello",
         maxTokens: 5,
       });
 
       // Read at least one chunk to verify connection
-      for await (const _ of testResult.textStream) {
-        break;
+      for await (const chunk of testResult.textStream) {
+        if (chunk) break;
       }
 
       const latencyMs = Date.now() - startTime;
       return { ok: true, latencyMs };
     } catch (err: any) {
       const latencyMs = Date.now() - startTime;
+      const targetModel = normalizeModelName(providerType, modelName || undefined);
       logger.warn(
-        { providerType, err: err.message },
+        { providerType, targetModel, err: err.message },
         "AI provider test ping failed"
       );
+
+      let errorMsg = err.message || "Failed to connect to AI provider";
+      if (err.statusCode === 401 || err.status === 401 || errorMsg.includes("API key not valid")) {
+        errorMsg = "Invalid API key (401 Unauthorized). Please check your key.";
+      } else if (err.statusCode === 404 || err.status === 404 || errorMsg.includes("not found")) {
+        errorMsg = `Model '${targetModel}' not found (404). Please verify model name.`;
+      } else if (err.statusCode === 429 || err.status === 429 || errorMsg.includes("quota")) {
+        errorMsg = "API quota exceeded or rate limited (429). Check provider billing.";
+      }
+
       return {
         ok: false,
         latencyMs,
-        error: err.message || "Failed to connect to AI provider",
+        error: errorMsg,
       };
     }
   }

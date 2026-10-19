@@ -9,12 +9,16 @@ interface ChatState {
   selectedModel: string;
   selectedProviderId: string | null;
   chatMode: ChatMode;
+  liveToolCalls: ToolCallExecution[];
+  lastFailedPrompt: string | null;
 
   setActiveSessionId: (id: string | null) => void;
   setMessages: (messages: ChatMessage[]) => void;
   appendUserMessage: (content: string) => void;
-  startAssistantStream: () => void;
+  startAssistantStream: (prompt?: string) => void;
   appendToken: (token: string) => void;
+  addLiveToolCall: (toolCall: ToolCallExecution) => void;
+  updateLiveToolResult: (toolCallId: string, result: any) => void;
   finishStream: (info: {
     messageId?: string;
     content?: string;
@@ -22,6 +26,7 @@ interface ChatState {
   }) => void;
   cancelStream: () => void;
   setError: (error: string) => void;
+  clearLastFailedPrompt: () => void;
   setSelectedModel: (model: string) => void;
   setSelectedProviderId: (id: string | null) => void;
   setChatMode: (mode: ChatMode) => void;
@@ -32,9 +37,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   streamingBuffer: "",
   isStreaming: false,
-  selectedModel: "gemini-2.5-pro",
+  selectedModel: "gemini-2.0-flash",
   selectedProviderId: null,
   chatMode: "edit",
+  liveToolCalls: [],
+  lastFailedPrompt: null,
 
   setActiveSessionId: (id) => set({ activeSessionId: id }),
 
@@ -52,10 +59,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ messages: [...messages, tempMessage] });
   },
 
-  startAssistantStream: () => {
+  startAssistantStream: (prompt?: string) => {
     set({
       isStreaming: true,
       streamingBuffer: "",
+      liveToolCalls: [],
+      lastFailedPrompt: prompt || null,
     });
   },
 
@@ -65,16 +74,36 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }));
   },
 
+  addLiveToolCall: (toolCall) => {
+    set((state) => ({
+      liveToolCalls: [...state.liveToolCalls, toolCall],
+    }));
+  },
+
+  updateLiveToolResult: (toolCallId, result) => {
+    set((state) => ({
+      liveToolCalls: state.liveToolCalls.map((tc) =>
+        tc.toolCallId === toolCallId ? { ...tc, result } : tc
+      ),
+    }));
+  },
+
   finishStream: ({ messageId, content, toolCalls }) => {
-    const { messages, streamingBuffer, activeSessionId } = get();
+    const { messages, streamingBuffer, activeSessionId, liveToolCalls } = get();
     const finalContent = content ?? streamingBuffer;
+    const finalTools =
+      toolCalls && toolCalls.length > 0
+        ? toolCalls
+        : liveToolCalls.length > 0
+        ? liveToolCalls
+        : null;
 
     const newAssistantMessage: ChatMessage = {
       id: messageId || "msg-" + Date.now(),
       sessionId: activeSessionId || "",
       role: "assistant",
       content: finalContent,
-      toolCalls: toolCalls || null,
+      toolCalls: finalTools,
       createdAt: new Date().toISOString(),
     };
 
@@ -82,11 +111,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
       messages: [...messages, newAssistantMessage],
       isStreaming: false,
       streamingBuffer: "",
+      liveToolCalls: [],
+      lastFailedPrompt: null,
     });
   },
 
   cancelStream: () => {
-    set({ isStreaming: false });
+    set({ isStreaming: false, liveToolCalls: [] });
   },
 
   setError: (error: string) => {
@@ -107,9 +138,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
       messages: [...messages, errorMessage],
       isStreaming: false,
       streamingBuffer: "",
+      liveToolCalls: [],
     });
   },
 
+  clearLastFailedPrompt: () => set({ lastFailedPrompt: null }),
   setSelectedModel: (selectedModel) => set({ selectedModel }),
   setSelectedProviderId: (selectedProviderId) => set({ selectedProviderId }),
   setChatMode: (chatMode) => set({ chatMode }),

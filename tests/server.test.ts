@@ -33,11 +33,12 @@ describe("Server HTTP Routes", () => {
   it("should normalize model names and latest aliases correctly", async () => {
     const { normalizeModelName } = await import("../src/services/ai.service.js");
 
-    // Google Gemini normalization
-    expect(normalizeModelName("google", "gemini-2.5-pro-latest")).toBe("gemini-2.5-pro");
-    expect(normalizeModelName("google", "gemini-2.5-flash-latest")).toBe("gemini-2.5-flash");
+    // Google Gemini normalization (mapping outdated/fictional models to real Gemini models)
+    expect(normalizeModelName("google", "gemini-2.5-pro-latest")).toBe("gemini-2.0-flash");
+    expect(normalizeModelName("google", "gemini-2.5-flash-latest")).toBe("gemini-2.0-flash");
     expect(normalizeModelName("google", "gemini-2.0-flash-latest")).toBe("gemini-2.0-flash");
-    expect(normalizeModelName("google", "gpt-4o", "gemini-2.5-pro")).toBe("gemini-2.5-pro"); // Cross-provider override fallback
+    expect(normalizeModelName("google", "gemini-1.5-pro-latest")).toBe("gemini-1.5-pro");
+    expect(normalizeModelName("google", "gpt-4o", "gemini-2.0-flash")).toBe("gemini-2.0-flash"); // Cross-provider override fallback
 
     // Anthropic Claude normalization
     expect(normalizeModelName("anthropic", "claude-3-7-sonnet")).toBe("claude-3-7-sonnet-20250219");

@@ -48,12 +48,32 @@ aiRoutes.post(
           data: JSON.stringify({ sessionId: chatResponse.sessionId }),
         });
 
-        // 2. Stream tokens
-        for await (const delta of chatResponse.textStream) {
-          await stream.writeSSE({
-            event: "token",
-            data: JSON.stringify({ delta }),
-          });
+        // 2. Stream tokens and live tool calls/results
+        for await (const part of chatResponse.eventStream) {
+          if (part.type === "token") {
+            await stream.writeSSE({
+              event: "token",
+              data: JSON.stringify({ delta: part.delta }),
+            });
+          } else if (part.type === "tool-call") {
+            await stream.writeSSE({
+              event: "tool-call",
+              data: JSON.stringify({
+                toolCallId: part.toolCallId,
+                toolName: part.toolName,
+                args: part.args,
+              }),
+            });
+          } else if (part.type === "tool-result") {
+            await stream.writeSSE({
+              event: "tool-result",
+              data: JSON.stringify({
+                toolCallId: part.toolCallId,
+                toolName: part.toolName,
+                result: part.result,
+              }),
+            });
+          }
         }
 
         // 3. Await completion and emit done event

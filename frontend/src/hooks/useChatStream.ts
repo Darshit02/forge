@@ -15,12 +15,16 @@ export function useChatStream(projectId: string | undefined) {
     selectedModel,
     selectedProviderId,
     chatMode,
+    lastFailedPrompt,
     appendUserMessage,
     startAssistantStream,
     appendToken,
+    addLiveToolCall,
+    updateLiveToolResult,
     finishStream,
     cancelStream,
     setError,
+    clearLastFailedPrompt,
     setActiveSessionId,
   } = useChatStore();
 
@@ -34,57 +38,76 @@ export function useChatStream(projectId: string | undefined) {
       appendUserMessage(messageText);
 
       // 2. Start streaming state
-      startAssistantStream();
+      startAssistantStream(messageText);
 
       analytics.aiMessageSent({ mode: chatMode, model: selectedModel });
 
-      await aiApi.stream(
-        projectId,
-        {
-          message: messageText,
-          sessionId: activeSessionId || undefined,
-          providerId: selectedProviderId || undefined,
-          model: selectedModel,
-          mode: chatMode,
-        },
-        {
-          onSession: (sessionId) => {
-            setActiveSessionId(sessionId);
+      try {
+        await aiApi.stream(
+          projectId,
+          {
+            message: messageText,
+            sessionId: activeSessionId || undefined,
+            providerId: selectedProviderId || undefined,
+            model: selectedModel,
+            mode: chatMode,
           },
-          onToken: (token) => {
-            appendToken(token);
-          },
-          onDone: (info) => {
-            finishStream({
-              messageId: info.messageId,
-              toolCalls: info.toolCalls,
-            });
+          {
+            onSession: (sessionId) => {
+              setActiveSessionId(sessionId);
+            },
+            onToken: (token) => {
+              appendToken(token);
+            },
+            onToolCall: (tc) => {
+              addLiveToolCall({
+                toolCallId: tc.toolCallId,
+                toolName: tc.toolName as any,
+                args: tc.args,
+              });
+            },
+            onToolResult: (res) => {
+              updateLiveToolResult(res.toolCallId, res.result);
+            },
+            onDone: (info) => {
+              finishStream({
+                messageId: info.messageId,
+                toolCalls: info.toolCalls,
+              });
 
-            if (info.toolCalls && info.toolCalls.length > 0) {
-              const files = info.toolCalls
-                .filter((tc) => tc.toolName === "writeFile")
-                .map((tc) => (tc.args as any).path);
+              if (info.toolCalls && info.toolCalls.length > 0) {
+                const files = info.toolCalls
+                  .filter((tc) => tc.toolName === "writeFile")
+                  .map((tc) => (tc.args as any)?.path)
+                  .filter(Boolean);
 
-              if (files.length > 0) {
-                analytics.aiCodeGenerated(files);
-                toast.success(`AI updated ${files.length} file(s)`, {
-                  description: files.join(", "),
-                });
+                if (files.length > 0) {
+                  analytics.aiCodeGenerated(files);
+                  toast.success(`AI updated ${files.length} file(s)`, {
+                    description: files.slice(0, 3).join(", ") + (files.length > 3 ? "..." : ""),
+                  });
+                }
               }
-            }
 
-            queryClient.invalidateQueries({ queryKey: ["chat-sessions", projectId] });
-            queryClient.invalidateQueries({ queryKey: ["files", projectId] });
+              queryClient.invalidateQueries({ queryKey: ["chat-sessions", projectId] });
+              queryClient.invalidateQueries({ queryKey: ["files", projectId] });
+            },
+            onError: (errMsg) => {
+              setError(errMsg || "Chat request failed");
+              toast.error(errMsg || "Chat request failed", {
+                duration: 6000,
+              });
+            },
           },
-          onError: (errMsg) => {
-            setError(errMsg || "Chat request failed");
-            toast.error(errMsg || "Chat request failed", {
-              duration: 5000,
-            });
-          },
-        },
-        abortControllerRef.current.signal
-      );
+          abortControllerRef.current.signal
+        );
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          const errMsg = err.message || "Failed to communicate with AI service";
+          setError(errMsg);
+          toast.error(errMsg, { duration: 6000 });
+        }
+      }
     },
     [
       projectId,
@@ -96,6 +119,8 @@ export function useChatStream(projectId: string | undefined) {
       appendUserMessage,
       startAssistantStream,
       appendToken,
+      addLiveToolCall,
+      updateLiveToolResult,
       finishStream,
       cancelStream,
       setError,
@@ -103,6 +128,13 @@ export function useChatStream(projectId: string | undefined) {
       queryClient,
     ]
   );
+
+  const retry = useCallback(() => {
+    if (lastFailedPrompt && !isStreaming) {
+      clearLastFailedPrompt();
+      sendMessage(lastFailedPrompt);
+    }
+  }, [lastFailedPrompt, isStreaming, clearLastFailedPrompt, sendMessage]);
 
   const cancel = useCallback(() => {
     if (abortControllerRef.current) {
@@ -114,7 +146,9 @@ export function useChatStream(projectId: string | undefined) {
 
   return {
     sendMessage,
+    retry,
     cancel,
     isStreaming,
+    hasFailedPrompt: Boolean(lastFailedPrompt),
   };
 }
