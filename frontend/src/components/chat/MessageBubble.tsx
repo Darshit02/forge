@@ -147,60 +147,64 @@ export function MessageBubble({
           )}
 
           {/* Markdown Content */}
-          {!isThinking && message.content && (
+          {!isThinking && (
             <div className="prose prose-sm max-w-none text-xs font-sans text-ink leading-relaxed font-normal">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({ className, children, ...props }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    const isInline = !match && !String(children).includes("\n");
+              {message.content ? (
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({ className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      const isInline = !match && !String(children).includes("\n");
 
-                    if (isInline) {
-                      return (
-                        <code
-                          className="px-1.5 py-0.5 rounded-[4px] bg-bone text-[11px] text-ink font-mono font-normal"
-                          {...props}
-                        >
-                          {children}
-                        </code>
-                      );
-                    }
-
-                    const codeText = String(children).replace(/\n$/, "");
-                    const blockId = Math.random().toString(36).slice(2, 7);
-
-                    return (
-                      <div className="relative my-2 rounded-xl bg-paper border border-hairline overflow-hidden">
-                        <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-bone text-[10px] uppercase tracking-[0.018em] text-ash font-mono">
-                          <span>{match ? match[1] : "code"}</span>
-                          <button
-                            onClick={() => copyToClipboard(codeText, blockId)}
-                            className="flex items-center gap-1 hover:text-ink transition-colors text-[10px]"
+                      if (isInline) {
+                        return (
+                          <code
+                            className="px-1.5 py-0.5 rounded-[4px] bg-bone text-[11px] text-ink font-mono font-normal"
+                            {...props}
                           >
-                            {copiedCodeId === blockId ? (
-                              <>
-                                <Check className="w-3 h-3 text-primary" />
-                                <span>Copied</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3 h-3" />
-                                <span>Copy</span>
-                              </>
-                            )}
-                          </button>
+                            {children}
+                          </code>
+                        );
+                      }
+
+                      const codeText = String(children).replace(/\n$/, "");
+                      const blockId = Math.random().toString(36).slice(2, 7);
+
+                      return (
+                        <div className="relative my-2 rounded-xl bg-paper border border-hairline overflow-hidden">
+                          <div className="flex items-center justify-between px-3 py-1 border-b border-hairline bg-bone text-[10px] uppercase tracking-[0.018em] text-ash font-mono">
+                            <span>{match ? match[1] : "code"}</span>
+                            <button
+                              onClick={() => copyToClipboard(codeText, blockId)}
+                              className="flex items-center gap-1 hover:text-ink transition-colors text-[10px]"
+                            >
+                              {copiedCodeId === blockId ? (
+                                <>
+                                  <Check className="w-3 h-3 text-primary" />
+                                  <span>Copied</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-3 h-3" />
+                                  <span>Copy</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                          <pre className="p-3 text-[11px] font-mono overflow-x-auto text-ink m-0 bg-paper">
+                            <code>{children}</code>
+                          </pre>
                         </div>
-                        <pre className="p-3 text-[11px] font-mono overflow-x-auto text-ink m-0 bg-paper">
-                          <code>{children}</code>
-                        </pre>
-                      </div>
-                    );
-                  },
-                }}
-              >
-                {message.content}
-              </ReactMarkdown>
+                      );
+                    },
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              ) : (!message.toolCalls || message.toolCalls.length === 0) ? (
+                <p className="text-ash italic text-xs">No response content was received for this turn.</p>
+              ) : null}
 
               {isStreaming && <StreamingCursor />}
             </div>

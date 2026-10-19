@@ -37,7 +37,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   streamingBuffer: "",
   isStreaming: false,
-  selectedModel: "gemini-2.0-flash",
+  selectedModel: "gemini-3.5-flash",
   selectedProviderId: null,
   chatMode: "edit",
   liveToolCalls: [],

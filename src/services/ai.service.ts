@@ -40,7 +40,7 @@ export function normalizeModelName(
   fallbackDefault?: string
 ): string {
   const defaultByProvider: Record<string, string> = {
-    google: "gemini-2.0-flash",
+    google: "gemini-3.5-flash",
     openai: "gpt-4o",
     anthropic: "claude-3-7-sonnet-20250219",
     custom: "deepseek-chat",
@@ -63,28 +63,35 @@ export function normalizeModelName(
       m.startsWith("o4") ||
       m.startsWith("claude-")
     ) {
-      return fallback.startsWith("gemini-") ? fallback : "gemini-2.0-flash";
+      return fallback.startsWith("gemini-") ? fallback : "gemini-3.5-flash";
     }
 
     const googleAliases: Record<string, string> = {
-      "gemini-2.5-pro": "gemini-2.0-flash",
-      "gemini-2.5-flash": "gemini-2.0-flash",
-      "gemini-2.5-pro-latest": "gemini-2.0-flash",
-      "gemini-2.5-flash-latest": "gemini-2.0-flash",
-      "gemini-2.0-flash-latest": "gemini-2.0-flash",
-      "gemini-2.0-flash": "gemini-2.0-flash",
-      "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
-      "gemini-2.0-pro-exp-02-05": "gemini-2.0-pro-exp-02-05",
-      "gemini-2.0-pro-latest": "gemini-2.0-pro-exp-02-05",
-      "gemini-1.5-pro-latest": "gemini-1.5-pro",
-      "gemini-1.5-pro": "gemini-1.5-pro",
-      "gemini-1.5-flash-latest": "gemini-1.5-flash",
-      "gemini-1.5-flash": "gemini-1.5-flash",
-      "gemini-2.5": "gemini-2.0-flash",
-      "gemini-2.0": "gemini-2.0-flash",
-      "gemini-1.5": "gemini-1.5-pro",
-      "gemini-pro": "gemini-2.0-flash",
-      "gemini-flash": "gemini-2.0-flash",
+      // Map retired 1.5, 2.0, and 2.5 versions to active gemini-3.5-flash and gemini-3.5-flash-lite
+      "gemini-2.0-flash": "gemini-3.5-flash",
+      "gemini-2.0-flash-lite": "gemini-3.5-flash-lite",
+      "gemini-2.0-flash-latest": "gemini-3.5-flash",
+      "gemini-2.5-flash": "gemini-3.5-flash",
+      "gemini-2.5-flash-lite": "gemini-3.5-flash-lite",
+      "gemini-2.5-pro": "gemini-3.5-flash",
+      "gemini-2.5-pro-latest": "gemini-3.5-flash",
+      "gemini-2.5-flash-latest": "gemini-3.5-flash",
+      "gemini-2.0-pro-exp-02-05": "gemini-3.5-flash",
+      "gemini-2.0-pro-latest": "gemini-3.5-flash",
+      "gemini-1.5-pro-latest": "gemini-3.5-flash",
+      "gemini-1.5-pro": "gemini-3.5-flash",
+      "gemini-1.5-flash-latest": "gemini-3.5-flash",
+      "gemini-1.5-flash": "gemini-3.5-flash",
+      "gemini-2.5": "gemini-3.5-flash",
+      "gemini-2.0": "gemini-3.5-flash",
+      "gemini-1.5": "gemini-3.5-flash",
+      "gemini-pro": "gemini-3.5-flash",
+      "gemini-flash": "gemini-3.5-flash",
+      // Active 3.x models
+      "gemini-3.5-flash": "gemini-3.5-flash",
+      "gemini-3.5-flash-lite": "gemini-3.5-flash-lite",
+      "gemini-3-flash-preview": "gemini-3-flash-preview",
+      "gemini-3.8-flash": "gemini-3.5-flash",
     };
     return googleAliases[m] || m;
   }
@@ -510,12 +517,13 @@ CORE INSTRUCTIONS & CONSTRAINTS:
     };
 
     // 6. Execute streamText with Vercel AI SDK
+    // Use maxSteps: 1 for stable single-turn tool calling across providers without thought signature issues
     const result = streamText({
       model,
       system: systemPrompt,
       messages: coreMessages,
       tools: mode === "chat" ? undefined : tools,
-      maxSteps: mode === "agent" ? 5 : 2,
+      maxSteps: mode === "agent" ? 3 : 1,
     });
 
     const executedTools: ToolCallExecution[] = [];
@@ -535,7 +543,13 @@ CORE INSTRUCTIONS & CONSTRAINTS:
     const streamPromise = (async () => {
       try {
         for await (const part of result.fullStream) {
-          if (part.type === "text-delta") {
+          if (part.type === "error") {
+            const errObj = (part as any).error;
+            const msg = errObj?.message || (typeof errObj === "string" ? errObj : "AI stream generated an error");
+            streamError = new Error(msg);
+            logger.error({ err: msg, projectId, sessionId }, "AI stream yielded error event");
+            break;
+          } else if (part.type === "text-delta") {
             accumulatedText += part.textDelta;
             wsHub.broadcastAiToken(projectId, part.textDelta);
             if (options.onChunk) {
@@ -584,6 +598,21 @@ CORE INSTRUCTIONS & CONSTRAINTS:
 
       if (streamError) {
         throw streamError;
+      }
+
+      // If tools executed and no plain text was generated, provide a helpful summary
+      if (!accumulatedText.trim() && executedTools.length > 0) {
+        const fileChanges = executedTools
+          .filter((t) => t.toolName === "writeFile")
+          .map((t) => (t.args as any)?.path)
+          .filter(Boolean);
+
+        if (fileChanges.length > 0) {
+          accumulatedText = `Updated workspace file${fileChanges.length > 1 ? "s" : ""}: ` +
+            fileChanges.map((f) => `\`${f}\``).join(", ") + ".";
+        } else {
+          accumulatedText = "Completed requested workspace actions.";
+        }
       }
 
       // Persist assistant message in DB

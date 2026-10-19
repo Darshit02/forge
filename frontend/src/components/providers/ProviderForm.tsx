@@ -35,12 +35,11 @@ const PROVIDER_PRESETS: Record<
 > = {
   google: {
     label: "Google Gemini",
-    defaultModel: "gemini-2.0-flash",
+    defaultModel: "gemini-3.5-flash",
     suggestedModels: [
-      "gemini-2.0-flash",
-      "gemini-2.0-flash-lite",
-      "gemini-1.5-pro",
-      "gemini-1.5-flash",
+      "gemini-3.5-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-3-flash-preview",
     ],
     baseUrlRequired: false,
   },
