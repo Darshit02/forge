@@ -141,7 +141,7 @@ export function MessageBubble({
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse [animation-delay:400ms]" />
               </div>
               <span className="font-sans text-[11px] text-ink">
-                Planning architecture and writing files...
+                Thinking...
               </span>
             </div>
           )}

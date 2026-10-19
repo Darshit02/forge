@@ -117,13 +117,13 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
             <span className="font-normal">Updated {formattedDate}</span>
           </div>
 
-          {project.hostPort ? (
+          {project.hostPort && project.status === "running" ? (
             <div className="flex items-center gap-1.5 text-ink font-normal">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span>:{project.hostPort}</span>
             </div>
           ) : (
-            <span className="text-ash/60 font-normal">Container stopped</span>
+            <span className="text-ash/60 font-normal">Backend offline</span>
           )}
         </div>
       </div>

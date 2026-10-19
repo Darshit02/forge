@@ -44,9 +44,9 @@ const FEATURES = [
   },
   {
     icon: Box,
-    title: "Live Docker Sandboxes",
-    body: "Every project boots a dedicated container bound to your filesystem. Hot reload, host port allocation, and live stdout/stderr over WebSockets.",
-    tag: "Automatic resource bounds",
+    title: "Universal Execution Engine",
+    body: "Run your microservices directly in the browser with native managed processes or isolated containers. Hot reload, host port allocation, and live logs over WebSockets.",
+    tag: "Docker-free browser execution",
   },
   {
     icon: Send,
@@ -149,10 +149,10 @@ export function LandingPage() {
         {/* Abstract Background Shapes */}
         <div className="relative mx-auto max-w-[1300px] px-6 text-center">
           <div className="forge-rise flex flex-col items-center">
-            <h1 className="text-5xl font-extraBold leading-[1.1] tracking-[-0.04em] text-ink sm:text-6xl lg:text-[80px]">
+            <h1 className="text-5xl font-extrabold leading-[1.1] tracking-[-0.04em] text-ink sm:text-6xl lg:text-[80px]">
               Run your backend
               <br />
-              in <span className="underline  underline-primary">one place</span>
+              in <span className="underline underline-offset-8 decoration-primary">one place</span>
             </h1>
 
             <p className="mt-8 max-w-5xl text-lg leading-relaxed text-ash">
@@ -221,7 +221,7 @@ export function LandingPage() {
               Core architecture
             </span>
             <h2 className="text-3xl tracking-[-0.02em] text-ink sm:text-5xl">
-              Everything your <span className="underline  underline-primary">backend workflow needs </span>, in a single pane of glass.
+              Everything your <span className="underline underline-offset-8 decoration-primary">backend workflow needs</span>, in a single pane of glass.
             </h2>
           </div>
 

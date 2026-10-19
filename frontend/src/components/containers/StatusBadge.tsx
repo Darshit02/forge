@@ -33,7 +33,7 @@ export function StatusBadge({ status, port, className }: StatusBadgeProps) {
           textClass: "text-destructive",
           borderClass: "border-hairline",
           bgClass: "bg-bone",
-          label: "Container Error",
+          label: "Execution Error",
         };
       case "stopped":
       default:
