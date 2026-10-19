@@ -22,6 +22,7 @@ interface RunningProcess {
   startedAt: Date;
   logs: string[];
   streamListeners: Set<(chunk: string) => void>;
+  stopping?: boolean;
 }
 
 export class ProcessExecutionEngine implements ExecutionEngine {
@@ -236,6 +237,9 @@ export class ProcessExecutionEngine implements ExecutionEngine {
       });
 
       child.on("error", async (err: any) => {
+        if (processInfo.stopping) {
+          return;
+        }
         logger.error({ projectId, err: err.message }, "Backend process error");
         appendLog(`[Forge Engine Error] ${err.message}`);
         this.runningProcesses.delete(projectId);
@@ -248,18 +252,23 @@ export class ProcessExecutionEngine implements ExecutionEngine {
       });
 
       child.on("exit", async (code, signal) => {
+        const wasIntentionallyStopped = processInfo.stopping === true;
         logger.info(
-          { projectId, code, signal },
+          { projectId, code, signal, wasIntentionallyStopped },
           "Backend process terminated"
         );
         appendLog(`[Forge Engine] Process exited (code: ${code ?? 0}, signal: ${signal ?? "none"})`);
         this.runningProcesses.delete(projectId);
         await portAllocatorService.releasePort(projectId);
 
-        const newStatus: ProjectStatus = code === 0 || signal === "SIGTERM" ? "stopped" : "error";
+        const newStatus: ProjectStatus =
+          wasIntentionallyStopped || code === 0 || signal === "SIGTERM" || signal === "SIGINT"
+            ? "stopped"
+            : "error";
+
         await db
           .update(projects)
-          .set({ status: newStatus, containerId: null, updatedAt: new Date() })
+          .set({ status: newStatus, containerId: null, hostPort: null, updatedAt: new Date() })
           .where(eq(projects.id, projectId));
         wsHub.broadcastContainerStatus(projectId, newStatus);
       });
@@ -336,6 +345,7 @@ export class ProcessExecutionEngine implements ExecutionEngine {
   async stop(projectId: string): Promise<ExecutionStatusInfo> {
     const running = this.runningProcesses.get(projectId);
     if (running) {
+      running.stopping = true;
       try {
         if (process.platform === "win32") {
           spawn("taskkill", ["/pid", `${running.pid}`, "/T", "/F"], { stdio: "ignore" });
