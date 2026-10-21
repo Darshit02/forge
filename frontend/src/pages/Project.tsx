@@ -22,7 +22,7 @@ export function ProjectPage() {
     return (
       <div className="h-screen w-screen bg-bone flex items-center justify-center p-6">
         <div className="max-w-md w-full rounded-2xl  bg-paper p-8 text-center space-y-4">
-          <div className="w-10 h-10 rounded-[6px] bg-bone text-destructive mx-auto flex items-center justify-center ">
+          <div className="w-10 h-10 rounded-[10px] bg-bone text-destructive mx-auto flex items-center justify-center ">
             <AlertCircle className="w-5 h-5" />
           </div>
           <div>
@@ -35,7 +35,7 @@ export function ProjectPage() {
           </div>
           <Button
             asChild
-            className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
+            className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
           >
             <Link to="/dashboard" className="gap-2">
               <ArrowLeft className="w-3.5 h-3.5" />

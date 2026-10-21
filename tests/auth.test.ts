@@ -44,4 +44,20 @@ describe("AuthService (Hashing & JWT)", () => {
 
     expect(() => authService.verifyRefreshToken(accessToken)).toThrow();
   });
+
+  it("should issue and verify password reset tokens", () => {
+    const user = { id: "user-reset-1", email: "reset@example.com" };
+    const resetToken = authService.generatePasswordResetToken(user);
+
+    expect(typeof resetToken).toBe("string");
+
+    const decoded = authService.verifyPasswordResetToken(resetToken);
+    expect(decoded.userId).toBe(user.id);
+    expect(decoded.email).toBe(user.email);
+    expect(decoded.type).toBe("reset_password");
+
+    // Must reject access tokens or refresh tokens as reset tokens
+    const accessToken = authService.generateAccessToken(user);
+    expect(() => authService.verifyPasswordResetToken(accessToken)).toThrow();
+  });
 });

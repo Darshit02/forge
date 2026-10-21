@@ -71,7 +71,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
           {/* Header Row */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[6px] bg-bone text-ink font-normal tracking-[0.018em] ">
+              <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[10px] bg-bone text-ink font-normal tracking-[0.018em] ">
                 {project.framework}
               </span>
               <span className="text-[10px] text-ash  uppercase tracking-[0.018em]">
@@ -87,7 +87,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 text-ash hover:text-ink hover:bg-bone rounded-[6px]"
+                    className="h-7 w-7 text-ash hover:text-ink hover:bg-bone rounded-[10px]"
                   >
                     <MoreVertical className="w-4 h-4" />
                   </Button>
@@ -148,13 +148,13 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
             <span className="font-normal">Updated {formattedDate}</span>
           </div>
 
-          {project.hostPort ? (
+          {project.hostPort && project.status === "running" ? (
             <div className="flex items-center gap-1.5 text-ink font-normal">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span>:{project.hostPort}</span>
             </div>
           ) : (
-            <span className="text-ash/60 font-normal">Container stopped</span>
+            <span className="text-ash/60 font-normal">Backend offline</span>
           )}
         </div>
       </div>

@@ -7,7 +7,12 @@ import { requireAuth } from "../middleware/auth.js";
 import { authRateLimiter } from "../middleware/rateLimit.js";
 import { CONSTANTS } from "../config/constants.js";
 
-import { RegisterRequestSchema, LoginRequestSchema } from "@forge/shared";
+import {
+  RegisterRequestSchema,
+  LoginRequestSchema,
+  ForgotPasswordRequestSchema,
+  ResetPasswordRequestSchema,
+} from "@forge/shared";
 
 export const authRoutes = new Hono();
 
@@ -76,6 +81,24 @@ authRoutes.post("/logout", async (c) => {
     path: "/",
   });
   return c.json({ ok: true });
+});
+
+/**
+ * POST /api/auth/forgot-password
+ */
+authRoutes.post("/forgot-password", zValidator("json", ForgotPasswordRequestSchema), async (c) => {
+  const body = c.req.valid("json");
+  const result = await authService.requestPasswordReset(body.email);
+  return c.json(result);
+});
+
+/**
+ * POST /api/auth/reset-password
+ */
+authRoutes.post("/reset-password", zValidator("json", ResetPasswordRequestSchema), async (c) => {
+  const body = c.req.valid("json");
+  const result = await authService.resetPassword(body);
+  return c.json(result);
 });
 
 /**

@@ -8,7 +8,7 @@ import { env } from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { logger } from "./utils/logger.js";
 import { checkDatabaseConnection, closeDatabaseConnection } from "./db/client.js";
-import { dockerService } from "./services/docker.service.js";
+import { executionService } from "./services/execution/index.js";
 import { watcherService } from "./services/watcher.service.js";
 import { fileStoreService } from "./services/fileStore.service.js";
 import { authService } from "./services/auth.service.js";
@@ -148,8 +148,8 @@ async function bootstrap() {
   await checkDatabaseConnection();
   await fileStoreService.loadWorkspacesFromDb();
 
-  // 2. Reconcile Docker containers
-  await dockerService.reconcile();
+  // 2. Reconcile execution engine states
+  await executionService.reconcile();
 
   logger.info(
     `Forge Backend running on http://${env.HOST}:${env.PORT} in ${env.NODE_ENV} mode`
@@ -163,6 +163,7 @@ bootstrap().catch((err) => {
 // Graceful Shutdown
 async function handleShutdown(signal: string) {
   logger.info(`Received ${signal}. Starting graceful shutdown...`);
+  await executionService.stopAll();
   await watcherService.stopAll();
   await closeDatabaseConnection();
   process.exit(0);

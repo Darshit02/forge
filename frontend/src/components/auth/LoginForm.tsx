@@ -10,6 +10,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ForgeAppIcon } from "../common/ForgeLogo.js";
+import { ForgotPasswordDialog } from "./ForgotPasswordDialog.js";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -20,11 +21,14 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
   const { login, isLoggingIn } = useAuth();
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -71,9 +75,13 @@ export function LoginForm() {
             >
               Password
             </Label>
-            <Link to="#" className="text-[10px] text-ash hover:text-ink font-normal underline underline-offset-2">
+            <button
+              type="button"
+              onClick={() => setForgotOpen(true)}
+              className="text-[10px] text-ash hover:text-ink font-normal underline underline-offset-2 transition-colors focus:outline-none"
+            >
               Forgot?
-            </Link>
+            </button>
           </div>
           <div className="relative">
             <Input
@@ -150,6 +158,13 @@ export function LoginForm() {
           Create an account
         </Link>
       </p>
+
+      <ForgotPasswordDialog
+        open={forgotOpen}
+        onOpenChange={setForgotOpen}
+        defaultEmail={watch("email")}
+        onSuccess={(resetEmail) => setValue("email", resetEmail)}
+      />
     </div>
   );
 }

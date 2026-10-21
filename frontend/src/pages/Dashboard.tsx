@@ -59,7 +59,7 @@ export function DashboardPage() {
                 {projects.length}
               </div>
             </div>
-            <div className="w-8 h-8 rounded-[6px] bg-bone  flex items-center justify-center text-ash">
+            <div className="w-8 h-8 rounded-[10px] bg-bone  flex items-center justify-center text-ash">
               <FolderGit2 className="w-4 h-4" />
             </div>
           </div>
@@ -80,7 +80,7 @@ export function DashboardPage() {
                 )}
               </div>
             </div>
-            <div className="w-8 h-8 rounded-[6px] bg-bone  flex items-center justify-center text-ash">
+            <div className="w-8 h-8 rounded-[10px] bg-bone  flex items-center justify-center text-ash">
               <Cpu className="w-4 h-4" />
             </div>
           </div>
@@ -94,7 +94,7 @@ export function DashboardPage() {
                 {providers.length}
               </div>
             </div>
-            <div className="w-8 h-8 rounded-[6px] bg-bone  flex items-center justify-center text-ash">
+            <div className="w-8 h-8 rounded-[10px] bg-bone  flex items-center justify-center text-ash">
               <KeyRound className="w-4 h-4" />
             </div>
           </div>

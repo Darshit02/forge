@@ -40,11 +40,11 @@ export function TopBar({ currentProject }: TopBarProps) {
 
   const userInitials = user?.name
     ? user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || "U";
 
   const userSeed = user?.id || user?.email || user?.name || "forge-developer";
@@ -71,7 +71,7 @@ export function TopBar({ currentProject }: TopBarProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 text-xs text-ink px-2 py-1 rounded-[6px] hover:bg-bone transition-colors font-sans">
+                <button className="flex items-center gap-1.5 text-xs text-ink px-2 py-1 rounded-[10px] hover:bg-bone transition-colors font-sans">
                   <span className="truncate max-w-[140px] font-normal">
                     {currentProject.name}
                   </span>
@@ -124,7 +124,7 @@ export function TopBar({ currentProject }: TopBarProps) {
       {/* Right side: Reconnecting pill, Cmd+K, Theme, User Profile */}
       <div className="flex items-center gap-2">
         {reconnecting && (
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[6px]  bg-bone text-ash text-[10px] uppercase  tracking-[0.018em]">
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[10px]  bg-bone text-ash text-[10px] uppercase  tracking-[0.018em]">
             <WifiOff className="w-3 h-3 animate-pulse" />
             <span>Reconnecting</span>
           </div>
@@ -134,7 +134,7 @@ export function TopBar({ currentProject }: TopBarProps) {
           variant="outline"
           size="sm"
           onClick={toggleCommandPalette}
-          className="h-7 text-xs border-hairline rounded-[6px] px-2 gap-1.5 text-ash hover:text-ink font-sans font-normal"
+          className="h-7 text-xs border-hairline rounded-[10px] px-2 gap-1.5 text-ash hover:text-ink font-sans font-normal"
         >
           <Command className="w-3 h-3" />
           <span className="hidden sm:inline">Search</span>
@@ -148,10 +148,10 @@ export function TopBar({ currentProject }: TopBarProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex items-center rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-transform active:scale-95"
+              className="flex items-center rounded-[10px] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-transform active:scale-95"
               title={`${user?.name || "Developer"} (${mascotInfo.name})`}
             >
-              <Avatar className="w-7 h-7 rounded-[6px] border border-hairline/60">
+              <Avatar className="w-7 h-7 rounded-[10px] border border-hairline/60">
                 <AvatarImage src={mascotUrl} alt={mascotInfo.name} />
                 <AvatarFallback className="bg-bone text-ink text-[11px] font-normal">
                   {userInitials}

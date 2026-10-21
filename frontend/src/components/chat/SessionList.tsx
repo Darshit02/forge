@@ -66,7 +66,7 @@ export function SessionList({ projectId }: SessionListProps) {
         size="xs"
         variant="ghost"
         onClick={handleNewSession}
-        className="rounded-[6px] bg-paper text-ink shrink-0 gap-1 font-normal shadow-2xs hover:bg-paper/80"
+        className="rounded-[10px]  bg-paper text-ink shrink-0 gap-1 font-normal"
       >
         <Plus className="w-3 h-3 text-ash" />
         <span>New</span>
@@ -79,7 +79,7 @@ export function SessionList({ projectId }: SessionListProps) {
             key={session.id}
             onClick={() => handleSelectSession(session.id)}
             className={cn(
-              "group flex items-center gap-1.5 h-6 pl-2.5 pr-1.5 rounded-[6px] text-[11px] transition-colors shrink-0 font-sans font-normal cursor-pointer select-none",
+              "flex items-center gap-1.5 h-6 px-2.5 rounded-[10px] text-[11px] truncate max-w-[130px] transition-colors shrink-0 font-sans font-normal",
               isActive
                 ? "bg-paper text-ink shadow-2xs"
                 : "text-ash hover:text-ink hover:bg-paper/50"

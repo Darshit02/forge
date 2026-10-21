@@ -21,11 +21,10 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("files")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-              activeTab === "files"
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${activeTab === "files"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
-            }`}
+              }`}
           >
             <Files className="w-3.5 h-3.5" />
             <span>Files</span>
@@ -34,11 +33,10 @@ export function Sidebar({ projectId }: SidebarProps) {
           {/* <button
             type="button"
             onClick={() => setActiveTab("collections")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-              activeTab === "collections"
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${activeTab === "collections"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
-            }`}
+              }`}
           >
             <Layers className="w-3.5 h-3.5" />
             <span>APIs</span>
@@ -48,11 +46,10 @@ export function Sidebar({ projectId }: SidebarProps) {
           <button
             type="button"
             onClick={() => setActiveTab("environments")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
-              activeTab === "environments"
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs  transition-colors font-normal ${activeTab === "environments"
                 ? "bg-paper text-ink border-b-2 border-primary"
                 : "text-ash hover:text-ink"
-            }`}
+              }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Envs</span>

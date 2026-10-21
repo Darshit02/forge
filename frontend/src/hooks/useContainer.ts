@@ -35,13 +35,13 @@ export function useContainer(projectId: string | undefined) {
     onSuccess: (data) => {
       setContainerStatus(data.container.status);
       queryClient.invalidateQueries({ queryKey: ["container-status", projectId] });
-      toast.success("Container started successfully", {
+      toast.success("Backend started successfully", {
         description: `Listening on 127.0.0.1:${data.container.hostPort}`,
       });
     },
     onError: (err: any) => {
       setContainerStatus("error");
-      toast.error(err.message || "Failed to start container");
+      toast.error(err.message || "Failed to start backend");
     },
   });
 
@@ -53,10 +53,10 @@ export function useContainer(projectId: string | undefined) {
     onSuccess: (data) => {
       setContainerStatus(data.container.status);
       queryClient.invalidateQueries({ queryKey: ["container-status", projectId] });
-      toast.info("Container stopped");
+      toast.info("Backend stopped");
     },
     onError: (err: any) => {
-      toast.error(err.message || "Failed to stop container");
+      toast.error(err.message || "Failed to stop backend");
     },
   });
 

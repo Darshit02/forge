@@ -70,7 +70,7 @@ function CommandInput({
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "flex h-10 w-full rounded-[6px] bg-transparent py-3 text-xs font-normal text-ink outline-none placeholder:text-ash disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full rounded-[10px] bg-transparent py-3 text-xs font-normal text-ink outline-none placeholder:text-ash disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         {...props}
@@ -144,7 +144,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "relative flex cursor-pointer items-center gap-2 rounded-[6px] px-2 py-2 text-xs font-normal text-ink outline-none select-none transition-colors",
+        "relative flex cursor-pointer items-center gap-2 rounded-[10px] px-2 py-2 text-xs font-normal text-ink outline-none select-none transition-colors",
         "data-[selected=true]:bg-bone data-[selected=true]:text-ink",
         "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ash",

@@ -34,6 +34,8 @@ export const aiApi = {
     callbacks: {
       onSession?: (sessionId: string) => void;
       onToken?: (delta: string) => void;
+      onToolCall?: (toolCall: { toolCallId: string; toolName: string; args: any }) => void;
+      onToolResult?: (result: { toolCallId: string; toolName: string; result: any }) => void;
       onDone?: (info: { messageId: string; sessionId?: string; toolCalls?: ToolCallExecution[] }) => void;
       onError?: (error: string) => void;
     },
@@ -120,20 +122,26 @@ export const aiApi = {
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n\n");
-        buffer = lines.pop() || "";
+        const normalized = buffer.replace(/\r\n/g, "\n");
+        const parts = normalized.split("\n\n");
+        buffer = parts.pop() || "";
 
-        for (const block of lines) {
+        for (const block of parts) {
           if (!block.trim()) continue;
 
           let event = "message";
           let dataStr = "";
 
-          const eventMatch = block.match(/event:\s*(.+)/);
-          if (eventMatch) event = eventMatch[1].trim();
+          const lines = block.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("event:")) {
+              event = line.slice(6).trim();
+            } else if (line.startsWith("data:")) {
+              dataStr += (dataStr ? "\n" : "") + line.slice(5).trim();
+            }
+          }
 
-          const dataMatch = block.match(/data:\s*(.+)/s);
-          if (dataMatch) dataStr = dataMatch[1].trim();
+          if (!dataStr) continue;
 
           try {
             const parsed = JSON.parse(dataStr);
@@ -141,6 +149,10 @@ export const aiApi = {
               callbacks.onSession(parsed.sessionId);
             } else if (event === "token" && callbacks.onToken) {
               callbacks.onToken(parsed.delta);
+            } else if (event === "tool-call" && callbacks.onToolCall) {
+              callbacks.onToolCall(parsed);
+            } else if (event === "tool-result" && callbacks.onToolResult) {
+              callbacks.onToolResult(parsed);
             } else if (event === "done" && callbacks.onDone) {
               callbacks.onDone(parsed);
               return;
@@ -157,11 +169,8 @@ export const aiApi = {
       if (err.name === "AbortError") {
         return; // User cancelled
       }
-      if (hasEmittedError) {
-        return; // An exact error was already emitted, do not overwrite
-      }
-      const rawMessage = err?.message || "";
-      emitError(rawMessage || "Failed to stream AI response");
+      const message = err.message || "Failed to stream AI response";
+      callbacks.onError?.(message);
     }
   },
 };

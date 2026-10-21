@@ -23,7 +23,7 @@ export const providersRoutes = new Hono();
 providersRoutes.use("*", requireAuth);
 
 const DEFAULT_MODELS: Record<string, string> = {
-  google: "gemini-2.0-flash",
+  google: "gemini-2.5-pro",
   openai: "gpt-4o",
   anthropic: "claude-3-7-sonnet-20250219",
   custom: "deepseek-chat",

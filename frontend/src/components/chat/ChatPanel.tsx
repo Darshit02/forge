@@ -10,12 +10,17 @@ interface ChatPanelProps {
 
 export function ChatPanel({ projectId }: ChatPanelProps) {
   const messages = useChatStore((s) => s.messages);
-  const { sendMessage, cancel, isStreaming } = useChatStream(projectId);
+  const { sendMessage, retry, cancel, isStreaming } = useChatStream(projectId);
 
   return (
     <div className="flex flex-col h-full bg-paper">
       <SessionList projectId={projectId} />
-      <MessageList messages={messages} projectId={projectId} />
+      <MessageList
+        messages={messages}
+        projectId={projectId}
+        onPromptSelect={sendMessage}
+        onRetry={retry}
+      />
       <ChatInput
         projectId={projectId}
         onSend={sendMessage}

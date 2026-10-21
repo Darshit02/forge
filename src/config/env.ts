@@ -60,6 +60,9 @@ const envSchema = z.object({
         ? `${process.env.HOME}/.docker/run/docker.sock`
         : "/var/run/docker.sock"
     ),
+  EXECUTION_ENGINE: z
+    .enum(["auto", "process", "docker"])
+    .default("auto"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),

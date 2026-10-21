@@ -34,7 +34,7 @@ export function DiffViewer({
               size="xs"
               variant="outline"
               onClick={onDiscard}
-              className="rounded-[6px] border-hairline font-normal"
+              className="rounded-[10px] border-hairline font-normal"
             >
               <X className="w-3 h-3 mr-1" />
               Discard
@@ -44,7 +44,7 @@ export function DiffViewer({
             <Button
               size="xs"
               onClick={onApply}
-              className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal"
+              className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal"
             >
               <Check className="w-3 h-3 mr-1" />
               Apply Changes

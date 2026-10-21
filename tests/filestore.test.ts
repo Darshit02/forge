@@ -93,8 +93,10 @@ describe("FileStoreService", () => {
   });
 
   it("should support custom workspace directory", async () => {
+    const os = await import("node:os");
+    const path = await import("node:path");
     const customProjId = "custom-proj-" + Math.random().toString(36).slice(2, 8);
-    const customDir = `/tmp/forge-custom-test-${customProjId}`;
+    const customDir = path.resolve(os.tmpdir(), `forge-custom-test-${customProjId}`);
     fileStoreService.setWorkspaceDir(customProjId, customDir);
 
     expect(fileStoreService.getWorkspaceDir(customProjId)).toBe(customDir);

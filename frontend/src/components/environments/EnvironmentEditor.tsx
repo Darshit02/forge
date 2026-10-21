@@ -172,7 +172,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-[6px] border-hairline text-xs  gap-1.5 h-8 font-normal"
+              className="rounded-[10px] border-hairline text-xs  gap-1.5 h-8 font-normal"
             >
               <Plus className="w-3.5 h-3.5" />
               New Environment
@@ -200,7 +200,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setNewEnvDialogOpen(false)}
-                className="text-xs rounded-[6px] font-normal"
+                className="text-xs rounded-[10px] font-normal"
               >
                 Cancel
               </Button>
@@ -208,7 +208,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                 size="sm"
                 onClick={handleCreateNew}
                 disabled={!newEnvName.trim() || isCreating}
-                className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
+                className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
               >
                 Create
               </Button>
@@ -226,7 +226,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
           <Button
             size="sm"
             onClick={() => setNewEnvDialogOpen(true)}
-            className="mt-3 rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
+            className="mt-3 rounded-[10px] bg-primary text-ink hover:bg-primary/90 text-xs font-normal"
           >
             Create Default Environment
           </Button>
@@ -239,11 +239,10 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
               return (
                 <div
                   key={env.id}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] border text-xs  transition-colors font-normal ${
-                    isSelected
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] border text-xs  transition-colors font-normal ${isSelected
                       ? "border-ink bg-bone text-ink"
                       : "border-hairline bg-paper text-ash hover:border-smoke"
-                  }`}
+                    }`}
                 >
                   <button
                     type="button"
@@ -290,7 +289,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     {activeEnv.name}
                   </span>
                   {activeEnv.isActive ? (
-                    <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[6px] bg-primary text-ink font-normal">
+                    <span className="text-[10px] uppercase  px-2 py-0.5 rounded-[10px] bg-primary text-ink font-normal">
                       Active Environment
                     </span>
                   ) : (
@@ -298,7 +297,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleSetActive(activeEnv)}
-                      className="text-[11px] h-6 px-2 text-ash hover:text-ink rounded-[6px] font-normal"
+                      className="text-[11px] h-6 px-2 text-ash hover:text-ink rounded-[10px] font-normal"
                     >
                       Set as active
                     </Button>
@@ -311,7 +310,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setRawTextMode(!rawTextMode)}
-                    className="text-xs text-ash hover:text-ink h-7 gap-1 rounded-[6px] font-normal"
+                    className="text-xs text-ash hover:text-ink h-7 gap-1 rounded-[10px] font-normal"
                   >
                     {rawTextMode ? (
                       <>
@@ -329,7 +328,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     size="sm"
                     onClick={handleSave}
                     disabled={isUpdating}
-                    className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 text-xs h-7 px-3 gap-1.5 font-normal"
+                    className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 text-xs h-7 px-3 gap-1.5 font-normal"
                   >
                     {isUpdating ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -390,7 +389,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleRemoveRow(idx)}
-                          className="h-7 w-7 text-ash hover:text-red-600 rounded-[6px]"
+                          className="h-7 w-7 text-ash hover:text-red-600 rounded-[10px]"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -403,7 +402,7 @@ export function EnvironmentEditor({ projectId }: EnvironmentEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={handleAddRow}
-                    className="text-xs text-ash hover:text-ink gap-1.5 h-8 mt-2 rounded-[6px] font-normal"
+                    className="text-xs text-ash hover:text-ink gap-1.5 h-8 mt-2 rounded-[10px] font-normal"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Variable

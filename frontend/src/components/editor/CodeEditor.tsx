@@ -116,7 +116,7 @@ export function CodeEditor({ projectId }: CodeEditorProps) {
           {currentFile.dirty ? (
             <button
               onClick={() => handleSave(currentFile.path, currentFile.content)}
-              className="flex items-center gap-1 text-[11px] text-ink bg-primary px-2 py-0.5 rounded-[6px] hover:opacity-90 font-sans font-normal"
+              className="flex items-center gap-1 text-[11px] text-ink bg-primary px-2 py-0.5 rounded-[10px] hover:opacity-90 font-sans font-normal"
             >
               <Save className="w-3 h-3" />
               Save

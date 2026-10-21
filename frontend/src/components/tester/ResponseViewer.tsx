@@ -56,7 +56,7 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
 
           <span
             className={cn(
-              "px-2 py-0.5 rounded-[6px] border  text-[10px] font-normal tracking-[0.018em]",
+              "px-2 py-0.5 rounded-[10px] border  text-[10px] font-normal tracking-[0.018em]",
               getStatusColor(response.status)
             )}
           >
@@ -73,10 +73,10 @@ export function ResponseViewer({ response, isSending }: ResponseViewerProps) {
       {/* Response Tabs (Body, Headers) */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
         <TabsList className="h-8 justify-start border-b border-hairline bg-paper px-2 gap-1 rounded-none">
-          <TabsTrigger value="body" className="text-xs h-6 px-2.5 rounded-[6px] font-sans font-normal">
+          <TabsTrigger value="body" className="text-xs h-6 px-2.5 rounded-[10px] font-sans font-normal">
             Body
           </TabsTrigger>
-          <TabsTrigger value="headers" className="text-xs h-6 px-2.5 rounded-[6px] font-sans font-normal">
+          <TabsTrigger value="headers" className="text-xs h-6 px-2.5 rounded-[10px] font-sans font-normal">
             Headers ({Object.keys(response.headers || {}).length})
           </TabsTrigger>
         </TabsList>

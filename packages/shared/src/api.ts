@@ -38,6 +38,18 @@ export const AuthResponseSchema = z.object({
 });
 export type AuthResponse = z.infer<typeof AuthResponseSchema>;
 
+export const ForgotPasswordRequestSchema = z.object({
+  email: z.string().email("Invalid email format"),
+});
+export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordRequestSchema>;
+
+export const ResetPasswordRequestSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  resetToken: z.string().min(1, "Reset token is required"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters long"),
+});
+export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>;
+
 // ==========================================
 // 2. AI Provider Schemas
 // ==========================================

@@ -11,9 +11,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group toast group-[.toaster]:bg-paper group-[.toaster]:text-ink group-[.toaster]:border-hairline group-[.toaster]:shadow-none group-[.toaster]:rounded-2xl font-sans text-xs font-normal p-4",
           description: "group-[.toast]:text-ash font-normal text-xs",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-ink group-[.toast]:rounded-[6px] font-normal text-xs px-3 py-1",
+            "group-[.toast]:bg-primary group-[.toast]:text-ink group-[.toast]:rounded-[10px] font-normal text-xs px-3 py-1",
           cancelButton:
-            "group-[.toast]:bg-bone group-[.toast]:text-ink group-[.toast]:rounded-[6px] font-normal text-xs px-3 py-1",
+            "group-[.toast]:bg-bone group-[.toast]:text-ink group-[.toast]:rounded-[10px] font-normal text-xs px-3 py-1",
         },
       }}
       {...props}

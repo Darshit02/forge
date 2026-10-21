@@ -153,17 +153,17 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
           onValueChange={(val) => setImportMode(val as "git" | "template")}
           className="mt-2"
         >
-          <TabsList className="grid grid-cols-2 bg-bone rounded-[6px] p-1 ">
+          <TabsList className="grid grid-cols-2 bg-bone rounded-[10px] p-1 ">
             <TabsTrigger
               value="git"
-              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
+              className="gap-2 rounded-[10px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
             >
               <GitBranch className="w-3.5 h-3.5 text-ash" />
               Git Repository
             </TabsTrigger>
             <TabsTrigger
               value="template"
-              className="gap-2 rounded-[6px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
+              className="gap-2 rounded-[10px] data-[state=active]:bg-paper data-[state=active]:text-ink data-[state=active]:border-b-2 data-[state=active]:border-primary shadow-none text-xs font-normal"
             >
               <Box className="w-3.5 h-3.5 text-ash" />
               Starter Template
@@ -238,11 +238,10 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
                       key={tmpl.id}
                       type="button"
                       onClick={() => handleTemplateSelect(tmpl)}
-                      className={`text-left p-3 rounded-xl border transition-colors ${
-                        isSelected
+                      className={`text-left p-3 rounded-xl border transition-colors ${isSelected
                           ? "border-ink bg-bone text-ink"
                           : "border-hairline bg-paper hover:border-smoke text-ink"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-normal text-ink capitalize">
@@ -363,15 +362,15 @@ export function ImportProjectDialog({ trigger }: ImportProjectDialogProps) {
             type="button"
             variant="ghost"
             onClick={() => setOpen(false)}
-            className="rounded-[6px] text-xs text-ash hover:text-ink font-normal"
+            className="rounded-[10px] text-xs text-ash hover:text-ink font-normal"
           >
             Cancel
           </Button>
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={!name.trim() || (importMode === "git" && !gitUrl.trim()) || (isCustomFolder && !folderPath.trim()) || isCreating}
-            className="rounded-[6px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
+            disabled={!name.trim() || (importMode === "git" && !gitUrl.trim()) || isCreating}
+            className="rounded-[10px] bg-primary text-ink hover:bg-primary/90 font-normal text-xs px-4"
           >
             {isCreating ? (
               <Loader2 className="w-4 h-4 animate-spin mr-1.5" />

@@ -227,6 +227,108 @@ export class AuthService {
 
     return userRecord;
   }
+
+  /**
+   * Generates a password reset token (15 mins)
+   */
+  generatePasswordResetToken(user: { id: string; email: string }): string {
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      type: "reset_password",
+    };
+    return jwt.sign(payload, env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+  }
+
+  /**
+   * Verifies a password reset token
+   */
+  verifyPasswordResetToken(token: string): JwtPayload {
+    try {
+      const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+      if (decoded.type !== "reset_password") {
+        throw new BadRequestError("Invalid token type for password reset");
+      }
+      return decoded;
+    } catch (err: any) {
+      if (err instanceof BadRequestError) throw err;
+      throw new BadRequestError("Invalid or expired password reset token");
+    }
+  }
+
+  /**
+   * Request password reset for an email
+   */
+  async requestPasswordReset(email: string): Promise<{ ok: boolean; resetToken?: string; message: string }> {
+    const cleanEmail = email.toLowerCase().trim();
+    const [user] = await db
+      .select({ id: users.id, email: users.email })
+      .from(users)
+      .where(eq(users.email, cleanEmail))
+      .limit(1);
+
+    if (!user) {
+      // Avoid user enumeration
+      return {
+        ok: true,
+        message: "If an account with this email exists, password reset instructions have been generated.",
+      };
+    }
+
+    const resetToken = this.generatePasswordResetToken(user);
+
+    return {
+      ok: true,
+      resetToken,
+      message: "Password reset token generated successfully.",
+    };
+  }
+
+  /**
+   * Resets user password using valid reset token
+   */
+  async resetPassword(input: {
+    email: string;
+    resetToken: string;
+    newPassword: string;
+  }): Promise<{ ok: boolean; message: string }> {
+    const cleanEmail = input.email.toLowerCase().trim();
+
+    try {
+      const decoded = jwt.verify(input.resetToken, env.JWT_SECRET) as any;
+      if (decoded.type !== "reset_password") {
+        throw new BadRequestError("Invalid token type for password reset");
+      }
+      if (decoded.email.toLowerCase().trim() !== cleanEmail) {
+        throw new BadRequestError("Token does not match the provided email address");
+      }
+    } catch (err: any) {
+      if (err instanceof BadRequestError) throw err;
+      throw new BadRequestError("Invalid or expired password reset token. Please request a new one.");
+    }
+
+    const passwordHash = await this.hashPassword(input.newPassword);
+
+    const [updated] = await db
+      .update(users)
+      .set({
+        passwordHash,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.email, cleanEmail))
+      .returning({ id: users.id });
+
+    if (!updated) {
+      throw new NotFoundError("User account not found");
+    }
+
+    return {
+      ok: true,
+      message: "Password has been successfully updated. You can now sign in.",
+    };
+  }
 }
 
 export const authService = new AuthService();

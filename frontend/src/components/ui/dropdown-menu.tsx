@@ -71,7 +71,7 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "relative flex cursor-pointer items-center gap-2 rounded-[6px] px-2 py-1.5 text-xs font-normal outline-none transition-colors",
+        "relative flex cursor-pointer items-center gap-2 rounded-[10px] px-2 py-1.5 text-xs font-normal outline-none transition-colors",
         "text-ink focus:bg-bone focus:text-ink",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8",
         variant === "destructive" && "text-ink hover:text-ink focus:bg-bone",
@@ -92,7 +92,7 @@ function DropdownMenuCheckboxItem({
     <DropdownMenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
       className={cn(
-        "relative flex cursor-pointer items-center gap-2 rounded-[6px] py-1.5 pr-2 pl-8 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone",
+        "relative flex cursor-pointer items-center gap-2 rounded-[10px] py-1.5 pr-2 pl-8 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
@@ -129,7 +129,7 @@ function DropdownMenuRadioItem({
     <DropdownMenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        "relative flex cursor-pointer items-center gap-2 rounded-[6px] py-1.5 pr-2 pl-8 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone",
+        "relative flex cursor-pointer items-center gap-2 rounded-[10px] py-1.5 pr-2 pl-8 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
@@ -213,7 +213,7 @@ function DropdownMenuSubTrigger({
       data-slot="dropdown-menu-sub-trigger"
       data-inset={inset}
       className={cn(
-        "flex cursor-pointer items-center gap-2 rounded-[6px] px-2 py-1.5 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone data-[inset]:pl-8 data-[state=open]:bg-bone",
+        "flex cursor-pointer items-center gap-2 rounded-[10px] px-2 py-1.5 text-xs font-normal outline-none transition-colors text-ink focus:bg-bone data-[inset]:pl-8 data-[state=open]:bg-bone",
         className
       )}
       {...props}
