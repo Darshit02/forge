@@ -44,6 +44,7 @@ export function Sidebar({ projectId }: SidebarProps) {
             <span>APIs</span>
           </button> */}
 
+
           <button
             type="button"
             onClick={() => setActiveTab("environments")}
