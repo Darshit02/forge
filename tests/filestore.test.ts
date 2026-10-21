@@ -73,6 +73,25 @@ describe("FileStoreService", () => {
     expect(safeFile.content).toBe("safe content");
   });
 
+  it("should create a valid ZIP archive excluding git and node_modules", async () => {
+    await fileStoreService.writeFile(testProjectId, "src/app.ts", "export const app = 1;");
+    await fileStoreService.writeFile(testProjectId, "README.md", "# Test Project");
+    await fileStoreService.writeFile(testProjectId, "node_modules/pkg/index.js", "evil");
+    await fileStoreService.writeFile(testProjectId, ".git/config", "secret");
+
+    const zipBuffer = await fileStoreService.createZip(testProjectId);
+    expect(Buffer.isBuffer(zipBuffer)).toBe(true);
+    expect(zipBuffer.length).toBeGreaterThan(0);
+
+    const zip = new AdmZip(zipBuffer);
+    const entries = zip.getEntries().map((e) => e.entryName);
+
+    expect(entries.some((e) => e.includes("src/app.ts"))).toBe(true);
+    expect(entries.some((e) => e.includes("README.md"))).toBe(true);
+    expect(entries.some((e) => e.includes("node_modules"))).toBe(false);
+    expect(entries.some((e) => e.includes(".git"))).toBe(false);
+  });
+
   it("should support custom workspace directory", async () => {
     const customProjId = "custom-proj-" + Math.random().toString(36).slice(2, 8);
     const customDir = `/tmp/forge-custom-test-${customProjId}`;

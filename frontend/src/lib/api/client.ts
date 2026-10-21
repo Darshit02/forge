@@ -129,3 +129,92 @@ export async function apiClient<T>(
 
   return (await response.json()) as T;
 }
+
+/**
+ * Downloads a binary file (e.g. ZIP archive) with authorization and automatic token refresh
+ */
+export async function apiDownload(
+  endpoint: string,
+  fallbackFilename = "download.zip"
+): Promise<void> {
+  let token = localStorage.getItem("forge_access_token");
+  const headers = new Headers();
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  const url = endpoint.startsWith("http")
+    ? endpoint
+    : `${env.VITE_API_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+
+  let response = await fetch(url, {
+    headers,
+    credentials: "include",
+  });
+
+  // Handle 401 Unauthorized with token refresh retry
+  if (response.status === 401 && !endpoint.includes("/api/auth/")) {
+    try {
+      const refreshRes = await fetch(`${env.VITE_API_URL}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!refreshRes.ok) {
+        throw new Error("Session expired");
+      }
+
+      const data = await refreshRes.json();
+      const newToken = data.accessToken;
+      if (newToken) {
+        localStorage.setItem("forge_access_token", newToken);
+        headers.set("Authorization", `Bearer ${newToken}`);
+        response = await fetch(url, {
+          headers,
+          credentials: "include",
+        });
+      }
+    } catch {
+      localStorage.removeItem("forge_access_token");
+      window.location.href = "/login";
+      throw new ApiError(401, "Session expired, please log in again.");
+    }
+  }
+
+  if (!response.ok) {
+    let errorMsg = `Download failed with HTTP ${response.status}`;
+    try {
+      const errJson = await response.json();
+      errorMsg = errJson.error || errorMsg;
+    } catch {
+      // not JSON
+    }
+    throw new ApiError(response.status, errorMsg);
+  }
+
+  // Parse filename from Content-Disposition header
+  let filename = fallbackFilename;
+  const disposition = response.headers.get("Content-Disposition");
+  if (disposition && disposition.includes("filename=")) {
+    const match = disposition.match(/filename="?([^";]+)"?/);
+    if (match?.[1]) {
+      filename = match[1].trim();
+    }
+  }
+
+  const blob = await response.blob();
+  const blobUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+  }, 100);
+}
+

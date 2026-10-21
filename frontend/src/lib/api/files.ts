@@ -1,4 +1,4 @@
-import { apiClient } from "./client.js";
+import { apiClient, apiDownload } from "./client.js";
 import type { FileContent, FileTreeNode } from "../../types/api.js";
 
 export const filesApi = {
@@ -35,4 +35,7 @@ export const filesApi = {
       }
     );
   },
+
+  download: (projectId: string, filename?: string) =>
+    apiDownload(`/api/projects/${projectId}/files/download`, filename),
 };

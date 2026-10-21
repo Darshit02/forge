@@ -11,6 +11,8 @@ import {
   FilePlus,
   FolderPlus,
   Upload,
+  Download,
+  Loader2,
   Trash2,
   MoreVertical,
   ChevronRight,
@@ -102,6 +104,22 @@ export function FileTree({ projectId }: FileTreeProps) {
       toast.error(err.message || "Failed to create");
     },
   });
+
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadProject = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    const toastId = toast.loading("Preparing project download...");
+    try {
+      await filesApi.download(projectId);
+      toast.success("Project downloaded successfully", { id: toastId });
+    } catch (err: any) {
+      toast.error(err.message || "Failed to download project", { id: toastId });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const toggleCollapse = (path: string) => {
     setCollapsedPaths((prev) => {
@@ -309,6 +327,21 @@ export function FileTree({ projectId }: FileTreeProps) {
             className="hidden"
             onChange={handleUploadChange}
           />
+
+          <Button
+            size="icon-xs"
+            variant="ghost"
+            title="Download Project (ZIP)"
+            disabled={isDownloading}
+            onClick={handleDownloadProject}
+            className="text-ash hover:text-ink rounded-[4px]"
+          >
+            {isDownloading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Download className="w-3.5 h-3.5" />
+            )}
+          </Button>
         </div>
       </div>
 

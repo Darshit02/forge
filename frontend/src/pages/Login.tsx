@@ -14,7 +14,7 @@ export function LoginPage() {
           </span>
         </Link>
         <div className="flex text-center gap-4">
-          <Link to="/register" className="text-xs text-ash hover:text-ink transition-colors font-normal">
+          <Link to="/register" className="text-xs hover:text-ink transition-colors font-medium bg-gray-200 text-gray-800 px-4 py-2 rounded-md">
             Create account
           </Link>
         </div>

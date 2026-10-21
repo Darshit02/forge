@@ -13,6 +13,12 @@ export const aiApi = {
       `/api/projects/${projectId}/chat/sessions/${sessionId}/messages`
     ),
 
+  deleteSession: (projectId: string, sessionId: string) =>
+    apiClient<{ ok: boolean; sessionId: string }>(
+      `/api/projects/${projectId}/chat/sessions/${sessionId}`,
+      { method: "DELETE" }
+    ),
+
   /**
    * SSE Stream for AI Chat with AbortController signal
    */
@@ -33,11 +39,19 @@ export const aiApi = {
     },
     signal?: AbortSignal
   ) {
-    const token = localStorage.getItem("forge_access_token");
+    let hasEmittedError = false;
+    const emitError = (msg: string) => {
+      if (!hasEmittedError) {
+        hasEmittedError = true;
+        callbacks.onError?.(msg);
+      }
+    };
+
+    let token = localStorage.getItem("forge_access_token");
     const url = `${env.VITE_API_URL}/api/projects/${projectId}/chat`;
 
     try {
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,6 +61,38 @@ export const aiApi = {
         signal,
         credentials: "include",
       });
+
+      // Handle 401 Unauthorized with automatic token refresh
+      if (response.status === 401) {
+        try {
+          const refreshRes = await fetch(`${env.VITE_API_URL}/api/auth/refresh`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          });
+
+          if (refreshRes.ok) {
+            const refreshData = await refreshRes.json();
+            token = refreshData.accessToken;
+            if (token) {
+              localStorage.setItem("forge_access_token", token);
+              // Retry stream request with refreshed access token
+              response = await fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+                signal,
+                credentials: "include",
+              });
+            }
+          }
+        } catch {
+          // Token refresh failed, continue to standard error handling
+        }
+      }
 
       if (!response.ok) {
         let errorMsg = `Chat stream failed with status ${response.status}`;
@@ -97,8 +143,10 @@ export const aiApi = {
               callbacks.onToken(parsed.delta);
             } else if (event === "done" && callbacks.onDone) {
               callbacks.onDone(parsed);
-            } else if (event === "error" && callbacks.onError) {
-              callbacks.onError(parsed.error);
+              return;
+            } else if (event === "error") {
+              emitError(parsed.error || "AI provider request failed");
+              return;
             }
           } catch {
             // non-JSON data
@@ -109,7 +157,11 @@ export const aiApi = {
       if (err.name === "AbortError") {
         return; // User cancelled
       }
-      callbacks.onError?.(err.message || "Failed to stream AI response");
+      if (hasEmittedError) {
+        return; // An exact error was already emitted, do not overwrite
+      }
+      const rawMessage = err?.message || "";
+      emitError(rawMessage || "Failed to stream AI response");
     }
   },
 };

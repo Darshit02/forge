@@ -39,7 +39,7 @@ export function normalizeModelName(
   fallbackDefault?: string
 ): string {
   const defaultByProvider: Record<string, string> = {
-    google: "gemini-2.5-pro",
+    google: "gemini-2.0-flash",
     openai: "gpt-4o",
     anthropic: "claude-3-7-sonnet-20250219",
     custom: "deepseek-chat",
@@ -62,21 +62,23 @@ export function normalizeModelName(
       m.startsWith("o4") ||
       m.startsWith("claude-")
     ) {
-      return fallback.startsWith("gemini-") ? fallback : "gemini-2.5-pro";
+      return fallback.startsWith("gemini-") ? fallback : "gemini-2.0-flash";
     }
 
     const googleAliases: Record<string, string> = {
-      "gemini-2.5-pro-latest": "gemini-2.5-pro",
-      "gemini-2.5-flash-latest": "gemini-2.5-flash",
+      "gemini-2.5-pro-latest": "gemini-2.0-flash",
+      "gemini-2.5-flash-latest": "gemini-2.0-flash",
+      "gemini-2.5-flash": "gemini-2.0-flash",
+      "gemini-2.5-pro": "gemini-2.0-flash",
       "gemini-2.0-flash-latest": "gemini-2.0-flash",
       "gemini-2.0-pro-latest": "gemini-2.0-pro-exp-02-05",
       "gemini-1.5-pro-latest": "gemini-1.5-pro",
       "gemini-1.5-flash-latest": "gemini-1.5-flash",
-      "gemini-2.5": "gemini-2.5-pro",
+      "gemini-2.5": "gemini-2.0-flash",
       "gemini-2.0": "gemini-2.0-flash",
       "gemini-1.5": "gemini-1.5-pro",
-      "gemini-pro": "gemini-2.5-pro",
-      "gemini-flash": "gemini-2.5-flash",
+      "gemini-pro": "gemini-1.5-pro",
+      "gemini-flash": "gemini-2.0-flash",
     };
     return googleAliases[m] || m;
   }
@@ -558,7 +560,12 @@ CORE INSTRUCTIONS & CONSTRAINTS:
           { err: err.message, stack: err.stack, projectId, sessionId },
           "Error in streamChat streamPromise"
         );
-        throw err;
+        return {
+          messageId: "",
+          sessionId,
+          content: "",
+          toolCalls: [],
+        };
       }
     })();
 
@@ -619,14 +626,20 @@ CORE INSTRUCTIONS & CONSTRAINTS:
       return { ok: true, latencyMs };
     } catch (err: any) {
       const latencyMs = Date.now() - startTime;
+      let errorMsg = err.message || "Failed to connect to AI provider";
+      if (err.data?.error?.message) {
+        errorMsg = err.data.error.message;
+      } else if (err.cause?.message) {
+        errorMsg = `${errorMsg} (${err.cause.message})`;
+      }
       logger.warn(
-        { providerType, err: err.message },
+        { providerType, err: errorMsg },
         "AI provider test ping failed"
       );
       return {
         ok: false,
         latencyMs,
-        error: err.message || "Failed to connect to AI provider",
+        error: errorMsg,
       };
     }
   }

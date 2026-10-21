@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { requireAuth, requireProjectOwner } from "../middleware/auth.js";
 import { fileStoreService } from "../services/fileStore.service.js";
+import { projectService } from "../services/project.service.js";
 import { wsHub } from "../ws/hub.js";
 import { BadRequestError } from "../utils/errors.js";
 
@@ -116,3 +117,26 @@ filesRoutes.post("/:id/files/upload", requireProjectOwner, async (c) => {
 
   return c.json({ ok: true, extractedFiles: extractedCount });
 });
+
+/**
+ * GET /api/projects/:id/files/download & /api/projects/:id/download
+ * Export project workspace as a ZIP archive
+ */
+const handleDownloadProject = async (c: any) => {
+  const projectId = c.req.param("id")!;
+  const project = await projectService.getProject(projectId);
+  const zipBuffer = await fileStoreService.createZip(projectId);
+
+  const safeName = (project.name || "project")
+    .replace(/[^a-zA-Z0-9_-]/g, "_")
+    .toLowerCase();
+  const filename = `${safeName}.zip`;
+
+  c.header("Content-Type", "application/zip");
+  c.header("Content-Disposition", `attachment; filename="${filename}"`);
+  return c.body(zipBuffer);
+};
+
+filesRoutes.get("/:id/files/download", requireProjectOwner, handleDownloadProject);
+filesRoutes.get("/:id/download", requireProjectOwner, handleDownloadProject);
+

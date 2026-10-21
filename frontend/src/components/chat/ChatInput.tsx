@@ -29,10 +29,11 @@ import type { ChatMode } from "../../types/api.js";
 
 const POPULAR_MODELS_BY_PROVIDER: Record<string, string[]> = {
   google: [
-    "gemini-2.5-pro",
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
+    "gemini-1.5-flash",
     "gemini-1.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
   ],
   openai: [
     "gpt-4o",

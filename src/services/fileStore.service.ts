@@ -355,6 +355,66 @@ export class FileStoreService {
   }
 
   /**
+   * Archives the project workspace directory into a ZIP buffer
+   * Excludes common heavy directories and build artifacts (e.g. node_modules, .git, venv)
+   */
+  async createZip(projectId: string): Promise<Buffer> {
+    const workspaceDir = this.getWorkspaceDir(projectId);
+    if (!fsSync.existsSync(workspaceDir)) {
+      await this.initWorkspace(projectId);
+    }
+
+    const zip = new AdmZip();
+
+    const addDirectory = async (currentDir: string, relZipDir: string) => {
+      let entries;
+      try {
+        entries = await fs.readdir(currentDir, { withFileTypes: true });
+      } catch (err) {
+        logger.error({ currentDir, err }, "Error reading directory for zip export");
+        return;
+      }
+
+      for (const entry of entries) {
+        const name = entry.name;
+
+        // Exclude version control, dependencies, and cache artifacts
+        if (
+          name === ".git" ||
+          name === ".DS_Store" ||
+          name === "node_modules" ||
+          name === "__pycache__" ||
+          name === "venv" ||
+          name === ".venv" ||
+          name === "target" ||
+          name === "dist" ||
+          name === "build"
+        ) {
+          continue;
+        }
+
+        const fullPath = path.join(currentDir, name);
+        const zipEntryPath = relZipDir ? `${relZipDir}/${name}` : name;
+
+        if (entry.isDirectory()) {
+          zip.addFile(`${zipEntryPath}/`, Buffer.alloc(0));
+          await addDirectory(fullPath, zipEntryPath);
+        } else if (entry.isFile()) {
+          try {
+            const data = await fs.readFile(fullPath);
+            zip.addFile(zipEntryPath, data);
+          } catch (readErr) {
+            logger.warn({ fullPath, readErr }, "Could not read file for zip export");
+          }
+        }
+      }
+    };
+
+    await addDirectory(workspaceDir, "");
+    return zip.toBuffer();
+  }
+
+  /**
    * Collects all workspace files as a flat map of relative path -> content
    * Used for passing workspace context to AI
    */

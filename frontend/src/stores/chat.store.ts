@@ -32,7 +32,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   streamingBuffer: "",
   isStreaming: false,
-  selectedModel: "gemini-2.5-pro",
+  selectedModel: "gemini-2.0-flash",
   selectedProviderId: null,
   chatMode: "edit",
 
@@ -91,9 +91,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   setError: (error: string) => {
     const { messages, streamingBuffer, activeSessionId } = get();
+    const isAuth =
+      error.toLowerCase().includes("access token") ||
+      error.toLowerCase().includes("unauthorized") ||
+      error.toLowerCase().includes("session expired");
+
+    const footer = isAuth
+      ? `*Your login session has expired. Please [log in again](/login).*`
+      : `*Check your API key and model selection in **Settings > AI Providers (BYOK)**.*`;
+
     const errorContent = streamingBuffer
       ? `${streamingBuffer}\n\n---\n⚠️ **AI Stream Interrupted**: ${error}`
-      : `⚠️ **AI Response Failed**\n\n${error}\n\n*Check your API key and model selection in **Settings > AI Providers (BYOK)**.*`;
+      : `⚠️ **AI Response Failed**\n\n${error}\n\n${footer}`;
 
     const errorMessage: ChatMessage = {
       id: "err-" + Date.now(),

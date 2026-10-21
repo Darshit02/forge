@@ -31,7 +31,7 @@ export function Sidebar({ projectId }: SidebarProps) {
             <span>Files</span>
           </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => setActiveTab("collections")}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs  transition-colors font-normal ${
@@ -42,7 +42,7 @@ export function Sidebar({ projectId }: SidebarProps) {
           >
             <Layers className="w-3.5 h-3.5" />
             <span>APIs</span>
-          </button>
+          </button> */}
 
           <button
             type="button"

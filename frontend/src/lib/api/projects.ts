@@ -1,4 +1,4 @@
-import { apiClient } from "./client.js";
+import { apiClient, apiDownload } from "./client.js";
 import type { Project, TemplateMetadata } from "../../types/api.js";
 
 export const projectsApi = {
@@ -51,4 +51,7 @@ export const projectsApi = {
     apiClient<{ ok: boolean; id: string }>(`/api/projects/${id}`, {
       method: "DELETE",
     }),
+
+  download: (id: string, filename?: string) =>
+    apiDownload(`/api/projects/${id}/files/download`, filename),
 };

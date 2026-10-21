@@ -17,7 +17,11 @@ import {
   Code2,
   Calendar,
   Layers,
+  Download,
+  Loader2,
 } from "lucide-react";
+import { projectsApi } from "../../lib/api/projects.js";
+import { toast } from "sonner";
 import type { Project } from "../../types/api.js";
 
 interface ProjectCardProps {
@@ -28,6 +32,21 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    const toastId = toast.loading(`Preparing "${project.name}" download...`);
+    try {
+      await projectsApi.download(project.id);
+      toast.success("Project downloaded successfully", { id: toastId });
+    } catch (err: any) {
+      toast.error(err.message || "Failed to download project", { id: toastId });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -82,6 +101,18 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                       <ExternalLink className="w-3.5 h-3.5" />
                       Open Workspace
                     </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    className="cursor-pointer gap-2 text-xs font-normal"
+                  >
+                    {isDownloading ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Download className="w-3.5 h-3.5" />
+                    )}
+                    Download ZIP
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-hairline" />
                   <DropdownMenuItem

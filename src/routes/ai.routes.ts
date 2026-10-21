@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { streamSSE } from "hono/streaming";
-import { eq, desc, asc } from "drizzle-orm";
+import { eq, desc, asc, and } from "drizzle-orm";
 import { requireAuth, requireProjectOwner } from "../middleware/auth.js";
 import { chatRateLimiter } from "../middleware/rateLimit.js";
 import { aiService } from "../services/ai.service.js";
@@ -67,12 +67,18 @@ aiRoutes.post(
           }),
         });
       } catch (err: any) {
-        const errorMsg = err.message || "AI stream failed";
+        let errorMsg = err.message || "AI stream failed";
+        if (err.data?.error?.message) {
+          errorMsg = err.data.error.message;
+        } else if (err.cause?.message) {
+          errorMsg = `${errorMsg} (${err.cause.message})`;
+        }
         logger.error({ err: errorMsg, stack: err.stack, projectId }, "AI stream route error");
         await stream.writeSSE({
           event: "error",
           data: JSON.stringify({ error: errorMsg }),
         });
+        await new Promise((resolve) => setTimeout(resolve, 60));
       }
     });
   }
@@ -119,5 +125,33 @@ aiRoutes.get(
       .orderBy(asc(chatMessages.createdAt));
 
     return c.json({ session, messages });
+  }
+);
+
+/**
+ * DELETE /api/projects/:id/chat/sessions/:sessionId - Delete a chat session and cascade its messages
+ */
+aiRoutes.delete(
+  "/:id/chat/sessions/:sessionId",
+  requireProjectOwner,
+  async (c) => {
+    const projectId = c.req.param("id")!;
+    const sessionId = c.req.param("sessionId")!;
+
+    const [deleted] = await db
+      .delete(chatSessions)
+      .where(
+        and(
+          eq(chatSessions.id, sessionId),
+          eq(chatSessions.projectId, projectId)
+        )
+      )
+      .returning({ id: chatSessions.id });
+
+    if (!deleted) {
+      throw new NotFoundError("Chat session not found");
+    }
+
+    return c.json({ ok: true, sessionId: deleted.id });
   }
 );
